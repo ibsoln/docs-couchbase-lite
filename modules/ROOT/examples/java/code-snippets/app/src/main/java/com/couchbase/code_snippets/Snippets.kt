@@ -10,6 +10,7 @@ class Snippets(context: Context) {
     private val TAG = "MainActivity"
 
     fun testGettingStarted() {
+        // tag::getting-started[]
         // Get the database (and create it if it doesn’t exist).
         val config = DatabaseConfiguration(context)
         val database = Database("mydb", config)
@@ -54,6 +55,7 @@ class Snippets(context: Context) {
         val replicator = Replicator(replConfig)
         // LOG TEST added:
         Log.i(TAG, "replicator before change is like: " + replicator.toString())
+        // end::getting-started[]
     }
 
     fun testNewDatabase() {
