@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import com.couchbase.lite.AbstractReplicator;
 import com.couchbase.lite.ArrayFunction;
 import com.couchbase.lite.BasicAuthenticator;
 import com.couchbase.lite.Blob;
@@ -24,6 +25,7 @@ import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.DataSource;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.DatabaseConfiguration;
+import com.couchbase.lite.DatabaseEndpoint;
 import com.couchbase.lite.Dictionary;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.DocumentFlag;
@@ -839,7 +841,7 @@ public class MainActivity extends AppCompatActivity {
         // end::basic-authentication[]
     }
 
-    public void testReplicationSessionAuthentication() throws {
+    public void testReplicationSessionAuthentication() throws URISyntaxException {
         // tag::session-authentication[]
         URLEndpoint target = new URLEndpoint(new URI("ws://localhost:4984/mydatabase"));
 
@@ -849,6 +851,34 @@ public class MainActivity extends AppCompatActivity {
         Replicator replication = new Replicator(config);
         replication.start();
         // end::session-authentication[]
+    }
+
+    public void testDatabaseReplica() throws CouchbaseLiteException {
+        DatabaseConfiguration config = new DatabaseConfiguration(getApplicationContext());
+        Database database1 = new Database("mydb", config);
+
+        config = new DatabaseConfiguration(getApplicationContext());
+        Database database2 = new Database("db2", config);
+
+        /* EE feature: code below might throw a compilation error
+           if it's compiled against CBL Android Community. */
+        // tag::database-replica[]
+        DatabaseEndpoint targetDatabase = new DatabaseEndpoint(database2);
+        ReplicatorConfiguration replicatorConfig = new ReplicatorConfiguration(database1, targetDatabase);
+        replicatorConfig.setReplicatorType(ReplicatorConfiguration.ReplicatorType.PUSH);
+
+        Replicator replicator = new Replicator(replicatorConfig);
+        replicator.start();
+        // end::database-replica[]
+
+        replicator.addChangeListener(change -> {
+            if (change.getStatus().getActivityLevel().equals(AbstractReplicator.ActivityLevel.STOPPED)) {
+                try { database2.delete(); }
+                catch (CouchbaseLiteException ignore) { }
+            }
+        });
+
+        replicator.stop();
     }
 
     private InputStream getAsset(String assetName) {
