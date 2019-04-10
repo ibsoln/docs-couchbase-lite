@@ -13,7 +13,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -50,11 +49,11 @@ import com.couchbase.lite.Meta;
 import com.couchbase.lite.MutableDictionary;
 import com.couchbase.lite.MutableDocument;
 import com.couchbase.lite.Ordering;
+import com.couchbase.lite.PredictiveIndex;
 import com.couchbase.lite.PredictiveModel;
 import com.couchbase.lite.ProtocolType;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryBuilder;
-import com.couchbase.lite.ReplicationFilter;
 import com.couchbase.lite.Replicator;
 import com.couchbase.lite.ReplicatorChange;
 import com.couchbase.lite.ReplicatorChangeListener;
@@ -64,6 +63,7 @@ import com.couchbase.lite.Result;
 import com.couchbase.lite.ResultSet;
 import com.couchbase.lite.SelectResult;
 import com.couchbase.lite.URLEndpoint;
+import com.couchbase.lite.ValueIndex;
 import com.couchbase.lite.ValueIndexItem;
 
 
@@ -729,12 +729,7 @@ public class MainActivity extends AppCompatActivity {
         URLEndpoint target = new URLEndpoint(new URI("ws://localhost:4984/mydatabase"));
 
         ReplicatorConfiguration config = new ReplicatorConfiguration(database, target);
-        config.setPushFilter(new ReplicationFilter() {
-            @Override
-            public boolean filtered(@NonNull Document document, @NonNull EnumSet<DocumentFlag> flags) {
-                return flags.equals(DocumentFlag.DocumentFlagsDeleted);
-            }
-        });
+        config.setPushFilter((document, flags) -> flags.contains(DocumentFlag.DocumentFlagsDeleted));
 
         Replicator replication = new Replicator(config);
         replication.start();
@@ -746,16 +741,60 @@ public class MainActivity extends AppCompatActivity {
         URLEndpoint target = new URLEndpoint(new URI("ws://localhost:4984/mydatabase"));
 
         ReplicatorConfiguration config = new ReplicatorConfiguration(database, target);
-        config.setPullFilter(new ReplicationFilter() {
-            @Override
-            public boolean filtered(@NonNull Document document, @NonNull EnumSet<DocumentFlag> flags) {
-                return "draft".equals(document.getString("type"));
-            }
-        });
+        config.setPullFilter((document, flags) -> "draft".equals(document.getString("type")));
 
         Replicator replication = new Replicator(config);
         replication.start();
         // end::replication-pull-filter[]
+    }
+
+    public void testPredictiveModel() throws CouchbaseLiteException {
+        DatabaseConfiguration config = new DatabaseConfiguration(getApplicationContext());
+        Database database = new Database("mydb", config);
+
+        // tag::register-model[]
+        Database.prediction.registerModel("ImageClassifier", new ImageClassifierModel());
+        // end::register-model[]
+
+        // tag::predictive- query-value-index[]
+        ValueIndex index = IndexBuilder.valueIndex(ValueIndexItem.expression(Expression.property("label")));
+        database.createIndex("value-index-image-classifier", index);
+        // end::predictive-query-value-index[]
+
+        // tag::unregister-model[]
+        Database.prediction.unregisterModel("ImageClassifier");
+        // end::unregister-model[]
+    }
+
+    public void testPredictiveIndex() throws CouchbaseLiteException {
+        DatabaseConfiguration config = new DatabaseConfiguration(getApplicationContext());
+        Database database = new Database("mydb", config);
+
+        // tag::predictive-query-predictive-index[]
+        Map<String, Object> inputMap = new HashMap<>();
+        inputMap.put("numbers", Expression.property("photo"));
+        Expression input = Expression.map(inputMap);
+
+        PredictiveIndex index = IndexBuilder.predictiveIndex("ImageClassifier", input, null);
+        database.createIndex("predictive-index-image-classifier", index);
+        // end::predictive-query-predictive-index[]
+    }
+
+    public void testPredictiveQuery() throws CouchbaseLiteException {
+        DatabaseConfiguration config = new DatabaseConfiguration(getApplicationContext());
+        Database database = new Database("mydb", config);
+
+        // tag::predictive-query[]
+        Query query = QueryBuilder
+            .select(SelectResult.all())
+            .from(DataSource.database(database))
+            .where(Expression.property("label").equalTo(Expression.string("car"))
+                .and(Expression.property("probability").greaterThanOrEqualTo(Expression.doubleValue(0.8))));
+
+        // Run the query.
+        ResultSet result = query.execute();
+        Log.d(TAG, "Number of rows: " + result.allResults().size());
+        // end::predictive-query[]
     }
 
     private InputStream getAsset(String assetName) {
@@ -928,3 +967,26 @@ class PassivePeerConnection implements MessageEndpointConnection {
         // end::passive-peer-receive[]
     }
 }
+
+// tag::predictive-model[]
+// `tensorFlowModel` is a fake implementation
+// this would be the implementation of the ml model you have chosen
+class ImageClassifierModel implements PredictiveModel {
+    @Override
+    public Dictionary predict(@NonNull Dictionary input) {
+        Blob blob = input.getBlob("photo");
+        if (blob == null) { return null; }
+
+        // `tensorFlowModel` is a fake implementation
+        // this would be the implementation of the ml model you have chosen
+        return new MutableDictionary(TensorFlowModel.predictImage(blob.getContent()));
+    }
+}
+
+class TensorFlowModel {
+    public static Map<String, Object> predictImage(byte[] data) {
+        return null;
+    }
+}
+// end::predictive-model[]
+
