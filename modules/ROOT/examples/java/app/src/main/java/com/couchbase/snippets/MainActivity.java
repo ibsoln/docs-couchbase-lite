@@ -35,6 +35,7 @@ import com.couchbase.lite.FullTextIndexItem;
 import com.couchbase.lite.Function;
 import com.couchbase.lite.IndexBuilder;
 import com.couchbase.lite.Join;
+import com.couchbase.lite.ListenerToken;
 import com.couchbase.lite.LogDomain;
 import com.couchbase.lite.LogLevel;
 import com.couchbase.lite.Message;
@@ -795,6 +796,34 @@ public class MainActivity extends AppCompatActivity {
         ResultSet result = query.execute();
         Log.d(TAG, "Number of rows: " + result.allResults().size());
         // end::predictive-query[]
+    }
+
+    public void testQueryAll() throws CouchbaseLiteException {
+        DatabaseConfiguration config = new DatabaseConfiguration(getApplicationContext());
+        Database database = new Database("mydb", config);
+
+        // tag::query-select-all[]
+        Query query = QueryBuilder
+            .select(SelectResult.all())
+            .from(DataSource.database(database));
+        // end::query-select-all[]
+
+        // Adds a query change listener.
+        // Changes will be posted on the main queue.
+        ListenerToken token = query.addChangeListener(change -> {
+            for (Result result: change.getResults()) {
+                Log.d(TAG, "results: " + result.getKeys());
+                /* Update UI */
+            }
+        });
+
+        // Start live query.
+        query.execute(); // <1>
+        // end::live-query[]
+
+        // tag::stop-live-query[]
+        query.removeChangeListener(token);
+        // end::stop-live-query[]
     }
 
     private InputStream getAsset(String assetName) {
