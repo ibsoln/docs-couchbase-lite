@@ -1,0 +1,34 @@
+// ANDROID NAV.ADOC
+//
+//
+:src-lang: java-android
+:root: ROOT
+:component: couchbase-lite
+:module: android
+:xref-pfx: xref:{component}:{module}:{src-lang}-
+
+.CBL for {src-lang}
+* xref:{component}:{module}:introduction.adoc[About]
+* xref:index.adoc[What's New]
+
+* Start
+// Add getting started tutorials and docs here
+** Prerequisites
+** Installation
+** xref:{component}:{root}:gs-{src-lang}.adoc[Build an app]
+
+* Advance
+// Add CBL 'next step' projects and activities here
+** {xref-pfx}dep-upgrade.adoc[Upgrading]
+
+* Learn
+// Add CBL concepts and best practices in here
+** Need to source some content
+
+* Refer
+// Add api references in here
+** {xref-pfx}ref-api.adoc[API]
+
+* Product Notes
+// Add product notices here, including Release Notes and Compatibility etc
+** {xref-pfx}pn-releasenotes.adoc[Release Notes]

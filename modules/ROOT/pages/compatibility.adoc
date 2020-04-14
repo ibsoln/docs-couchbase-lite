@@ -1,6 +1,6 @@
 = Compatibility
-include::_partials/_attributes-local.adoc[]
 :page-aliases: compatibility-matrix.adoc
+include::_partials/_attributes-local.adoc[]ß∑
 
 == Operating System SDK Support
 
