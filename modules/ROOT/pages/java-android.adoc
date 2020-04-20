@@ -1,6 +1,6 @@
 = Couchbase Lite Java (Android) framework
-:page-aliases: java
 include::partial$_attributes-local.adoc[]
+:page-aliases: java
 :idprefix:
 :idseparator: -
 :snippet: {examplesdir}/java-android/app/src/main/java/com/couchbase/code_snippets/Examples.java
@@ -1192,6 +1192,7 @@ Note: Support notices remain in force for this maintenance release -- see <<supp
 ==== {fixed}
 
 This maintenance release fixes the following issues:
+
 * https://issues.couchbase.com/browse/CBL-789[*CBL-789*] Crash when accessing `connection->name()`
 * https://issues.couchbase.com/browse/CBL-701[*CBL-701*] Pending Document IDs not working correctly
 * https://issues.couchbase.com/browse/CBL-698[*CBL-698*] Wrong query evaluation using expression values instead of expression properties
@@ -1203,11 +1204,14 @@ This maintenance release fixes the following issues:
 ==== {ke}
 
 The following issues document known errors:
+
 * https://issues.couchbase.com/browse/CBL-608[*CBL-608*] Ordering null values inconsistent with N1QL expectations
 * https://issues.couchbase.com/browse/CBL-370[*CBL-370*] 370	Broken API, Kotlin: Unable to import ReplicatorType
 * https://issues.couchbase.com/browse/CBL-216[*CBL-216*] Ordering null values inconsistent with N1QL expectations
 * https://issues.couchbase.com/browse/CBL-95[*CBL-95*] Pending conflicts could be resolved by a wrong replicator
 * https://issues.couchbase.com/browse/CBL-49[*CBL-49*] Need a way to distinguish boolean types
+
+=== Release {this-version}
 
 ==== {nftr} at {this-version}
 
@@ -1215,7 +1219,7 @@ New at release {this-version} is the Java Platform, which enables development of
 
 xref::index.adoc[{more}]
 
-*{ke}*
+==== {ke}
 
 - https://issues.couchbase.com/browse/CBL-608[*CBL-608*]	Blob missing content file
 - https://issues.couchbase.com/browse/CBL-564[*CBL-564*]	Property alias not working under certain cases
@@ -1224,7 +1228,7 @@ xref::index.adoc[{more}]
 - https://issues.couchbase.com/browse/CBL-95[*CBL-95*] Pending conflicts could be resolved by a wrong replicator
 - https://issues.couchbase.com/browse/CBL-49[*CBL-49*] Need a way to distinguish boolean types
 
-*{fixed}*
+==== {fixed}
 
 // - https://issues.couchbase.com/browse/CBL-562[*CBL-562*] Can't open existing db read-only; LiteCore test "Database Open Older Encrypted" fails
 // - https://issues.couchbase.com/browse/CBL-550[*CBL-550*] SQLite index creation mistakenly sets user_version backwards
@@ -1268,7 +1272,7 @@ xref::index.adoc[{more}]
 - https://issues.couchbase.com/browse/CBL-34[*CBL-34*] Replicator crash
 - https://issues.couchbase.com/browse/CBL-13[*CBL-13*] Native crash
 
-== {suppnotes}
+==== {suppnotes}
 
 :msg_component: API 19 and 21
 :msg_action:  Please plan to migrate your apps to use API versions greater than API 21
