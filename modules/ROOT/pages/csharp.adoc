@@ -14,7 +14,7 @@ include::partial$_attributes-local.adoc[]
 :this-version: {version}
 :this-maint-vsn: {vrsnMaintRelFull}
 :xref-pfx: {xref-pfx-cbl}:
-:pg-relnote-archive: pn-release-notes-archive-objc.adoc
+:pg-relnote-archive: pn-release-notes-archive-csharp.adoc
 :xref-pg-relnote-archive: {xref-pfx}{pg-relnote-archive}[Release Notes Archive]
 //
 // End header
