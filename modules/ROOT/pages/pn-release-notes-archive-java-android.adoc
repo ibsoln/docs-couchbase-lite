@@ -9,6 +9,8 @@ include::partial$_attributes-local.adoc[]
 :pg-android: java-android.adoc
 :xref-pg-android: {xref-pfx}{pg-android}[Release Notes for {this-version}]
 
+For current release notes see: {xref-pg-android--release-notes}
+
 == Release 2.7
 
 === {nftr}
