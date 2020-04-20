@@ -7,7 +7,7 @@ include::partial$_attributes-local.adoc[]
 :this-maint-vsn: {vrsnMaintRelFull}
 :xref-pfx: {xref-pfx-cbl}:
 :pg-android: java-android.adoc
-:xref-pg-android: {xref-pfx}{pg-android}[Release Notes for {this-version}]
+:xref-pg-android--release-notes: {xref-pfx}{pg-android}#release-notes[Release Notes for {this-version}]
 
 For current release notes see: {xref-pg-android--release-notes}
 
