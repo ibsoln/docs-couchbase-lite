@@ -1147,23 +1147,6 @@ New at this release is the Java Platform, which enables development of Java apps
 
 xref::index.adoc[{more}]
 
-==== {suppnotes}
-
-:msg_level: CAUTION
-:msg_title: Apple Mac OS
-:msg_component: Mac OS 10.9 and 10.10
-:msg_endrel: 2.8
-:msg_release: 2.5
-:msg_action: Please plan to migrate your apps to use at least the minimum <<Supported Versions>>.
-include::_partials/deprecationNotice.adoc[]
-
-:msg_title: Apple iOS
-:msg_component: iOS 9
-:msg_release: 2.6
-:msg_endrel: 2.9
-:msg_action: Please plan to migrate your apps to use at least the minimum <<Supported Versions>>.
-include::_partials/deprecationNotice.adoc[]
-
 ==== {ke}
 
 - https://issues.couchbase.com/browse/CBL-216[*CBL-216*] Ordering null values inconsistent with N1QL expectations
@@ -1197,4 +1180,21 @@ include::_partials/deprecationNotice.adoc[]
 - https://issues.couchbase.com/browse/CBL-171[*CBL-171*] CBL replication never finishes for replication filtering when doc count is 1000
 - https://issues.couchbase.com/browse/CBL-126[*CBL-126*] Litecore does not retry subChanges request that fails with temporary 503 error
 - https://issues.couchbase.com/browse/CBL-52[*CBL-52*] “LIKE”, "CONTAINS", "REGEX_LIKE" operators ignore collations
+
+==== {suppnotes}
+
+:msg_level: CAUTION
+:msg_title: Apple Mac OS
+:msg_component: Mac OS 10.9 and 10.10
+:msg_endrel: 2.8
+:msg_release: 2.5
+:msg_action: Please plan to migrate your apps to use at least the minimum <<Supported Versions>>.
+include::_partials/deprecationNotice.adoc[]
+
+:msg_title: Apple iOS
+:msg_component: iOS 9
+:msg_release: 2.6
+:msg_endrel: 2.9
+:msg_action: Please plan to migrate your apps to use at least the minimum <<Supported Versions>>.
+include::_partials/deprecationNotice.adoc[]
 

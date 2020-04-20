@@ -16,22 +16,6 @@ New at this release is the Java Platform, which enables development of Java apps
 
 xref::index.adoc[{more}]
 
-*Current Support Notices*
-
-:msg_level: CAUTION
-:msg_title: Apple Mac OS
-:msg_component: Mac OS 10.9 and 10.10
-:msg_endrel: 2.8
-:msg_release: 2.5
-:msg_action: Please plan to migrate your apps to use at least the minimum <<Supported Versions>>.
-include::_partials/deprecationNotice.adoc[]
-
-:msg_title: Apple iOS
-:msg_component: iOS 9
-:msg_release: 2.6
-:msg_endrel: 2.9
-:msg_action: Please plan to migrate your apps to use at least the minimum <<Supported Versions>>.
-include::_partials/deprecationNotice.adoc[]
 
 *{ke}*
 
@@ -67,6 +51,22 @@ include::_partials/deprecationNotice.adoc[]
 - https://issues.couchbase.com/browse/CBL-126[*CBL-126*] Litecore does not retry subChanges request that fails with temporary 503 error
 - https://issues.couchbase.com/browse/CBL-52[*CBL-52*] “LIKE”, "CONTAINS", "REGEX_LIKE" operators ignore collations
 
+*{suppnotes}*
+
+:msg_level: CAUTION
+:msg_title: Apple Mac OS
+:msg_component: Mac OS 10.9 and 10.10
+:msg_endrel: 2.8
+:msg_release: 2.5
+:msg_action: Please plan to migrate your apps to use at least the minimum <<Supported Versions>>.
+include::_partials/deprecationNotice.adoc[]
+
+:msg_title: Apple iOS
+:msg_component: iOS 9
+:msg_release: 2.6
+:msg_endrel: 2.9
+:msg_action: Please plan to migrate your apps to use at least the minimum <<Supported Versions>>.
+include::_partials/deprecationNotice.adoc[]
 
 == Release 2.6
 
@@ -221,17 +221,17 @@ Console Log Crash when there is percent character in the log message
 * {url-issues-ios}/2112[*#2112*] HTTP proxy support
 * {url-issues-ios}/2122[*#2122*] IOS 9 - Got LiteCore error: connection closed abnormally - eventual crash
 
-== 2.1.5
-
-.{fixed}
-* https://github.com/couchbase/couchbase-lite-core/issues/714[*#714*] docIDs like `_design/...` cause a 1.x upgrade to fail
-* https://github.com/couchbase/couchbase-lite-core/issues/712[*#712*] fleece::Scope throws an exception on a background thread while updating a live query
-
 == 2.1.2
 
 .{fixed}
 * {url-issues-ios}/2205[*#2205*] Crash when using 2.1 to pull attachments from 2.0
 * {url-issues-ios}/2216[*#2216*] Auth Header from BasicAuthenticator not getting sent if SG Guest user is enabled
+
+== 2.1.5
+
+.{fixed}
+* https://github.com/couchbase/couchbase-lite-core/issues/714[*#714*] docIDs like `_design/...` cause a 1.x upgrade to fail
+* https://github.com/couchbase/couchbase-lite-core/issues/712[*#712*] fleece::Scope throws an exception on a background thread while updating a live query
 
 == Release 2.0
 
