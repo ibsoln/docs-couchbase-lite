@@ -1135,7 +1135,7 @@ New at this release is the Java Platform, which enables development of Java apps
 
 xref::index.adoc[{more}]
 
-*{fixed}*
+==== {fixed}
 
 - https://issues.couchbase.com/browse/CBL-456[*CBL-456*] Deprecated Database.setLogLevel is not logging
 - https://issues.couchbase.com/browse/CBL-428[*CBL-428*] .NET Framework build does not load LiteCore properly
