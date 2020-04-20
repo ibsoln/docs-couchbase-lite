@@ -9,7 +9,7 @@ include::partial$_attributes-local.adoc[]
 :pg-android: java-android.adoc
 :xref-pg-android: {xref-pfx}{pg-android}[Release Notes for {this-version}]
 
-== 2.7.0
+== Release 2.7
 
 === {nftr}
 
@@ -80,21 +80,8 @@ See also <<Supported Versions>>
 - https://issues.couchbase.com/browse/CBL-34[*CBL-34*] Replicator crash
 - https://issues.couchbase.com/browse/CBL-13[*CBL-13*] Native crash
 
-== 2.6.2
 
-This maintenance release for Android includes important bug fixes.
-
-=== Bugs
-
-* https://issues.couchbase.com/browse/CBL-468[*CBL-468*] Null dereference during pull-only replication.
-* https://issues.couchbase.com/browse/CBL-467[*CBL-467*] Replication listener sometimes crashed on NPE.
-* https://issues.couchbase.com/browse/CBL-436[*CBL-436*] An attempt to get the keys from an empty dictionary caused a crash.
-* https://issues.couchbase.com/browse/CBL-324[*CBL-324*] Function.upper() failed to operate non-ASCII characters.
-* https://issues.couchbase.com/browse/CBL-172[*CBL-172*] Initial delay observed when starting a liveQuery has been fixed.
-* https://issues.couchbase.com/browse/CBL-34[*CBL-34*] Fixed a replicator crash issue.
-
-
-== 2.6.0
+== Release 2.6
 
 === {nftr}
 
@@ -137,28 +124,21 @@ Applications upgrading from earlier versions to 2.6 must invoke this method.
 - https://issues.couchbase.com/browse/CBL-95[*CBL-95*] Pending conflicts could be resolved by a wrong replicator
 - https://issues.couchbase.com/browse/CBL-49[*CBL-49*] Need a way to distinguish boolean types
 
-== 2.5.3
+== 2.6.2
 
-=== {enh}
+This maintenance release for Android includes important bug fixes.
 
-* https://issues.couchbase.com/browse/CBL-142[*CBL-142*] Added native support for x86_64.
+=== Bugs
 
-=== {fixed}
+* https://issues.couchbase.com/browse/CBL-468[*CBL-468*] Null dereference during pull-only replication.
+* https://issues.couchbase.com/browse/CBL-467[*CBL-467*] Replication listener sometimes crashed on NPE.
+* https://issues.couchbase.com/browse/CBL-436[*CBL-436*] An attempt to get the keys from an empty dictionary caused a crash.
+* https://issues.couchbase.com/browse/CBL-324[*CBL-324*] Function.upper() failed to operate non-ASCII characters.
+* https://issues.couchbase.com/browse/CBL-172[*CBL-172*] Initial delay observed when starting a liveQuery has been fixed.
+* https://issues.couchbase.com/browse/CBL-34[*CBL-34*] Fixed a replicator crash issue.
 
-* https://issues.couchbase.com/browse/CBL-176[*CBL-176*] Reduce replication timeouts.
-* https://issues.couchbase.com/browse/CBL-110[*CBL-110*] Delta sync on top of a deletion caused data discrepancy between Couchbase Sync Gateway and Couchbase Lite.
-* https://issues.couchbase.com/browse/CBL-131[*CBL-131*] Continuous replicator does not back off retries.
 
-== 2.5.2
-
-=== {fixed}
-
-* https://github.com/couchbase/couchbase-lite-core/issues/776[*#776*] `c4db_endTransaction` sometimes results in invalid memory access.
-* https://github.com/couchbase/couchbase-lite-core/issues/787[*#787*] Fleece error when querying array property.
-* https://github.com/couchbase/couchbase-lite-core/issues/792[*#792*] DBWorker crashes in Fleece Encoder (writePointer).
-* https://issues.couchbase.com/browse/CBL-5[*CBL-5*] Excessive synchronization is stalling Live Query notification.
-
-== 2.5.0
+== Release 2.5
 
 === {nftr}
 
@@ -209,16 +189,28 @@ Client Proxy Support
 Memory Leak: Database reference held by a ReplicatorListenerThread after
 close
 
-== 2.1.2
+== 2.5.2
 
 === {fixed}
-* {url-issues-java}/1760[*#1760*] Warning about CBLWebSocket failed to shutdown the web socket
-* {url-issues-java}/1761[*#1761*] Could not find class `android.system.ErrnoException' error
-* {url-issues-java}/1762[*#1762*] Potential memory leak in replicator
-* {url-issues-java}/1763[*#1763*] Log from replicator’s native code shouldn’t be shown unless the logging is enabled
-* {url-issues-java}/1766[*#1766*] Auth Header from BasicAuthenticator not getting sent if SG Guest user is enabled
 
-== 2.1
+* https://github.com/couchbase/couchbase-lite-core/issues/776[*#776*] `c4db_endTransaction` sometimes results in invalid memory access.
+* https://github.com/couchbase/couchbase-lite-core/issues/787[*#787*] Fleece error when querying array property.
+* https://github.com/couchbase/couchbase-lite-core/issues/792[*#792*] DBWorker crashes in Fleece Encoder (writePointer).
+* https://issues.couchbase.com/browse/CBL-5[*CBL-5*] Excessive synchronization is stalling Live Query notification.
+
+== 2.5.3
+
+=== {enh}
+
+* https://issues.couchbase.com/browse/CBL-142[*CBL-142*] Added native support for x86_64.
+
+=== {fixed}
+
+* https://issues.couchbase.com/browse/CBL-176[*CBL-176*] Reduce replication timeouts.
+* https://issues.couchbase.com/browse/CBL-110[*CBL-110*] Delta sync on top of a deletion caused data discrepancy between Couchbase Sync Gateway and Couchbase Lite.
+* https://issues.couchbase.com/browse/CBL-131[*CBL-131*] Continuous replicator does not back off retries.
+
+== Release 2.1
 
 === {enh}
 * {url-issues-java}/1678[*#1678*] Support Peer-to-Peer replication through MessageEndpoint API (EE Feature)
@@ -237,11 +229,16 @@ close
 === {ke}
 * {url-issues-java}/1743[*#1743*] HTTP Proxy Support
 
-== 2.0.2
+== 2.1.2
 
-* Support for Log redaction of sensitive information when <<Logging,logging is enabled>>.
+=== {fixed}
+* {url-issues-java}/1760[*#1760*] Warning about CBLWebSocket failed to shutdown the web socket
+* {url-issues-java}/1761[*#1761*] Could not find class `android.system.ErrnoException' error
+* {url-issues-java}/1762[*#1762*] Potential memory leak in replicator
+* {url-issues-java}/1763[*#1763*] Log from replicator’s native code shouldn’t be shown unless the logging is enabled
+* {url-issues-java}/1766[*#1766*] Auth Header from BasicAuthenticator not getting sent if SG Guest user is enabled
 
-== 2.0.0
+== Release 2.0
 
 === {enh}
 * {url-issues-java}/1264[*#1264*] 2.0 migration from Forest back to SQlite
@@ -289,3 +286,8 @@ As a workaround, code shrinking can be disabled for Couchbase Lite classes and i
 -keep class com.couchbase.litecore.*=== { *; }
 -keep class com.couchbase.lite.*=== { *; }
 ----
+
+== 2.0.2
+
+* Support for Log redaction of sensitive information when <<Logging,logging is enabled>>.
+
