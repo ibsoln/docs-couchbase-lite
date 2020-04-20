@@ -1,0 +1,179 @@
+= Release Notes Archive (C# .Net)
+include::partial$_attributes-local.adoc[]
+:this-version: {version}
+:xref-pfx: {xref-pfx-cbl}:
+:pg-csharp: csharp.adoc
+:xref-pg-csharp: {pg-csharp}
+:xref-pg-csharp--release-notes: {xref-pfx}{pg-csharp}#release-notes[Release Notes for {this-version}]
+
+For current release notes see: {xref-pg-csharp--release-notes}
+
+
+== Release 2.7
+
+New at this release is the Java Platform, which enables development of Java apps on any platform that supports the JVM model
+
+xref::index.adoc[{more}]
+
+*{fixed}*
+
+- https://issues.couchbase.com/browse/CBL-456[*CBL-456*] Deprecated Database.setLogLevel is not logging
+- https://issues.couchbase.com/browse/CBL-428[*CBL-428*] .NET Framework build does not load LiteCore properly
+- https://issues.couchbase.com/browse/CBL-326[*CBL-326*] Replicator stopped with websocket exception while bring network down
+
+=== {ke}
+
+- https://issues.couchbase.com/browse/CBL-216[*CBL-216*] Ordering null values inconsistent with N1QL expectations
+- https://issues.couchbase.com/browse/CBL-95[*CBL-95*] Pending conflicts could be resolved by a wrong replicator
+- https://issues.couchbase.com/browse/CBL-49[*CBL-49*] Need a way to distinguish boolean types
+
+
+== Release 2.6
+
+*{nftr}*
+
+* Custom Conflict Resolution
++
+xref:index.adoc[{more}]
+
+*{enh}*
+
+* Expose the Document Revision ID: the `revisionID` property on a `Document` instance now returns the current revision identifier.
+
+*OS API Support*
+
+Support for Android API 19, API 20 and API 21 on Xamarin is deprecated in this release.
+Support will be removed within two (non-maintenance) releases following the deprecation announcement.
+
+*{fixed}*
+
+* https://issues.couchbase.com/browse/CBL-171[*CBL-171*] CBL replication never finishes for replication filtering when doc count is 1000
+* https://issues.couchbase.com/browse/CBL-136[*CBL-136*] Replication is not replicating all updates with delta-sync enabled
+* https://issues.couchbase.com/browse/CBL-110[*CBL-110*] delta sync on top of a deletion caused data discrepancy between SG and CBL
+* https://issues.couchbase.com/browse/CBL-106[*CBL-106*] Replicator C++ exception: "properties excessively large"
+* https://issues.couchbase.com/browse/CBL-104[*CBL-104*] Replicating two documents with identical blob could cause POSIX error
+* https://issues.couchbase.com/browse/CBL-86[*CBL-86*] Race condition on SharedKeys causes silent error
+* https://issues.couchbase.com/browse/CBL-47[*CBL-47*] Intermittent SQLITE_MISUSE error during normal testing
+* https://issues.couchbase.com/browse/CBL-45[*CBL-45*] LiteCore time out issues stray busy callback
+* https://issues.couchbase.com/browse/CBL-38[*CBL-38*] null pointer dereference
+* https://issues.couchbase.com/browse/CBL-2[*CBL-2*] [sg-ssl enabled] cbl replicator does not resume after SG restart
+
+*{ke}*
+
+- https://issues.couchbase.com/browse/CBL-95[*CBL-95*] Pending conflicts could be resolved by a wrong replicator
+- https://issues.couchbase.com/browse/CBL-49[*CBL-49*] Need a way to distinguish boolean types
+
+== 2.5.0
+
+*{nftr}*
+
+* Delta Sync
+* Replication Filters
+* Continuous Logging
+* Predictive Query
++
+xref:index.adoc[{more}]
+
+*{enh}*
+
+* {url-issues-net}/999[*#999*]
+Move embedded credentials check from Replicator to URLEndpoint
+* {url-issues-net}/1068[*#1068*]
+Replication Filters
+* {url-issues-net}/1069[*#1069*]
+Predictive Query
+* {url-issues-net}/1114[*#1114*]
+Remove log rotation change batching
+* {url-issues-net}/1119[*#1119*]
+Write a log warning if file logging is disabled
+
+{fixed}
+
+* {url-issues-net}/1120[*#1120*]
+[CBSE-6309] Xamarin Android BlobWriteStream writing extra bytes
+* {url-issues-net}/1125[*#1125*]
+UWP proxy implementation violates WACK
+* {url-issues-net}/1135[*#1135*]
+P2P Pull replication is not able to filter documents with attachements
+properly
+* {url-issues-net}/1137[*#1137*]
+Revisions are missing on sync-gateway with large number of docs
+
+*{ke}*
+
+* {url-issues-net}/1140[*#1140*]
+[xamarin-ios][sg-ssl enabled] cbl replicator does not resume after SG
+restart
+
+== 2.5.2
+
+{fixed}
+
+* https://github.com/couchbase/couchbase-lite-core/issues/776[*#776*] `c4db_endTransaction` sometimes results in invalid memory access.
+* https://github.com/couchbase/couchbase-lite-core/issues/787[*#787*] Fleece error when querying array property.
+* https://github.com/couchbase/couchbase-lite-core/issues/792[*#792*] DBWorker crashes in Fleece Encoder (writePointer).
+
+== 2.5.3
+
+{fixed}
+
+* https://issues.couchbase.com/browse/CBL-176[*CBL-176*] Reduce replication timeouts.
+* https://issues.couchbase.com/browse/CBL-110[*CBL-110*] Delta sync on top of a deletion caused data discrepancy between Couchbase Sync Gateway and Couchbase Lite.
+
+== Release 2.1
+
+.{enh}
+* {url-issues-net}/1005[*#1005*] Add Encryption to EE
+* {url-issues-net}/1006[*#1006*] Add P2P
+
+.{fixed}
+* {url-issues-net}/1000[*#1000*] 2.0. Xamarin. Replicator fails to get out of Connecting State when connecting to unreachable host
+* {url-issues-net}/1010[*#1010*] [Xamarin][db023] continuous synchronization stopping after a while
+* {url-issues-net}/1011[*#1011*] Xamarin Android cannot recover from loss of connection to LAN address
+* {url-issues-net}/1012[*#1012*] Reusing the same collation in a query will cause all of them to be affected by the last modification
+* {url-issues-net}/1020[*#1020*] Closing/Disposing database throws Exception because of unfinished replicators
+* {url-issues-net}/1048[*#1048*] Couchbase Lite parsing nested value as UInt64 then throwing exception on update.
+* {url-issues-net}/1051[*#1051*] Heap corruption/Access Violation with unreachable replication endpoint on Windows x86
+
+.{ke}
+* {url-issues-net}/1040[*#1040*] HTTP Proxy Support
+
+== 2.1.1
+
+* {url-issues-net}/1058[*#1058*] Xamarin iOS missing PInvokeCallback attributes on listener callbacks
+
+== 2.1.2
+
+.{fixed}
+* {url-issues-net}/1057[*#1057*] Xamarin Android can’t detect airplane mode correctly
+* {url-issues-net}/1066[*#1066*] Authorization headers should be sent preemptively
+
+
+== Release 2.0
+
+.{enh}
+
+* {url-issues-net}/647[*#647*] Equivalent to full text search
+* {url-issues-net}/964[*#964*] AddLoggerProvider
+
+.{fixed}
+
+* {url-issues-net}/884[*#884*] Replication with DNS endpoint failing on (at least) Mac
+* {url-issues-net}/894[*#894*] Crash on iOS Simulator 9.x on Query.Run() execution
+* {url-issues-net}/957[*#957*] SG doesn't have any docs in its cache after replication
+* {url-issues-net}/966[*#966*] Incorrect callback type(?) leads to AOT compilation failure for Xamarin
+* {url-issues-net}/994[*#994*] 2.0db023 SetBinaryLogDirectory(string) path ignored, still written to AppContext.BaseDirectory
+
+.{ke}
+
+* {url-issues-net}/1002[*#1002*] System proxy is not being used for replication
+* {url-issues-net}/1012[*#1012*] Reusing the same collation in a query will cause all of them to be affected by the last modification
+
+== 2.0.2
+
+* Support for Log redaction of sensitive information when <<logging,logging is enabled>>.
+
+== 2.0.3
+
+* Support for Log redaction of sensitive information when <<logging,logging is enabled>>.
+
