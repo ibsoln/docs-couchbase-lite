@@ -1,6 +1,8 @@
 = C#
+
 include::partial$mobAttrCBL.adoc[]
 include::partial$_attributes-local.adoc[]
+
 :cbl-log-version: {version-full}
 :idprefix:
 :idseparator: -
