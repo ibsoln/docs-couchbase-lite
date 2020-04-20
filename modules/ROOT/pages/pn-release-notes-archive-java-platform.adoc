@@ -2,6 +2,16 @@
 include::partial$_attributes-local.adoc[]
 
 
+// :url-issues-java: https://github.com/couchbase/couchbase-lite-java/issues
+:this-version: {version}
+:this-maint-vsn: {vrsnMaintRelFull}
+:xref-pfx: {xref-pfx-cbl}:
+:pg-java: java-platform.adoc
+:pg-java--release-notes: {pg-java}#release-notes
+:xref-pg-java--release-notes: {xref-pfx}{pg-java--release-notes}[Release Notes for {this-version}]
+
+For current release notes see: {xref-pg-java--release-notes}
+
 
 == Release 2.7
 
