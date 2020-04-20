@@ -1,6 +1,6 @@
 = Release Notes Archive (Swift)
 include::partial$_attributes-local.adoc[]
-
+:this-version: {version}
 :xref-pfx: {xref-pfx-cbl}:
 :pg-swift: swift.adoc
 :xref-pg-swift: {pg-swift}
