@@ -1092,6 +1092,7 @@ The Couchbase Lite API is thread safe except for calls to mutable objects: `Muta
 include::partial$symbolicate-iOS.adoc[leveloffset=2]
 
 == Release Notes
+
 These release notes cover _Release {this-version}_ and any subsequent _{this-version}.x_ maintenance releases.
 
 <<2-7, Release Notes for Release {this-version}>> | <<support-notices, Current Support Notices>> | {xref-pg-relnote-archive}

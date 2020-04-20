@@ -4,7 +4,7 @@ include::partial$_attributes-local.adoc[]
 :xref-pfx: {xref-pfx-cbl}:
 :pg-swift: swift.adoc
 :xref-pg-swift: {pg-swift}
-:xref-pg-swift--release-notes: {xref-pfx-cbl}{pg-swift}#release-notes[Release Notes for {this-version}]
+:xref-pg-swift--release-notes: {xref-pfx}{pg-swift}#release-notes[Release Notes for {this-version}]
 
 For current release notes see: {xref-pg-swift--release-notes}
 
