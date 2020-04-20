@@ -5,6 +5,8 @@ include::partial$_attributes-local.adoc[]
 :pg-csharp: csharp.adoc
 :xref-pg-csharp: {pg-csharp}
 :xref-pg-csharp--release-notes: {xref-pfx}{pg-csharp}#release-notes[Release Notes for {this-version}]
+:url-issues-net: https://github.com/couchbase/couchbase-lite-net/issues
+:url-api-references: http://docs.couchbase.com/mobile/{version-full}/couchbase-lite-net
 
 For current release notes see: {xref-pg-csharp--release-notes}
 
