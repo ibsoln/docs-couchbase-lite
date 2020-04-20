@@ -1,9 +1,0 @@
-= Release Notes Archive (Java -- Android)
-include::partial$_attributes-local.adoc[]
-:this-version: {version}
-:xref-pfx: {xref-pfx-cbl}:
-:pg-java-android: java-android.adoc
-:xref-pg-java-android: {pg-java-android}
-:xref-pg-java-android--release-notes: {xref-pfx}{pg-java-android}#release-notes[Release Notes for {this-version}]
-
-For current release notes see: {xref-pg-java-android--release-notes}
