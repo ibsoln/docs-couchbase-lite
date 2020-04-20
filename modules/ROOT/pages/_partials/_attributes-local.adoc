@@ -48,6 +48,8 @@
 :snippet-java-jvm: example$java/src/com/couchbase/code_snippets/Examples.java
 :url-cb-website: https://www.couchbase.com
 :url-issues-java: TBA
+:url-issues-ios: https://github.com/couchbase/couchbase-lite-ios/issues
+
 // :url-api-references: Now defined locally in pages
 :url-cb-downloads-all: {url-cb-website}/downloads
 :url-cb-downloads-mobile: {url-cb-downloads-all}?family=mobile
