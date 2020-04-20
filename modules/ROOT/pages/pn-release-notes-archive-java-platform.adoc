@@ -1,0 +1,20 @@
+= Release Notes Archive (Java)
+include::partial$_attributes-local.adoc[]
+
+
+
+== Release 2.7
+
+*{nftr}*
+
+New at this release is the Java Platform, which enables development of Java apps on any platform that supports the JVM model
+
+xref::index.adoc[{more}]
+
+=== {ke}
+
+{natt}
+
+=== {fixed}
+
+{natt}

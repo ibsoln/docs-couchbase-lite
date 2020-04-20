@@ -1,5 +1,6 @@
 = Couchbase Lite Java Framework
 include::partial$mobAttrCBL.adoc[]
+include::partial$_attributes-local.adoc[]
 :JP: Java
 :Android: Java (android)
 :cblJP: {product} {JP}
@@ -14,6 +15,12 @@ include::partial$mobAttrCBL.adoc[]
 :sgGetStartedDoc-createRBACuser: {sgGetStartedDoc}#creating-an-rbac-user
 :sgGetStartedDoc-createBucket: {sgGetStartedDoc}#creating-a-bucket
 :tabs:
+
+:this-version: {version}
+:this-maint-vsn: {vrsnMaintRelFull}
+:xref-pfx: {xref-pfx-cbl}:
+:pg-relnote-archive: pn-release-notes-archive-java-platform.adoc
+:xref-pg-relnote-archive: {xref-pfx}{pg-relnote-archive}[Release Notes Archive]
 
 == GET STARTED
 
@@ -1677,22 +1684,48 @@ NOTE: For linux platform see also -- <<Additional Steps for Linux>>
 Back to <<Preparing Your Build Environment>>
 
 
-== RELEASE NOTES
+== Release Notes
 
-=== .
+These release notes cover _Release {this-version}_ and any subsequent _{this-version}.x_ maintenance releases.
 
-== 2.7.0
+<<2-7, Release Notes for Release {this-version}>> | <<support-notices, Current Support Notices>> | {xref-pg-relnote-archive}
 
-*{nftr}*
+=== 2.7.1
 
-New at this release is the Java Platform, which enables development of Java apps on any platform that supports the JVM model
+Note: Support notices remain in force for this maintenance release -- see <<support-notices>> below.
+
+==== {fixed}
+
+This maintenance release fixes the following issues:
+* https://issues.couchbase.com/browse/CBL-789[*CBL-789*] Crash when accessing `connection->name()`
+* https://issues.couchbase.com/browse/CBL-701[*CBL-701*] Pending Document IDs not working correctly
+* https://issues.couchbase.com/browse/CBL-698[*CBL-698*] Wrong query evaluation using expression values instead of expression properties
+* https://issues.couchbase.com/browse/CBL-657[*CBL-657*] LIKE and CONTAINS are much slower in 2.7
+* https://issues.couchbase.com/browse/CBL-581[*CBL-581*] Native memory leak when save document repeatedly​
+* https://issues.couchbase.com/browse/CBL-579[*CBL-579*] SDK fails for opening Database files over 2GB
+
+
+==== {ke}
+
+The following issues document known errors:
+* https://issues.couchbase.com/browse/CBL-647[*CBL-637*] Java Console app doesn't exit
+* https://issues.couchbase.com/browse/CBL-370[*CBL-370*] 370	Broken API, Kotlin: Unable to import ReplicatorType
+* https://issues.couchbase.com/browse/CBL-216[*CBL-216*] Ordering null values inconsistent with N1QL expectations
+* https://issues.couchbase.com/browse/CBL-95[*CBL-95*] Pending conflicts could be resolved by a wrong replicator
+* https://issues.couchbase.com/browse/CBL-49[*CBL-49*] Need a way to distinguish boolean types
+
+=== {this-version}
+
+==== {nftr} at {this-version}
+
+New at release {this-version} is the Java Platform, which enables development of Java apps on any platform that supports the JVM model
 
 xref::index.adoc[{more}]
 
-*{ke}*
+==== {ke}
 
 {natt}
 
-*{fixed}*
+==== {fixed}
 
 {natt}
