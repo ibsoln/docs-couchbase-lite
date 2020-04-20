@@ -1,0 +1,9 @@
+= Release Notes Archive (Java)
+include::partial$_attributes-local.adoc[]
+:this-version: {version}
+:xref-pfx: {xref-pfx-cbl}:
+:pg-java-platform: java-platform.adoc
+:xref-pg-java-platform: {pg-java-platform}
+:xref-pg-java-platform--release-notes: {xref-pfx}{pg-java-platform}#release-notes[Release Notes for {this-version}]
+
+For current release notes see: {xref-pg-java-platform--release-notes}
