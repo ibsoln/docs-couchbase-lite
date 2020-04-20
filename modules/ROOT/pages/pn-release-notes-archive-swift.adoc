@@ -1,6 +1,13 @@
 = Release Notes Archive (Swift)
 include::partial$_attributes-local.adoc[]
 
+:xref-pfx: {xref-pfx-cbl}:
+:pg-swift: swift.adoc
+:xref-pg-swift: {pg-swift}
+:xref-pg-swift--release-notes: {xref-pfx-cbl}{pg-swift}#release-notes[Release Notes for {this-version}]
+
+For current release notes see: {xref-pg-swift--release-notes}
+
 == Release 2.7
 
 *{nftr}*
@@ -238,6 +245,7 @@ Console Log Crash when there is percent character in the log message
 .{fixed}
 * https://github.com/couchbase/couchbase-lite-core/issues/714[*#714*] docIDs starting with `_design/` cause the upgrade to 1.x to fail
 * https://github.com/couchbase/couchbase-lite-core/issues/712[*#712*] fleece::Scope throws an exception on a background thread while updating a live query
+
 == 2.1.6
 
 * This release is compiled with Xcode 10.2.
