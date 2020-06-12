@@ -3,8 +3,10 @@
 
 .How-to ...
 
+* Write peer-to-peer listener (websockets)
+** Write {xref-cbl-pg-dbo-p2psync-websocket-using-passive} listener
+** Write {xref-cbl-pg-dbo-p2psync-websocket-using-active} listener
 * Write {xref-cbl-pg-p2psync-custom} listener
-* Write {xref-cbl-pg-p2psync-websocket} listener
 
 .Learn more ...
 
