@@ -65,14 +65,11 @@ You set the required authentication method in the configuration using `ListenerP
 
 [{tabs}]
 ====
-Basic -- User Password::
+
+Username/Password::
 +
 --
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-auth-basic-pwd"]
-----
---
+This snippet uses a closure to verify if the given credentials match any on a stored allow-list.
 
 TLS -- Self-signed::
 +
@@ -83,9 +80,10 @@ include::{snippet-p2psync-ws}[tags="listener-auth-tls-self-signed"]
 ----
 --
 
-Cert Auth (Roots)::
+Cert (root)::
 +
 --
+This snippet seeds the Certificate Authenticator with a list of the root certificates to trust when verifying client.
 
 [source, {source-language}]
 ----
@@ -93,15 +91,17 @@ include::{snippet-p2psync-ws}[tags="listener-auth-tls-CCA-Root-full", indent=0]
 ----
 --
 
-Cert Auth::
+Certs (auth)::
 +
 --
+This snippet seeds the Certificate Authenticator with a closure to verify client certificates.
 
 [source, {source-language}]
 ----
 include::{snippet-p2psync-ws}[tags="listener-auth-tls-ca-cert", indent=0]
 ----
 --
+====
 
 // Anonymous::
 // +
