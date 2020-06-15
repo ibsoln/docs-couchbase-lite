@@ -44,18 +44,11 @@ This content provides sample code covering the implementation of peer-to-peer sy
 For the overall workflow see: *add link here*
 
 == Discovery
+Optional, but typical step.
 
-Pior to initiating the listener you must have executed the peer discovery phase.
+Pior to initiating the listener you may execute the peer discovery phase.
 For the passive peer this involves advertising the device using, for example _Bonjour_, and waiting for an invite.
 The connection is established once the passive peer has authenticated and accepted an active peer's invitation.
-
-Basic Authentication is supported using username/password, however developers are strongly encouraged to enable TLS while using basic auth.
-
-.Key Steps
-* Initialize and Start the Listener
-** Configure  authentication mode and details
-* Stop the Listener
-
 
 //[#pass-initialize]
 //====
@@ -67,8 +60,49 @@ Basic Authentication is supported using username/password, however developers ar
 //====
 
 
+== Configure Listener
+
+
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-pv-cfg-listener", indent=0]
+----
+
+
+== Configure TLS Authentication
+
+
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-pv-cfg-tls-auth", indent=0]
+----
+
+== Configure Client Authentication
+
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-pv-cfg-client-auth", indent=0]
+----
+
+
+== Configure Delta Sync
+
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-pv-cfg-delta-sync", indent=0]
+----
+
+
+== Configure Conflict Resolver
+
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-pv-cfg-conflict", indent=0]
+----
+
 //[#pass-start]
-== Start Listening
+== Start Listener
+
 
 The first step after connection establishment on the passive peer is to initialize and start a new _WebsocketEndpointListener_, passing it the remote peer and database contexts.
 
@@ -77,7 +111,7 @@ This tells the listener to accept incoming data from that peer.
 // include::{snippet-p2psync-ws}[tags="initWebsocketsListener"]
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-start-func", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-pv-start-listener", indent=0]
 ----
 //====
 
@@ -88,7 +122,7 @@ At this point the _active peer_ will initiate a replication. When the replicatio
 
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-status-check-full", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-pv-status-check", indent=0]
 ----
 
 == Disconnection
@@ -98,7 +132,7 @@ Stop the Listener on receipt of the disconnect.
 // include::{snippet-p2psync-ws}[tags="stopWebsocketsListener"]config
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-stop"]
+include::{snippet-p2psync-ws}[tags="listener-pv-stop-listener"]
 ----
 
 
