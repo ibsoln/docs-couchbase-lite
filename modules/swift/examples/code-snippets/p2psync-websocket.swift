@@ -706,5 +706,31 @@ listenerConfig.authenticator = ListenerCertificateAuthenticator.init {
     }
     return false
 }
-// end::listener-config-client-auth-self-signed[]
+// end::passive-p2pWebsocketsListener[]
+
+// tag::p2p-ws-api-urlendpointlistener[]
+public class URLEndpointListener {
+    // Properties // <1>
+    public let config: URLEndpointListenerConfiguration
+    public let port UInt16?
+    public let tlsIdentity: TLSIdentity?
+    public let urls: Array<URL>?
+    public let status: ConnectionStatus?
+    // Constructors <2>
+    public init(config: URLEndpointListenerConfiguration)
+    // Methods <3>
+    public func start() throws
+    public func stop()
+}
+// end::p2p-ws-api-urlendpointlistener[]
+
+
+// tag::p2p-ws-api-urlendpointlistener-constructor[]
+let config = URLEndpointListenerConfiguration.init(database: self.oDB)
+config.port = tls ? wssPort : wsPort
+config.disableTLS = !tls
+config.authenticator = auth
+self.listener = URLEndpointListener.init(config: config) // <1>
+// end::p2p-ws-api-urlendpointlistener-constructor[]
+
 
