@@ -1,0 +1,146 @@
+//= Using Peer-to-Peer Sync (websockets)
+//:page-layout: article
+//:page-status: {release-status-cbl} -- {release-comments-cbl}
+//:page-edition: Enterprise
+//:page-role:
+//
+//include::partial$_std-cbl-hdr-{param-module}.adoc[]
+//
+// BEGIN::Local page attributes
+//
+//:url-issues-java: {url-github-cbl}{module}/issues
+//:ziputils: {snippets-pfx--android}/code_snippets/ZipUtils.java
+//
+
+[abstract]
+--
+{description}
+{param-abstract}
+--
+
+ifndef::release-status-cbl[:release-status-cbl!:]
+ifeval::["{release-status-cbl}" == "gamma"]
+[.pane__frame--orange]
+.Author's Notes
+--
+
+DOC-6340-H2-P2P: New topic - Implementing P2P Sync
+https://issues.couchbase.com/browse/DOC-6340
+
+This is the how-to for P2P snc using websockets
+--
+endif::[]
+
+== Overview
+
+ifeval::["{page-edition}"=="{enterprise}"]
+.Enterprise Edition only
+IMPORTANT: Peer-to-peer sync is an {url-enterprise} feature.
+You must purchase the Enterprise License which includes official {url-support-policy} to use it in production (also see the {url-license-and-supp-faq}).
+endif::[]
+
+This content provides sample code covering the implementation of peer-to-peer sync over websockets. Specifically it covers the implementation of a passive peer listener, that will accept and apply database changes replicated by a connected active peer.
+
+For the overall workflow see: *add link here*
+
+== Discovery
+
+Pior to initiating the listener you must have executed the peer discovery phase.
+For the passive peer this involves advertising the device using, for example _Bonjour_, and waiting for an invite.
+The connection is established once the passive peer has authenticated and accepted an active peer's invitation.
+
+Basic Authentication is supported using username/password, however developers are strongly encouraged to enable TLS while using basic auth.
+
+.Key Steps
+* Initialize and Start the Listener
+** Configure  authentication mode and details
+* Stop the Listener
+
+
+//[#pass-initialize]
+//====
+// include::{snippet-p2psync-ws}[tags="startWebsocketsListener"]
+//[source, {source-language}]
+//----
+//include::{snippet-p2psync-ws}[tags="listener-config"]
+//----
+//====
+
+
+//[#pass-start]
+== Start Listening
+
+The first step after connection establishment on the passive peer is to initialize and start a new _WebsocketEndpointListener_, passing it the remote peer and database contexts.
+
+This tells the listener to accept incoming data from that peer.
+//====
+// include::{snippet-p2psync-ws}[tags="initWebsocketsListener"]
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-start-func", indent=0]
+----
+//====
+
+At this point the _active peer_ will initiate a replication. When the replication is complete, the active peer will
+ initiate disconnection.
+
+== Checking the Status
+
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-status-check-full", indent=0]
+----
+
+== Disconnection
+
+Stop the Listener on receipt of the disconnect.
+//====
+// include::{snippet-p2psync-ws}[tags="stopWebsocketsListener"]config
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-stop"]
+----
+
+
+== Using Authentication
+
+[{tabs}]
+====
+Basic -- User/Password::
++
+--
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-auth-basic-pwd"]
+----
+--
+
+TLS -- Self-signed::
++
+--
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-auth-basic-self-signed"]
+----
+--
+
+TLS - Cert Auth (Roots)::
++
+--
+
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-auth-tls-CCA-Root-full", indent=0]
+----
+--
+
+TLS -- Cert Auth::
++
+--
+
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-auth-tls-ca-cert", indent=0]
+----
+--
+====
