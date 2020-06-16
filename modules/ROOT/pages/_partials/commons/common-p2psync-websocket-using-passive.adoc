@@ -41,9 +41,7 @@ endif::[]
 
 This content provides sample code covering the implementation of peer-to-peer sync over websockets. Specifically it covers the implementation of a passive peer listener, that will accept and apply database changes replicated by a connected active peer.
 
-For the overall workflow see: *add link here*
-
-== Discovery
+=== Discovery
 Optional, but typical step.
 
 Pior to initiating the listener you may execute the peer discovery phase.
@@ -59,18 +57,74 @@ The connection is established once the passive peer has authenticated and accept
 //----
 //====
 
+=== Initialization
+
+[#simple-listener-initialization]
+.Simple Listener Initialization
+====
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-initialize", indent=0]
+----
+
+<1> <<configure-listener>>
+<2> <<configure-tls-authentication>>
+<3> <<configure-client-authentication>>
+<4> <<configure-delta-sync>>
+<5> Initialize the listener using the configuration settings
+<6> Start the listener
+<7> <<conflict-resolution>>
+====
 
 == Configure Listener
 
+Use a combination of the two `URLEndointListenerConfiguration` constructors (below) to set the <<Database>>, <<Port>> and <<network-interface,IP>> to be used.
 
+* `public init(database: Database)`
+* `init(config:)`
+
+
+=== Database
+API Reference: {url-api-reference-urlendpointconfiguration-initdb}
+
+Using the `init(database)` constructor, as in <<simple-listener-initialization>> this example, will initialize the configuration paramaters with details of the local database endpoint.
+All other configuration values will take their default setting.
+
+NOTE: Database is read-only, and can only be set using this constructor.
+
+=== Port
+
+Use this configuration parameter to specify the port that the listener will listen to.
+If this is null or zero, the port is auto-assigned.
+
+Default::
+Null or zero depending on platform.
+Example::
++
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-pv-cfg-listener", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-config-port", indent=0]
 ----
+API::
+{url-api-reference-urlendpointconfiguration-port}
+
+=== Network Interface
+
+Use this configuration parameter to specify the network interface the listener is to listen on.
+Specify either an IP Address or network interface name such as `en0`
+
+Default:: nil -- the listener will listen to all network interfaces
+Example::
++
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-config-netw-iface", indent=0]
+----
+API::
+* {url-api-reference-urlendpointconfiguration-netwk-iface}
 
 
 == Configure TLS Authentication
-
 
 [source, {source-language}]
 ----
@@ -95,14 +149,16 @@ include::{snippet-p2psync-ws}[tags="listener-pv-cfg-delta-sync", indent=0]
 
 == Configure Conflict Resolver
 
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-pv-cfg-conflict", indent=0]
-----
+The listener returns a 409 response on detecting a conflict.
+All conflicts are reolved on the active peer, which supports both  automatic and custom conflict resolution.
+
+// [source, {source-language}]
+// ----
+// include::{snippet-p2psync-ws}[tags="listener-pv-cfg-conflict", indent=0]
+// ----
 
 //[#pass-start]
 == Start Listener
-
 
 The first step after connection establishment on the passive peer is to initialize and start a new _WebsocketEndpointListener_, passing it the remote peer and database contexts.
 

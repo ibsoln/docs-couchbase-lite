@@ -595,3 +595,60 @@ fileprivate func registerForEventsForReplicator(_ replicator:Replicator?,
   })
   return pushPullReplListenerForUserDb
 // end::replicator-register-for-events[]
+
+
+
+
+//
+// Stuff I adapted
+//
+
+
+import Foundation
+import CouchbaseLiteSwift
+import MultipeerConnectivity
+
+class myclass {
+// tag::listener-initialize[]
+    fileprivate  var _allowlistedUsers:[[String:String]] = []
+    fileprivate var _websocketListener:URLEndpointListener?
+    fileprivate var _userDb:Database?
+        // Include websockets listener initializer code
+        let db=_userDb!
+
+        let listenerConfig = URLEndpointListenerConfiguration(database: db) // <1>
+
+        listenerConfig.disableTLS  = false // <2>
+        listenerConfig.tlsIdentity = nil //
+
+        listenerConfig.authenticator = ListenerPasswordAuthenticator.init { // <3>
+            (username, password) -> Bool in
+                if (self._allowlistedUsers.contains(
+                  ["password" : password, "name":username])) {
+                    return true
+                }
+            return false
+        }
+
+        listenerConfig.enableDeltaSync = true // <4>
+
+        _websocketListener = URLEndpointListener(config: listenerConfig) // <5>
+
+        guard let websocketListener = _websocketListener else {
+            throw ListDocError.WebsocketsListenerNotInitialized
+            }
+        try websocketListener.start() // <6> <7>
+
+        // end::listener-initialize
+    }
+}
+
+// tag::listener-config-port[]
+let wsPort: UInt16 = 4984
+let wssPort: UInt16 = 4985
+    listenerConfig.port = listener.config.disableTLS ? wsPort, wssPort
+// end::listener-config-port[]
+
+// tag::listener-config-netw-iface[]
+listenerConfig.networkInterface = "10.1.1.10"
+// end::listener-config-netw-iface[]
