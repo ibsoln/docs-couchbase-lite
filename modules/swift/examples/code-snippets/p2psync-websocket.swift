@@ -734,3 +734,56 @@ self.listener = URLEndpointListener.init(config: config) // <1>
 // end::p2p-ws-api-urlendpointlistener-constructor[]
 
 
+// Active Peer Connection Snippets
+
+// tag::p2p-act-rep-func[]
+
+Let user = //
+Let password = //
+Let cert:SecCertificate = //
+Let passivePeerEndpoint = //
+Let passivePeerPort = //
+Let passivePeerDb = //
+
+// tag::p2p-act-rep-initialize[]
+    var database: Database?
+    var replicator: Replicator? // <1>
+
+    let url = URL(string: "ws://"+ passivePeerEndpoint + ":" + passivePeerPort +"/" + passivePeerDb)!
+    // <2> <3>
+    let targetEndpoint = URLEndpoint(url: url)
+
+    let config = ReplicatorConfiguration(database: database!, target: targetEndpoint)  // <4>
+// end::p2p-act-rep-initialize[]
+
+// tag::p2p-act-rep-config[]
+    config.replicatorType = .pushandpull
+    config.continuous = true
+    config.serverCertificateVerificationMode = .selfSignedCert // <5>
+// end::p2p-act-rep-config[]
+
+// tag::p2p-act-rep-auth[]
+//  Set Authentication Mode
+    let authenticator = BasicAuthenticator(username: user, password: password)
+    config.authenticator = authenticator
+
+    replicator = Replicator.init( config: config)
+// end::tag::p2p-act-rep-auth[]
+
+// tag::p2p-act-rep-start[]
+    replicator?.start()
+// end::p2p-act-rep-start[]
+
+// tag::p2p-act-rep-add-change-listener[]
+    let pushPullListener = replicator?.addChangeListener { (change) in
+        if change.status.activity == .stopped {
+            print("Replication stopped")
+        }
+    }
+// tag::p2p-act-rep-status[]
+    print("Replicator is current;y ", replicator?.status.activity)
+// end::p2p-act-rep-status[]
+// end::p2p-act-rep-add-change-listener[]
+
+
+// end::p2p-act-rep-func[]
