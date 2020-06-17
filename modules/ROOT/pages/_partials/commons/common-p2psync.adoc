@@ -26,15 +26,9 @@ ifeval::["{release-status-cbl}" == "gamma"]
 
 DOC-6340-H2-P2P: New topic - Implementing P2P Sync
 https://issues.couchbase.com/browse/DOC-6340
-
 This is the main P2P content covering CBL P2P:
 
 Create a parent topic P2P Sync that will cover the generic sync concepts and then branch to cover new WebsocketEndpointListener topic, existing EndpointListener topic
-
---
-endif::[]
-
-== Overview
 
 .Enterprise Edition only
 IMPORTANT: Peer-to-peer sync is an https://www.couchbase.com/products/editions[Enterprise Edition] feature.
