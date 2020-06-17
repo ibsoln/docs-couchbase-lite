@@ -706,7 +706,7 @@ listenerConfig.authenticator = ListenerCertificateAuthenticator.init {
     }
     return false
 }
-// end::passive-p2pWebsocketsListener[]
+// end::listener-config-client-auth-self-signed[]
 
 // tag::p2p-ws-api-urlendpointlistener[]
 public class URLEndpointListener {
