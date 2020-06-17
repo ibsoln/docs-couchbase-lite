@@ -134,17 +134,15 @@
 //
 :url-api-references-pfx: http://docs.couchbase.com/mobile/{version-full}/couchbase-lite-
 
-:url-api-references-staging: https://ibsoln.github.io/stage/h2/mobile/{version-full}/couchbase-lite-
+// :url-api-references-staging: https://ibsoln.github.io/stage/h2/mobile/{version-full}/couchbase-lite-
+:url-api-references-staging: https://ibsoln.github.io/stage/api/mobile/{version-full}/couchbase-lite-
+
 
 //swift local
 
-ifeval::["{build-target}"=="origin"]
+ifeval::["{api-target}"=="origin"]
 //preparing staging or local site
-
 :url-api-references-pfx: {url-api-references-staging}
-
-//pfx {url-api-references-pfx}
-
 endif::[]
 
 //pfx after block {url-api-references-pfx}
