@@ -59,6 +59,8 @@ The connection is established once the passive peer has authenticated and accept
 
 === Initialization
 
+You will need to configure the listener. The example below shows a simple configuration. The subsequent sections show additional configuration options with examples. You do not need to provide configuration values for all properties, only those necessary to meet the requirements of your sync process.
+
 [#simple-listener-initialization]
 .Simple Listener Initialization
 ====
@@ -92,6 +94,14 @@ All other configuration values will take their default setting.
 
 NOTE: Database is read-only, and can only be set using this constructor.
 
+Default::
+none
+Example::
+See callout 1 in <<simple-listener-initialization>>
+API Reference::
+{url-api-reference-urlendpointconfiguration-initdb} |
+{url-api-reference-urlendpointconfiguration-database}
+
 === Port
 
 Use this configuration parameter to specify the port that the listener will listen to.
@@ -100,6 +110,7 @@ If this is null or zero, the port is auto-assigned.
 Default::
 Null or zero depending on platform.
 Example::
+{empty}
 +
 [source, {source-language}]
 ----
@@ -115,37 +126,96 @@ Specify either an IP Address or network interface name such as `en0`
 
 Default:: nil -- the listener will listen to all network interfaces
 Example::
+{empty}
 +
 [source, {source-language}]
 ----
 include::{snippet-p2psync-ws}[tags="listener-config-netw-iface", indent=0]
 ----
 API::
-* {url-api-reference-urlendpointconfiguration-netwk-iface}
+{url-api-reference-urlendpointconfiguration-netwk-iface}
 
 
 == Configure TLS Authentication
 
+=== Enable or Disable TLS
+
+include::{root-partials}p2p-api.adoc[tag=config-disable-tls]
+
+Default::
+include::{root-partials}p2p-api.adoc[tag=config-disable-tls-default]
+Example::
+{empty}
++
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-pv-cfg-tls-auth", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-config-disable-tls", indent=0]
 ----
+
+API::
+{url-api-reference-urlendpointconfiguration-disable-tls}
+
+=== Set TLS Identity
+
+include::{root-partials}p2p-api.adoc[tag=config-tls-id]
+
+Default::
+include::{root-partials}p2p-api.adoc[tag=config-tls-id-default]
+Example::
+{empty}
++
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-config-tls-id", indent=0]
+----
+API::
+{url-api-reference-urlendpointconfiguration-tls-id}
+
+Related-items::
+{url-api-reference-tlsidentity}
 
 == Configure Client Authentication
 
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-pv-cfg-client-auth", indent=0]
-----
+include::{root-partials}p2p-api.adoc[tag=config-auth]
 
+=== Authenticating with User Name and Password
+
+include::{root-partials}p2p-api.adoc[tag=ListenerPasswordAuthenticator]
+
+include::{root-partials}p2p-api.adoc[tag=ListenerPasswordAuthenticatorDelegate]
+
+=== Authenticating with Certificate
+
+include::{root-partials}p2p-api.adoc[tag=ListenerCertificateAuthenticator]
+
+==== Using Root CA Certicicate Chains
+
+include::{root-partials}p2p-api.adoc[tag=ListenerCertificateAuthenticator-root]
+
+==== Using Application Logic
+
+include::{root-partials}p2p-api.adoc[tag=ListenerCertificateAuthenticatorDelegate]
+
+Default::
+N/A
+Example::
+As shown above.
+API::
+{url-api-reference-urlendpointconfiguration-auth}
 
 == Configure Delta Sync
 
+Use the `enableDeltaSync` property to activate or deactivate delta sync mode.
+
+Default::
+False - that is delta sync is deactivated.
+Example::
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-pv-cfg-delta-sync", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-config-delta-sync", indent=0]
 ----
-
+API::
+{url-api-reference-urlendpointconfiguration-delta-sync}
 
 == Configure Conflict Resolver
 
@@ -160,77 +230,34 @@ All conflicts are reolved on the active peer, which supports both  automatic and
 //[#pass-start]
 == Start Listener
 
-The first step after connection establishment on the passive peer is to initialize and start a new _WebsocketEndpointListener_, passing it the remote peer and database contexts.
-
-This tells the listener to accept incoming data from that peer.
+Once you have configured the listener, you can start listening, ready to accept incoming data from active peers.
 //====
 // include::{snippet-p2psync-ws}[tags="initWebsocketsListener"]
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-pv-start-listener", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-start", indent=0]
 ----
 //====
 
-At this point the _active peer_ will initiate a replication. When the replication is complete, the active peer will
- initiate disconnection.
-
 == Checking the Status
+
+You can use the `status` property of the listener to check on the number of total and active connections.
+The object returned is of type `ConnecionStatus` and comprises:
+
+* ConnectionCount -- the total number of connections served by the listener
+* activeConnectionCount -- the number of active (BUSY) connections currently being served by the listener
 
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-pv-status-check", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-status-check", indent=0]
 ----
 
-== Disconnection
-
-Stop the Listener on receipt of the disconnect.
+== Stop the Listener
 //====
 // include::{snippet-p2psync-ws}[tags="stopWebsocketsListener"]config
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-pv-stop-listener"]
+include::{snippet-p2psync-ws}[tags="listener-stop"]
 ----
 
 
-== Using Authentication
-
-[{tabs}]
-====
-Basic -- User/Password::
-+
---
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-auth-basic-pwd"]
-----
---
-
-TLS -- Self-signed::
-+
---
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-auth-basic-self-signed"]
-----
---
-
-TLS - Cert Auth (Roots)::
-+
---
-
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-auth-tls-CCA-Root-full", indent=0]
-----
---
-
-TLS -- Cert Auth::
-+
---
-
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-auth-tls-ca-cert", indent=0]
-----
---
-====
