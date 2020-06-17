@@ -41,156 +41,126 @@ endif::[]
 
 This content provides sample code covering the implementation of peer-to-peer sync over websockets. Specifically it covers the implementation of an active peer listener, that will sync database changes with a connected passive peer.
 
-For the overall workflow see: *add link here*
+=== Discovery
+Optional, but typical step.
 
-== Discovery
-Pior to initiating the listener you must have executed the peer discovery phase.
+Prior to connecting with a listener you may execute a peer discovery phase.
+For the active peer this involves browsing-for and selecting the appropriate service using a zero-config protocol such as _Bonjour_.
 
-For the active peer discovery involves browsing for an available peer device using, for example _Bonjour_.
-Once found the active peer can initiate connection by inviting the passive peer to connect. Once the invite is accepted, the connection is established and the active peer can initiate replication (pull, push-pull or push) .
-
-.Key Steps
-* Discovery -- Identify and select remote peer (Bonjour)
-* Authentication -- Authenticate remote peer
-* Connection -- Initialize and Start the Replication
-* Replication -- Run the replication
-* Disconnection -- Stop replication and listener
+Alternatively if the listener is configured to use a known endpoint then the client can instead be pre-configured to connect to the listener.
 
 // image::ROOT:replication.svg[,800]
 
-== Authentication
-//====
 
-You set the required authentication method in the configuration using `ListenerPasswordAuthenticator` or `ListenerCertificateAuthenticator`.
+== Establish Connection
 
-[{tabs}]
+.Simple Replication to Listener
 ====
 
-Username/Password::
-+
---
-This snippet uses a closure to verify if the given credentials match any on a stored allow-list.
-
-TLS -- Self-signed::
-+
---
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-auth-tls-self-signed"]
+include::{snippet-p2psync-ws}[tags="p2p-act-rep-func"]
 ----
---
 
-Cert (root)::
-+
---
-This snippet seeds the Certificate Authenticator with a list of the root certificates to trust when verifying client.
-
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-auth-tls-CCA-Root-full", indent=0]
-----
---
-
-Certs (auth)::
-+
---
-This snippet seeds the Certificate Authenticator with a closure to verify client certificates.
-
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-auth-tls-ca-cert", indent=0]
-----
---
+<1> A replication is an asynchronous operation.
+Keep a reference to the `replicator` object by setting it as an instance property.
+<2> Construct the listener endpoint from its IP, Port and Database name and use the `URLEndpoint` to initialize a connection with the target.
+<3> The URL scheme for remote database URLs uses `ws:` (non-TLS) or `wss:` (SSL/TLS) prefixes.
+<4> Use the `ReplicationConfiguration` classes `init(database:target:)` constructor to initialze the replication configuration set.
+<5> The `ServerCertificateVerificationMode` can be: `caCert` (default) or `selfSignedCert`.
 ====
 
-// Anonymous::
-// +
-// --
-// [source, {source-language}, indent=0]
-// ----
-// include::{snippet-p2psync-ws}[tags="listener-auth-tls-anon", // indent=0]
-// ----
-// --
-====
 
-== Replication Config
+== Initialize Peer Connection
 
-=== Configure the Replication Target:
+Initialize the replication connection, providing the target (passive peer's) endpoint details, whether pre-configured or gathered during a discovery phase.
 
-** The database to be sync'd
-** The remote peer's endpoint using `URLEndPoint` and the passive peer's URL as returned fron the discovery phase. You need to append the target database name to the url.
+The required elements comprise:
+
+* The passive peer's URL as returned fron the discovery phase
+* The port the listener is listening on
+* The database to be sync'd
+You need to append the target database name to the url.
+
+You will also need any security credentials provided (for example, user name and password or Cert) for use in authentication.
 
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="replicator-start-func-config-init", indent=0]
+include::{snippet-p2psync-ws}[tags="p2p-act-rep-initialize"]
 ----
 
-=== Configure the Replication Mode:
+=== Configure
 
-** Set  `replicatorType` = pushAndPull
-** Sets `continuous` = true
+Configure the required replication options. For more on these see: {xref-cbl-pg-replicaton}.
 
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="replicator-start-func-config-more", indent=0]
+include::{snippet-p2psync-ws}[tags="p2p-act-rep-config"]
 ----
 
-=== Configure the Authentication Mode
+=== Authenticate
 
-** Set the authentication mode, for example 'self signed certificate'
-** Set the authenticator, for example `BasicAuthenticator` and provides the current users credentials
+Configure the authenticator to be used to authenticate the
+
+ion mode, for example 'self signed certificate'
+
+Authentication modes available include:
+
+* Basic
+* Client CA
+* Self-signed Cert
+
+Set the authenticator, for example `BasicAuthenticator` and provides the current users credentials
+
+This example shows basic authentication using user name and password:
 
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="replicator-start-func-config-auth", indent=0]
+include::{snippet-p2psync-ws}[tags="p2p-act-rep-auth"]
 ----
 
-== Initiate Replication
+=== Server Authentication
 
-=== Initialize the Replication
+Configure the server authentication mode using `ServerCertificateVerificationMode`.
 
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="replicator-start-func-repl-init", indent=0]
-----
+Valid options are:
+caCert::
+Verify by using trusted anchor CA certs or by using the configured pinned server certs (Default Mode).
+selfSignedCert::
+ Verify by accepting any and only self-signed certs. Any non-self-signed certs will be rejected.
 
-=== Monitor Replication Changes
+== Listen for Changes
 
 Add a change listener as a callback to the Replicator.
+
 You will then be asynchronously notified of state changes.
 Use this to monitor changes and to inform on sync progress, as shown below; this is an optional step.
 
-//====
+// Add change listener
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="replicator-register-for-events", indent=0]
+include::{snippet-p2psync-ws}[tags=p2p-act-rep-add-change-listener,indent=0]
 ----
 
-=== Start the Replicator
-In this snippet the functionality described <<registering-a-change-listener, above>> is delivered by the `registerForEventsForReplicator` function.
-
-//====
-
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="replicator-start-func-repl-start", indent=0]
-----
-
-== Disconnection
-
-[#act-stop]
-.Stop the Listener
-//====
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-stop", indent=0]
-----
-
-== Using TLSIdentity
-
-Use the `TLSIdentity` API to manage TLS identity data, including for example the X.509 certificate chain ued to configure TLS coomunication to the listener.
+Use the `replicator.status` property to monitor the status of a replication.
+That is, when it is actively transferring data and when it has stopped.
 
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="replicator-start-func-repl-start", indent=0]
+include::{snippet-p2psync-ws}[tags=p2p-act-rep-status,indent=0]
 ----
+
+The status struct comprises the following elements:
+
+* activity -- stopped, offline, connecting, idle or busy
+* progress
+** completed The total number of changes completed
+** total -- the total number of changes to be processed
+* error -- the current error, if any
+
+For more on replication status, see: {xref-cbl-pg-replication--status}
+
+API Reference::
+{url-api-property-replication-status}
+{url-api-method-add-change-listener}
+
