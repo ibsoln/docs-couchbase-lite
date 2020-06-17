@@ -274,27 +274,76 @@ When the port is null or zero, the listener will listen to an available port (au
 |Bool
 |No
 |No
-|Disable TLS communication. The default value is false which means that the TLS will be enabled by default. The URL scheme to connect to the listener will be wss://.
+a|
+// tag::config-disable-tls-full[]
+// tag::config-disable-tls[]
+TLS is enabled by default.
+Use `disableTLS` to disable TLS communication if necessary
 
-The developers can set up their TLS Identity (keys and certificate) by setting the tlsIdentity property. If the TLS Identity is not set, the listener will use an auto-generated anonymous self-signed identity. Even though the anonymous identity cannot be used to authenticate or verify trust on the client side, the communication channel will be encrypted which provide more security than using Non-TLS communication,
+This property works in conjunction with `TLSidentity`, which enables developers to define the key and-or certificate to be used.
 
-When setting the disableTLS to true, the TLS communication will be disabled and the tlsIdentity property if set will not be used. The URL scheme used for connecting to the listener will be ws:// instead of wss://.
+NOTE: If `disableTLS` is true, TLS communication is disabled and the `tlsIdentity` property is ignored.
+So, the URL scheme used to connect to the listener will be `ws://` NOT `wss://`.
+// end::config-disable-tls[]
 
+See also:: `TLSIdentity`
+
+Default:
+// tag::config-disable-tls-default[]
+False -- that is, TLS is enabled by default and the URL scheme to connect to the listener is `wss://`.
+// end::config-disable-tls-default[]
+API Reference:  {url-api-reference-urlendpointconfiguration-disable-tls}
+
+// end::config-disable-tls-full[]
 |tlsIdentity
 |TLSIdentity
 |Yes
 |No
-|TLS Identity used for TLS communication. When the tlsIdentity is specified, the TLS identity will be used.
+a|
 
-When the tls is enabled and the tlsIdentity is not specified, the listener will generate an anonymous self-signed identity when the listener starts.
+// tag::config-tls-id-full[]
+// tag::config-tls-id[]
+Use this configuration property to specify the TLS Identity used in TLS communication.
 
-Note: the auto-generated anonymous self-signed identity could be saved for future use so that the identity doesn’t need to be re-generated every time if the platform (e.g. Apple platforms) supports secure storage.
+If `TLSIdentity` is not set when TLS is enabled (default), the listener uses an auto-generated anonymous self-signed identity.
+This doesn't authenticate or verify trust (on the client side) but it does encrypt communication, giving a more secure option than Non-TLS communication.
+
+.Resuable Id
+[NOTE]
+ If the platform supports secure storage, you can save and re-use the auto-generated identity. This avoids the need to generate new identities every time.
+
+// end::config-tls-id[]
+
+Default:
+// tag::config-tls-id-default[]
+An auto-generated anonymous self-signed identity is used.
+// end::config-tls-id-default[]
+API Reference:  {url-api-reference-urlendpointconfiguration-tls-id}
+
+// end::config-tls-id-full[]
 
 |authenticator
 |ListenerAuthenticator
 |Yes
 | No
-|The authenticator is used by the listener to authenticate the request. The null value means there is no authentication. Default value is null.
+a|
+// tag::config-auth-full[]
+// tag::config-auth[]
+Use this configuration property to specify the authenticator to be used by the listener to authenticate the request.
+
+This should be set to one of the following:
+
+* ListenerPasswordAuthenticator
+* ListenerCertificateAuthenticator
+// end::config-auth[]
+
+Default:
+// tag::config-auth-default[]
+Null -- there is no authentication.
+// tag::config-auth-default[]
+API Reference:  {url-api-reference-urlendpointconfiguration-auth}
+
+// end::config-auth-full[]
 
 |readOnly
 |Bool
@@ -347,13 +396,16 @@ public protocol ListenerAuthenticator { }
 
 This opaque authenticator interface is implemented by the authenticator classes. Couchbase Lite supports two types of the authenticator:
 
-* <<ListenerPasswordAuthenticator>>
-* <<ListenerCertificateAuthenticator>>
+* ListenerPasswordAuthenticator
+* ListenerCertificateAuthenticator
 
 == ListenerPasswordAuthenticator
+// tag::ListenerPasswordAuthenticator[]
+Use the `ListenerPasswordAuthenticator` class to provide password type authentication such as the Basic Authentication.
 
-`ListenerPasswordAuthenticator` provides password type authentication such as the BASIC authentication.
-Actual authentication is done through a `ListenerPasswordAuthenticatorDelegate` object provided by the application code.
+The actual authentication logic is provided through a `ListenerPasswordAuthenticatorDelegate` object provided by the application code.
+Often in the form of a closure where the platform permits.
+// end::ListenerPasswordAuthenticator[]
 
 .Class Definition
 
@@ -387,11 +439,19 @@ init(delegate: ListenerPasswordAuthenticatorDelegate)
 |===
 
 == ListenerPasswordAuthenticatorDelegate
-The interface defines a method used for authenticating the username and password for the `ListenerPasswordAuthenticator`.
-The `ListenerPasswordAuthenticatorDelegate` interface should turn into a function or block if the platform allows.
-The type of the password argument could be SecureString for .NET or byte[] for Java.
 
-[source,{source-langauge}]
+// tag::ListenerPasswordAuthenticatorDelegate[]
+Use the `ListenerPasswordAuthenticatorDelegate` type to provide the application logic to be used to authenticate user credentials such as name and password.
+
+Your `ListenerPasswordAuthenticatorDelegate` should be a function or block (such as a closure expression) if the platform allows.
+
+The parameters are:
+
+* User Name -- type String
+* Password -- type will depend on the platform, for example SecureString for .NET or byte[] for Java.
+// end::ListenerPasswordAuthenticatorDelegate[]
+
+[source,{source-languge}]
 ----
 public protocol ListenerPasswordAuthenticatorDelegate {
     func authenticate(username: String, password: Data) -> Bool
@@ -399,24 +459,46 @@ public protocol ListenerPasswordAuthenticatorDelegate {
 ----
 
 == ListenerCertificateAuthenticator
-`ListenerCertificateAuthenticator` provides certificate authentication for authenticating clients.
+// tag::ListenerCertificateAuthenticator[]
+Use the `ListenerCertificateAuthenticator` class to authenticate  clients certificates.
+This requires you have TLS enabled.
+You can verify the certificate using either:
 
-[source,{source-langauge}]
-----
-public class ListenerCertificateAuthenticator: ListenerAuthenticator {
-   // Constructors
-    public init(rootCerts: [SecCertificate])
-    public init(delegate: ListenerCertificateAuthenticatorDelegate)
-}
-----
+* Root CA certificate chains -- any client cert signed by the given root CA cert chains is authenticated
+
+* Application logic -- an option used mainly for authenticating self-signed certificates
+// end::ListenerCertificateAuthenticator[]
+
+// [source,{source-language}]
+// ----
+// public class ListenerCertificateAuthenticator : _ListenerAuthenticator
+// public init(rootCerts: [SecCertificate])
+// public init(authenticator: @escaping (_ certs: [SecCertificate]) -> Bool)
+// }
+// ----
 
 NOTE: For Java, the equivalent of the SecCertificate is Certificate and for .NET, the equivalent of the SecCertificate is X509Certificate2.
 
-.Constructors
+=== Constructors
+
+==== For Root CA Chain Authentication
+
 [source,{source-langauge}]
 ----
 init(rootCerts: [SecCertificate])
 ----
+
+.Usage:
+
+// tag::ListenerCertificateAuthenticator-root[]
+Initialize the `ListenerCertificateAuthenticator` using the `rootCert` interface. This identifies the Root CA Chain to be used to verify a certificate chain received from the client.
+
+For example:
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-config-client-auth-root", indent=0]
+----
+// end::ListenerCertificateAuthenticator-root[]
 
 [cols="2,8"]
 |===
@@ -438,11 +520,35 @@ Any client cert that's been signed by the given root CA cert chains will be auth
 init(delegate: ListenerCertificateAuthenticatorDelegate)
 ----
 
+Usage
+
+// tag::ListenerCertificateAuthenticatorDelegate[]
+Initialize the `ListenerCertificateAuthenticator` using the `ListenerCertificateAuthenticatorDelegate` interface. This identifies the application logic to be used to verify a certificate chain received from the client.
+
+[source, {source-language}]
+----
+public protocol ListenerCertificateAuthenticatorDelegate {
+    func authenticate(certs: Array<SecCertificate>) -> Bool
+}
+----
+
+The logic should take the form of function or block (such as, a closure expression) if the platform allows.
+
+For example:
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-config-client-auth-self-signed", indent=0]
+----
+// end::ListenerCertificateAuthenticatorDelegate[]
+
+
 [cols="2,8"]
 |===
 
 |Explanation
-|Creates a ListenerCertificateAuthenticator object with the given delegate object to verify the certificates received from the client. When given the delegate object, it means that developers will need to verify the certificate chain received from the client by themselves. This option is mostly used for authenticating the self-sign certificate.
+|Creates a ListenerCertificateAuthenticator object with the given delegate object to verify the certificates received from the client.
+When given the delegate object, it means that developers will need to verify the certificate chain received from the client by themselves.
+This option is mostly used for authenticating the self-sign certificate.
 
 |Preconditions
 |N/A
@@ -452,22 +558,16 @@ init(delegate: ListenerCertificateAuthenticatorDelegate)
 
 |===
 
-[CAUTION]
---
-The authenticator will not work if the TLS is not enabled (TLSIdentity object set to the URLEndpointListenerConfiguration has null value). The URLEndpointListener should log a warning message when the URLEndpointListener is created if that happens.
---
 
 == ListenerCertificateAuthenticatorDelegate
-The interface defines a method used for verifying the certificate chain received from the client. The ListenerCertificateAuthenticatorDelegate interface should turn into a function or block if the platform allows.
 
-[source, {source-language}]
-----
-public protocol ListenerCertificateAuthenticatorDelegate {
-    func authenticate(certs: Array<SecCertificate>) -> Bool
-}
-----
 
-NOTE: For Java, the equivalent of the SecCertificate is Certificate and for .NET, the equivalent of the SecCertificate is X509Certificate2.
+.SecCertificate equivalents
+[NOTE]
+* For Java, the equivalent of the SecCertificate is Certificate.
+* For .NET, the equivalent of the SecCertificate is X509Certificate2.
+// end::ListenerCertificateAuthenticatorDelegate[]
+
 
 == ConnectionStatus
 ConnectionStatus provides information about the current number of the connections and the current number of the active connections served by the URLEndpointListener object.
