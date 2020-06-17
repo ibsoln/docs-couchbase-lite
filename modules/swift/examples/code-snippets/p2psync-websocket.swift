@@ -81,13 +81,13 @@ class URLEndpontListenerTest: ReplicatorTest {
     }
 
     func stopListener(listener: URLEndpointListener) throws {
-    // tag::listener-stop[]
+    // tag::listener-stop-func[]
     var listener: URLEndpointListener?
         let identity = listener.tlsIdentity
         listener.stop()
         if let id = identity {
             try id.deleteFromKeyChain()
-    // end::listener-stop[]
+    // end::listener-stop-func[]
         }
     }
 
@@ -620,7 +620,7 @@ class myclass {
 
         listenerConfig.disableTLS  = false // <2>
         listenerConfig.tlsIdentity = nil //
-
+// tag::listener-config-auth[]
         listenerConfig.authenticator = ListenerPasswordAuthenticator.init { // <3>
             (username, password) -> Bool in
                 if (self._allowlistedUsers.contains(
@@ -629,6 +629,7 @@ class myclass {
                 }
             return false
         }
+// end::listener-config-auth[]
 
         listenerConfig.enableDeltaSync = true // <4>
 
@@ -639,7 +640,7 @@ class myclass {
             }
         try websocketListener.start() // <6> <7>
 
-        // end::listener-initialize
+// end::listener-initialize[]
     }
 }
 
@@ -652,3 +653,58 @@ let wssPort: UInt16 = 4985
 // tag::listener-config-netw-iface[]
 listenerConfig.networkInterface = "10.1.1.10"
 // end::listener-config-netw-iface[]
+
+// tag::listener-config-disable-tls[]
+// This combination will force non-TLS communication
+listenerConfig.disableTLS  = true
+// end::listener-config-disable-tls[]
+
+// tag::listener-config-tls-id[]
+listenerConfig.tlsIdentity = nil
+// end::listener-config-tls-id[]
+
+// tag::listener-config-delta-sync[]
+listenerConfig.enableDeltaSync = true
+// end::listener-config-delta-sync[]
+
+
+// tag::listener-start[]
+_websocketListener = URLEndpointListener(config: listenerConfig)
+guard let websocketListener = _websocketListener else {
+    throw ListDocError.WebsocketsListenerNotInitialized
+    }
+try websocketListener.start()
+// end::listener-start[]
+
+// tag::listener-status-check[]
+let totalConnections = websocketListener.status.connectionCount
+let activeConnections = websocketListener.status.activeConnectionCount
+// end::listener-status-check[]
+
+
+// tag::listener-stop[]
+        listener.stop()
+// end::listener-stop[]
+
+// tag::listener-config-client-auth-root[]
+  // cert is a pre-populated object of type:SecCertificate representing a certificate
+  let rootCertData = SecCertificateCopyData(cert) as Data
+  let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
+  // Listener:
+  listenerConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
+// end::listener-config-client-auth-root[]
+
+
+// tag::listener-config-client-auth-self-signed[]
+listenerConfig.authenticator = ListenerCertificateAuthenticator.init {
+  (cert) -> Bool in
+    var cert:SecCertificate
+    var certCommonName:CFString?
+    let status=SecCertificateCopyCommonName(cert, &certCommonName)
+    if (self._allowlistedUsers.contains(["name": certCommonName! as String])) {
+        return true
+    }
+    return false
+}
+// end::listener-config-client-auth-self-signed[]
+
