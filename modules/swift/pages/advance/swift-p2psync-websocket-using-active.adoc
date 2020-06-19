@@ -6,7 +6,7 @@
 :description: Couchbase Lite - this content covers how to set up an active peer to replicate CBL database changes using peer-to-peer sync over websockets
 :param-abstract:
 
-Using Peer-to-Peer Sync
+*Topic group*: _Using Peer-to-Peer Sync (web sockets)_
 
 include::partial$_std-cbl-hdr-swift.adoc[]
 // :param-name: {lang-name-swift}

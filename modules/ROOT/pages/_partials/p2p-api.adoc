@@ -316,8 +316,9 @@ This doesn't authenticate or verify trust (on the client side) but it does encry
 
 Default:
 // tag::config-tls-id-default[]
-An auto-generated anonymous self-signed identity is used.
+Nil -- in this case an auto-generated anonymous self-signed identity is used unless `disableTLS = true`
 // end::config-tls-id-default[]
+
 API Reference:  {url-api-reference-urlendpointconfiguration-tls-id}
 
 // end::config-tls-id-full[]
@@ -493,11 +494,13 @@ init(rootCerts: [SecCertificate])
 // tag::ListenerCertificateAuthenticator-root[]
 Initialize the `ListenerCertificateAuthenticator` using the `rootCert` interface. This identifies the Root CA Chain to be used to verify a certificate chain received from the client.
 
-For example:
+.Root Cert authentication
+====
 [source, {source-language}]
 ----
 include::{snippet-p2psync-ws}[tags="listener-config-client-auth-root", indent=0]
 ----
+====
 // end::ListenerCertificateAuthenticator-root[]
 
 [cols="2,8"]
@@ -534,11 +537,13 @@ public protocol ListenerCertificateAuthenticatorDelegate {
 
 The logic should take the form of function or block (such as, a closure expression) if the platform allows.
 
-For example:
+.Cert authentication closure
+====
 [source, {source-language}]
 ----
 include::{snippet-p2psync-ws}[tags="listener-config-client-auth-self-signed", indent=0]
 ----
+====
 // end::ListenerCertificateAuthenticatorDelegate[]
 
 

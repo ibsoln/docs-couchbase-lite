@@ -13,8 +13,6 @@
 :this-leveloffset: {leveloffset}
 :leveloffset: 0
 
-== Overview
-
-include::{root-partials}database-conflict.adoc[]
+include::{root-partials}handling-conflicts.adoc[]
 
 :leveloffset: {this-leveloffset}

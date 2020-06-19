@@ -7,10 +7,8 @@
 //
 // include::partial$_std-cbl-hdr-android.adoc[]
 [abstract]
---
 {description}
 {param-abstract}
---
 
 ifndef::release-status-cbl[:release-status-cbl!:]
 ifeval::["{release-status-cbl}" == "gamma"]
@@ -43,12 +41,26 @@ Topic to include from requirements:
 --
 endif::[]
 
-==  Overview
+[.pane__frames]
+== Overview
 
+[.no-title . no-color]
+.{empty}
+* {empty}
++
+--
 Couchbase Lite provides out-of-the-box {glos-term-peer-to-peer-sync}, over websockets, between Couchbase Lite enabled clients in IP-based networks.
 
 Using this _WebsocketEndpointListener_ developers can implement peer-to-peer replication without navigating the compexity of the _MessageEndpoint_ API, which can often be a barrier.
 The _WebsocketEndpointListener_ listens for incoming websocket connections on a user-defined, or auto-selected, port.
+--
+
+[.narrow]
+.How to use
+* {url-api-references}[API Reference]
+* {xref-cbl-pg-dbo-p2psync-websocket-using-passive}
+* {xref-cbl-pg-dbo-p2psync-websocket-using-active}
+* {xref-cbl-pg-p2p-manage-tls-id}
 
 == Features
 

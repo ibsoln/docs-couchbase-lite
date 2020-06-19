@@ -42,7 +42,7 @@ The active peer initiates the communications. It is the peer that initializes an
 // end::cbl-active-peer-def[]
 * _Related Term(s)_: <<passive-peer>> <<peer-to-peer-sync>>
 * _Read More_: {xref-cbl-pg-p2psync}
-// end::cbl-active-peer[]
+// end::cbl-active-peer-full[]
 
 
 == C
@@ -68,12 +68,27 @@ Est aliquip proident dolor cillum.
 
 {goto-index}
 
-//== D
+== D
+
+[[delta-sync]]
+Delta Sync::
+// tag::cbl-delta-sync-full[]
+// tag::cbl-delta-sync-def[]
+// tag::cbl-delta-sync[]
+Delta Sync is the ability to replicate only parts of the Couchbase document that have changed.
+
+This can result in significant savings in bandwidth consumption as well as throughput improvements, especially when network bandwidth is typically constrained.
+// tag::cbl-delta-sync[]
+// tag::cbl-delta-sync-def[]
+* _Related Term(s)_: <<passive-replicator, Passive replicator>>
+* _Read More_: {xref-cbl-pg-icr-overview}
+// tag::cbl-delta-sync-full[]
+
 
 //{goto-index}
 
 == I
-[[a-dummy-term]]
+[[a-delta-sync]]
 A-dummy-term::
 // tag::cbl-dummy-term-full[]
 // tag::cbl-dummy-term-def[]
@@ -90,7 +105,7 @@ Est aliquip proident dolor cillum.
 // end::cbl-dummy-term-def[]
 * _Related Term(s)_: <<passive-replicator, Passive replicator>>
 * _Read More_: {xref-cbl-pg-icr-overview}
-// end::cbl-dummy-term[]
+// end::cbl-dummy-term-full[]
 
 {goto-index}
 
@@ -193,7 +208,7 @@ Couchbase Lite provides out-of-the-box peer-to-peer sync, over websockets, betwe
 // end::cbl-peer-to-peer-sync-def[]
 * _Related Term(s)_: <<active-peer>> <<passive-peer>>
 * _Read More_: {xref-cbl-pg-p2psync}
-// end::cbl-peer-to-peer-sync[]
+// end::cbl-peer-to-peer-sync-full[]
 
 {goto-index}
 
@@ -205,5 +220,21 @@ Couchbase Lite provides out-of-the-box peer-to-peer sync, over websockets, betwe
 == S
 
 == T
+
+[[tlsidentity,TLSIdentity]]
+TLSIdentity::
+// tag::cbl-p2psync-tlsid-full[]
+// tag::cbl-p2psync-tlsid-def[]
+// tag::cbl-p2psync-tlsid[]
+TLSIdentity represents the identity information (Key pair and Certificates) used for setting up TLS Communication.
+
+The TLSIdentity API differs from platform-to-platform.
+// end::cbl-p2psync-tlsid[]
+// end::cbl-p2psync-tlsid-def[]
+* _Synonym(s)_: n/a
+* _Topic Group_: _Using Peer-to-Peer Sync (web sockets_
+* _Related Term(s)_: <<active-peer>> <<passive-peer>>
+* _Read More_: {xref-cbl-pg-p2psync-websockets}
+// end::cbl-p2psync-tlsid-full[]
 
 {goto-index}
