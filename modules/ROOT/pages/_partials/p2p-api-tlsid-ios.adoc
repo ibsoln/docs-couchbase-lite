@@ -4,6 +4,7 @@
 <<URLEndpointListener-constructors>> |
 <<URLEndpointListener-methods>>
 
+// tag::components[]
 TLSIdentity represents the identity information (Key pair and Certificates) used for setting up TLS Communication.
 The TLSIdentity API differs from platform-to-platform.
 This API is based on the {param-platform} platform.
@@ -50,12 +51,16 @@ public class TLSIdentity {
 |The expiration date of the (leaf) certificate of the TLSIdentity.
 
 |===
+// end::components[]
 
+// tag::methods[]
 [#tlsidentity-methods]
 .Methods
 {empty}
 
-.*`getIdentity()`*
+
+// tag::method-get-with-label[]
+.*`identity(withLabel:)`*
 [caption=]
 [cols="20,80"]
 |===
@@ -63,17 +68,54 @@ public class TLSIdentity {
 |Form
 a|[{source-language}]
 ----
-getIdentity(label: String) throws -> TLSIdentity?
+public static func identity(withLabel label: String) throws -> TLSIdentity?
 ----
 
 |Explanation
-|Get the TLSIdentity of the given label from the secure storage.
+|Use this method to get an identity from the Keychain with the given label.
 
 |Preconditions
 |N/A
 
 |Postconditions
-|The identity returned from the secure storage. If the identity doesn’t exist, this method will return null.
+|The identity returned from the secure storage.
+If the identity doesn’t exist, this method will return null.
+
+|Exceptions
+|CouchbaseLiteException will be thrown if there is an error occurred while getting the identity from the secure storage.
+
+|Usage
+a|[{source-language}]
+----
+----
+
+|===
+// end::method-get-with-label[]
+
+// tag::method-get-with-cert[]
+.*`identity(withIdentity:certs:)`*
+[caption=]
+[cols="20,80"]
+|===
+
+|Form
+a|[{source-language}]
+----
+public static func identity(withIdentity identity: SecIdentity,
+    certs: [SecCertificate]?) throws -> TLSIdentity
+----
+
+|Explanation
+|Use this method to get an identity from the Keychain with a `SecIdentity` object.
+Any intermediate or root certificates required to identify the certificate but not present in the system wide set of trusted anchor certificates need to be specified in the optional `certs` parameter.
+
+
+|Preconditions
+|The specified SecIdentity object must be present in the KeyChain, otherwise an exception will be thrown. given label.
+
+|Postconditions
+|The identity returned from the secure storage.
+If the identity doesn’t exist, this method will return null.
 
 |Exceptions
 |CouchbaseLiteException will be thrown if there is an error occurred while getting the identity from the secure storage.
@@ -85,7 +127,9 @@ a|[{source-language}]
 
 |===
 
+// end::method-get-with-cert[]
 
+// tag::method-create[]
 .`createIdentity(isServer, attributes, expiration, label)`
 [caption=]
 [cols="20,80"]
@@ -115,8 +159,16 @@ When creating a certificate, the common name attribute is required for creating 
 
 *The error code will be determined during the technical design phase.*
 
-|===
+| Example
+a| [source, {source-language}]
+----
+include::{snippet}[tag=p2psync-act-tlsid-create]
+----
 
+|===
+// end::method-create[]
+
+// tag::method-import[]
 .`importIdentity(data, password, label) throws -> TLSIdentity`
 {empty}
 [caption=]
@@ -143,8 +195,15 @@ importIdentity(data: Data, password: String?, label: String) throws -> TLSIdenti
 
 CouchbaseLiteException will be thrown if the common name is not presented in the certificate.
 
+| Example
+a| [source, {source-language}]
+----
+include::{snippet}[tag=p2psync-act-tlsid-import]
+----
+
 |===
 
+// tag::method-delete[]
 .`deleteIdentity(label)`
 {empty}
 [caption=]
@@ -169,6 +228,13 @@ deleteIdentity(label: String) throws
 |Exceptions
 |CouchbaseLiteException will be thrown when the identity cannot be deleted. The error code will be determined during the technical design phase.
 
+|Example
+a| [source, {source-language}]
+----
+include::{snippet}[tag=p2psync-act-tlsid-delete]
+----
 |===
+// end::method-delete[]
+// end::methods[]
 
 
