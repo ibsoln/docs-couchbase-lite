@@ -80,6 +80,7 @@ Apps have the following strategies for resolving conflicts:
 - *Remote Wins:* The revision pulled from the remote endpoint through replication wins.
 - *Merge:* Merge the content bodies of the conflicting revisions.
 
+// tag::conflict-custom-resolution-examples[]
 [{tabs}]
 ====
 Local Wins::
@@ -109,6 +110,7 @@ include::{snippet}[tag=merge-conflict-resolver,indent=0]
 ----
 --
 ====
+// end::conflict-custom-resolution-examples[]
 
 When a null document is returned by the resolver, the conflict will be resolved as a document deletion.
 
