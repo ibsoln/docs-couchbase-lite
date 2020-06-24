@@ -1402,12 +1402,14 @@ class URLEndpontListenerTest: ReplicatorTest {
         XCTAssertNil(listener.tlsIdentity)
 
         // User Identity:
+// tag::p2psync-act-tlsid-create[]
         try TLSIdentity.deleteIdentity(withLabel: serverCertLabel);
         let attrs = [certAttrCommonName: "CBL-Server"]
         let identity = try TLSIdentity.createIdentity(forServer: true,
                                                       attributes: attrs,
                                                       expiration: nil,
                                                       label: serverCertLabel)
+// end::p2psync-act-tlsid-create[]
         config = URLEndpointListenerConfiguration.init(database: self.oDB)
         config.tlsIdentity = identity
         listener = URLEndpointListener.init(config: config)
@@ -1487,7 +1489,6 @@ class URLEndpontListenerTest: ReplicatorTest {
         if !self.keyChainAccessAllowed {
             return
         }
-
         // Root Cert:
         let rootCertData = try dataFromResource(name: "identity/client-ca", ofType: "der")
         let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
@@ -1496,12 +1497,16 @@ class URLEndpontListenerTest: ReplicatorTest {
         let listenerAuth = ListenerCertificateAuthenticator.init(rootCerts: [rootCert])
         let listener = try listen(tls: true, auth: listenerAuth)
 
+// tag::p2psync-act-tlsid-delete[]
         // Cleanup:
         try TLSIdentity.deleteIdentity(withLabel: clientCertLabel)
+// end::p2psync-act-tlsid-delete[]
 
         // Create client identity:
+// tag::p2psync-act-tlsid-import[]
         let clientCertData = try dataFromResource(name: "identity/client", ofType: "p12")
         let identity = try TLSIdentity.importIdentity(withData: clientCertData, password: "123", label: clientCertLabel)
+// end::p2psync-act-tlsid-import[]
 
         // Replicator:
         let auth = ClientCertificateAuthenticator.init(identity: identity)
