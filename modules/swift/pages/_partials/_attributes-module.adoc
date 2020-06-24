@@ -6,13 +6,17 @@
 :packageNm: couchbase-lite-swift
 :url-issues: {url-issues-swift}
 
+:sep: #/
+
 :url-api-references: {url-api-references-swift}
 
 :url-api-reference-urlendpointconfiguration: {url-api-references}/Classes/URLEndpointListenerConfiguration.html
 
 :url-api-reference-tlsidentity: {url-api-references}/Classes/TLSIdentity.html[TLSIdentity class]
 
-:url-api-reference-urlendpointconfiguration-property: {url-api-reference-urlendpointconfiguration}#/s:18CouchbaseLiteSwift32URLEndpointListenerConfiguration
+:url-api-class-urlendpointconfiguration: {url-api-reference-urlendpointconfiguration}[URLEndpointListenerConfiguration]
+
+:url-api-reference-urlendpointconfiguration-property: {url-api-reference-urlendpointconfiguration}{sep}s:18CouchbaseLiteSwift32URLEndpointListenerConfiguration
 
 :url-api-reference-urlendpointconfiguration-port: {url-api-reference-urlendpointconfiguration-property}C4ports6UInt16VSgvp[port]
 
@@ -30,5 +34,46 @@
 
 :url-api-reference-urlendpointconfiguration-auth: {url-api-reference-urlendpointconfiguration-property}C13authenticatorAA0E13Authenticator_pSgvp[authenticator]
 // diag: Env+Module {param-module}
+
+
+// Replicator API
+:url-api-class-replicator: {url-api-references}/Classes/Replicator.html
+
+:url-api-constructor-replicator-init-config: {url-api-class-replicator}{sep}s:18CouchbaseLiteSwift10ReplicatorC6configAcA0D13ConfigurationC_tcfc[init(config:)]
+
+:url-api-method-replicator-add-change-listener: {url-api-class-replicator}{sep}s:18CouchbaseLiteSwift10ReplicatorC17addChangeListeneryAA0G5TokenCyAA0dF0VcF[addChangeListener(_:)]
+:url-api-method-replicator-rmv-change-listener: {url-api-class-replicator}{sep}/s:18CouchbaseLiteSwift10ReplicatorC20removeChangeListener9withTokenyAA0gI0C_tF[removeChangeListener(withToken:)]
+:url-api-method-replicator-start: {url-api-class-replicator}{sep}s:18CouchbaseLiteSwift10ReplicatorC5startyyF[start()]
+:url-api-method-replicator-stop: {url-api-class-replicator}{sep}s:18CouchbaseLiteSwift10ReplicatorC4stopyyF[stop()]
+
+:url-api-property-replicator-status: {url-api-class-replicator}{sep}s:18CouchbaseLiteSwift10ReplicatorC6StatusV[status]
+:url-api-property-replicator-status-activity: {url-api-class-replicator}{sep}s:18CouchbaseLiteSwift10ReplicatorC13ActivityLevelO
+
+:url-api-enum-replicator-status: {url-api-references}/Classes/Replicator/Status.html[Status enum]
+:url-api-enum-replicator-activity: {url-api-references}/Classes/Replicator/ActivityLevel.html[ActivityLevel enum]
+:url-api-enum-replicator-progress: {url-api-references}/Classes/Replicator/Progress.html[Progress enum]
+
+// ReplicatorConfiguration API
+:url-api-class-replicator-config: {url-api-references}/Classes/ReplicatorConfiguration.html
+
+:url-api-prop-replicator-config-auth: {url-api-class-replicator-config}{sep}s:18CouchbaseLiteSwift23ReplicatorConfigurationC13authenticatorAA13Authenticator_pSgvp[authenticator]
+
+:url-api-prop-replicator-config-cont: {url-api-class-replicator-config}{sep}s:18CouchbaseLiteSwift23ReplicatorConfigurationC10continuousSbvp[continuous]
+
+:url-api-prop-replicator-config-rep-type: {url-api-class-replicator-config}{sep}s:18CouchbaseLiteSwift23ReplicatorConfigurationC14replicatorTypeAA0dG0Ovp[replicatorType]
+
+:url-api-prop-replicator-config-ServerCertificateVerificationMode: {url-api-class-replicator-config}{sep}s:18CouchbaseLiteSwift23ReplicatorConfigurationC33serverCertificateVerificationModeAA06ServerghI0Ovp[serverCertificateVerificationMode]
+
+:url-api-prop-replicator-config-database: {url-api-class-replicator-config}{sep}s:18CouchbaseLiteSwift23ReplicatorConfigurationC8databaseAA8DatabaseCvp[database]
+
+:url-api-prop-replicator-config-target: {url-api-class-replicator-config}{sep}s:18CouchbaseLiteSwift23ReplicatorConfigurationC6targetAA8Endpoint_pvp[target]
+
+:url-api-prop-replicator-config-conflict: {url-api-class-replicator-config}{sep}s:18CouchbaseLiteSwift23ReplicatorConfigurationC16conflictResolverAA08ConflictG8Protocol_pSgvp[conflictResolver]
+
+
+
+// Replicator API
+:url-api-class-tlsidentity: {url-api-references}/Classes/TLSIdentity.html[TLSIdentity]
+
 
 // End define module specific attributes
