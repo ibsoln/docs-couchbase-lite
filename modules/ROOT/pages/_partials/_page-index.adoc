@@ -22,6 +22,8 @@
 :cbl-pg-changelog-all: cbl-changelog-all.adoc
 :cbl-pg-compatibility: compatibility.adoc
 :cbl-pg-conflict: learn/{param-name}-conflict.adoc
+:cbl-pg-conflict-auto: learn/{param-name}-conflict.adoc#automatic-conflict-resolution
+:cbl-pg-conflict-custom: learn/{param-name}-conflict.adoc#custom-conflict-resolution
 :cbl-pg-database: learn/{param-name}-database.adoc
 :cbl-pg-dbo-crud: next/{param-name}-dbo-crud.adoc
 :cbl-pg-dbo-query: next/{param-name}-dbo-query.adoc
@@ -30,6 +32,7 @@
 :cbl-pg-dbo-p2psync-cloud-using: advance/{param-name}-p2psync-cloud-using.adoc
 :cbl-pg-dbreplica: learn/{param-name}-dbreplica.adoc
 :cbl-pg-dep-upgrade: advance/{param-name}-dep-upgrade.adoc
+:cbl-pg-p2p-manage-tls-id: advance/{param-name}-p2p-managing-tls-id.adoc
 :cbl-pg-document: learn/{param-name}-document.adoc
 :cbl-pg-fts: learn/{param-name}-fts.adoc
 :cbl-pg-index: index.adoc
@@ -48,7 +51,7 @@
 :cbl-pg-date-time: learn/query/{param-name}-date-time.adoc
 :cbl-pg-ref-api: refer/{param-name}-ref-api.adoc
 :cbl-pg-refer-glossary:   refer-glossary.adoc
-:cbl-pg-releasenotes: product/{param-name}-pn-releasenotes.adoc
+:cbl-pg-releasenotes: product/{param-name}-releasenotes.adoc
 :cbl-pg-replication: learn/{param-name}-replication.adoc
 :cbl-pg-replication--status: {cbl-pg-replication}#replication-status
 :cbl-pg-supportnotes: product/{param-name}-pn-supportnotes.adoc
@@ -83,6 +86,8 @@
 :xref-cbl-pg-changelog-all: {xref-pfx-root}{cbl-pg-changelog-all}[Change Log (all platforms)]
 :xref-cbl-pg-compatibility: {xref-pfx-root}{cbl-pg-compatibility}[Compatibility]
 :xref-cbl-pg-conflict: {xref-pfx-cbl}{cbl-pg-conflict}[Handling Conflicts]
+:xref-cbl-pg-conflict-auto: {xref-pfx-cbl}{cbl-pg-conflict-auto}[Automatic Conflict Resolution]
+:xref-cbl-pg-conflict-custom: {xref-pfx-cbl}{cbl-pg-conflict-custom}[Custom Conflict Resolution]
 :xref-cbl-pg-database: {xref-pfx-cbl}{cbl-pg-database}[Working with Databases]
 :xref-cbl-pg-dbreplica: {xref-pfx-cbl}{cbl-pg-dbreplica}[Local Replicaton]
 :xref-cbl-pg-dep-upgrade: {xref-pfx-cbl}{cbl-pg-dep-upgrade}[Upgrading]
@@ -92,6 +97,7 @@
 :xref-cbl-pg-index: {xref-pfx-cbl}{cbl-pg-index}[{component-title-cbl}]
 :xref-cbl-pg-indexing: {xref-pfx-cbl}{cbl-pg-indexing}[Indexing]
 :xref-cbl-pg-install: {xref-pfx-cbl}{cbl-pg-install}[Install]
+:xref-cbl-pg-p2p-manage-tls-id: {xref-pfx-cbl}{cbl-pg-p2p-manage-tls-id}[Manage TLS Identity]
 :xref-cbl-pg-p2psync: {xref-pfx-cbl}{cbl-pg-p2psync}[Peer-to_peer Synchronization]
 :xref-cbl-pg-p2psync-http: {xref-pfx-cbl}{cbl-pg-p2psync-http}[P2P - http]
 :xref-cbl-pg-p2psync-custom: {xref-pfx-cbl}{cbl-pg-p2psync-custom}[P2P - Custom]
