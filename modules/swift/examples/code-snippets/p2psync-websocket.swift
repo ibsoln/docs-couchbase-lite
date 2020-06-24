@@ -41,7 +41,7 @@ class URLEndpontListenerTest: ReplicatorTest {
     }
 
     @discardableResult
-    // tag::listener-start-func[]
+    // tag::xctListener-start-func[]
     func listen(tls: Bool, auth: ListenerAuthenticator?) throws -> URLEndpointListener {
         // Stop:
         if let listener = self.listener {
@@ -49,8 +49,8 @@ class URLEndpontListenerTest: ReplicatorTest {
         }
 
         // Listener:
-    // tag::listener-start[]
-    // tag::listener-config[]
+    // tag::xctListener-start[]
+    // tag::xctListener-config[]
     //  ... fragment preceded by other user code, including
     //  ... Couchbase Lite Database initialization that returns `_userDB`
 
@@ -65,15 +65,15 @@ class URLEndpontListenerTest: ReplicatorTest {
     config.authenticator = auth
     self.listener = URLEndpointListener.init(config: config)
 //  ... fragment followed by other user code
-    // end::listener-config[]
+    // end::xctListener-config[]
 
         // Start:
         try self.listener!.start()
-    // end::listener-start[]
+    // end::xctListener-start[]
 
         return self.listener!
     }
-    // end::listener-start-func[]
+    // end::xctListener-start-func[]
 
     func stopListen() throws {
         if let listener = self.listener {
@@ -82,20 +82,20 @@ class URLEndpontListenerTest: ReplicatorTest {
     }
 
     func stopListener(listener: URLEndpointListener) throws {
-    // tag::listener-stop-func[]
+    // tag::xctListener-stop-func[]
     var listener: URLEndpointListener?
         let identity = listener.tlsIdentity
         listener.stop()
         if let id = identity {
             try id.deleteFromKeyChain()
-    // end::listener-stop-func[]
+    // end::xctListener-stop-func[]
         }
     }
 
     func cleanUpIdentities() throws {
-// tag::listener-delete-anon-ids[]
+// tag::xctListener-delete-anon-ids[]
         try URLEndpointListener.deleteAnonymousIdentities()
-// end::listener-delete-anon-ids[]
+// end::xctListener-delete-anon-ids[]
     }
 
     override func setUp() {
@@ -125,7 +125,7 @@ class URLEndpontListenerTest: ReplicatorTest {
         try stopListener(listener: listener)
         XCTAssertNil(listener.tlsIdentity)
 
-// tag::listener-auth-tls-tlsidentity-anon[]
+// tag::xctListener-auth-tls-tlsidentity-anon[]
         // Anonymous Identity:
 
         config = URLEndpointListenerConfiguration.init(database: self.oDB)
@@ -137,9 +137,9 @@ class URLEndpontListenerTest: ReplicatorTest {
         try stopListener(listener: listener)
         XCTAssertNil(listener.tlsIdentity)
 
-// end::listener-auth-tls-tlsidentity-anon[]
+// end::xctListener-auth-tls-tlsidentity-anon[]
 
-// tag::listener-auth-tls-tlsidentity-ca[]
+// tag::xctListener-auth-tls-tlsidentity-ca[]
         // User Identity:
         try TLSIdentity.deleteIdentity(withLabel: serverCertLabel);
         let attrs = [certAttrCommonName: "CBL-Server"]
@@ -157,13 +157,13 @@ class URLEndpontListenerTest: ReplicatorTest {
         XCTAssert(identity === listener.tlsIdentity!)
         try stopListener(listener: listener)
         XCTAssertNil(listener.tlsIdentity)
-// end::listener-auth-tls-tlsidentity-ca[]
+// end::xctListener-auth-tls-tlsidentity-ca[]
     }
 
     func testPasswordAuthenticator() throws {
-// tag::listener-auth-basic-pwd-full[]
+// tag::xctListener-auth-basic-pwd-full[]
         // Listener:
-// tag::listener-auth-basic-pwd[]
+// tag::xctListener-auth-basic-pwd[]
         let listenerAuth = ListenerPasswordAuthenticator.init {
             (username, password) -> Bool in
             return (username as NSString).isEqual(to: "daniel") &&
@@ -174,7 +174,7 @@ class URLEndpontListenerTest: ReplicatorTest {
         auth = BasicAuthenticator.init(username: "daniel", password: "123")
         self.run(target: listener.localURLEndpoint, type: .pushAndPull,    continuous: false,
                  auth: auth)
-// end::listener-auth-basic-pwd[]
+// end::xctListener-auth-basic-pwd[]
 
         // Replicator - No Authenticator:
         self.run(target: listener.localURLEndpoint, type: .pushAndPull, continuous: false,
@@ -189,7 +189,7 @@ class URLEndpontListenerTest: ReplicatorTest {
         // Cleanup:
         try stopListen()
     }
-// end::listener-auth-basic-pwd-full[]
+// end::xctListener-auth-basic-pwd-full[]
 
     func testClientCertAuthenticatorWithClosure() throws {
         if !self.keyChainAccessAllowed {
@@ -232,8 +232,8 @@ class URLEndpontListenerTest: ReplicatorTest {
             return
         }
 
-// tag::listener-auth-tls-CCA-Root-full[]
-// tag::listener-auth-tls-CCA-Root[]
+// tag::xctListener-auth-tls-CCA-Root-full[]
+// tag::xctListener-auth-tls-CCA-Root[]
         // Root Cert:
         let rootCertData = try dataFromResource(name: "identity/client-ca", ofType: "der")
         let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
@@ -241,7 +241,7 @@ class URLEndpontListenerTest: ReplicatorTest {
         // Listener:
         let listenerAuth = ListenerCertificateAuthenticator.init(rootCerts: [rootCert])
         let listener = try listen(tls: true, auth: listenerAuth)
-// end::listener-auth-tls-CCA-Root[]
+// end::xctListener-auth-tls-CCA-Root[]
 
         // Cleanup:
         try TLSIdentity.deleteIdentity(withLabel: clientCertLabel)
@@ -256,7 +256,7 @@ class URLEndpontListenerTest: ReplicatorTest {
 
         self.ignoreException {
             self.run(target: listener.localURLEndpoint, type: .pushAndPull, continuous: false, auth: auth, serverCert: serverCert)
-// end::listener-auth-tls-CCA-Root-full[]
+// end::xctListener-auth-tls-CCA-Root-full[]
         }
 
         // Cleanup:
@@ -268,8 +268,8 @@ class URLEndpontListenerTest: ReplicatorTest {
         if !self.keyChainAccessAllowed {
             return
         }
-// tag::listener-auth-tls-self-signed-full[]
-// tag::listener-auth-tls-self-signed[]
+// tag::xctListener-auth-tls-self-signed-full[]
+// tag::xctListener-auth-tls-self-signed[]
         // Listener:
         let listener = try listen(tls: true)
         XCTAssertNotNil(listener.tlsIdentity)
@@ -281,7 +281,7 @@ class URLEndpontListenerTest: ReplicatorTest {
             self.run(target: listener.localURLEndpoint, type: .pushAndPull, continuous: false,
                      serverCertVerifyMode: .selfSignedCert, serverCert: nil)
         }
-// end::listener-auth-tls-self-signed[]
+// end::xctListener-auth-tls-self-signed[]
         // Replicator - TLS Error:
         self.ignoreException {
             self.run(target: listener.localURLEndpoint, type: .pushAndPull, continuous: false,
@@ -290,17 +290,17 @@ class URLEndpontListenerTest: ReplicatorTest {
 
         // Cleanup
         try stopListen()
-// end::listener-auth-tls-self-signed-full[]
+// end::xctListener-auth-tls-self-signed-full[]
     }
 
-// tag::listener-auth-tls-ca-cert-full[]
+// tag::xctListener-auth-tls-ca-cert-full[]
     func testServerCertVerificationModeCACert() throws {
         if !self.keyChainAccessAllowed {
             return
         }
 
         // Listener:
-// tag::listener-auth-tls-ca-cert[]
+// tag::xctListener-auth-tls-ca-cert[]
         let listener = try listen(tls: true)
         XCTAssertNotNil(listener.tlsIdentity)
         XCTAssertEqual(listener.tlsIdentity!.certs.count, 1)
@@ -311,7 +311,7 @@ class URLEndpontListenerTest: ReplicatorTest {
             self.run(target: listener.localURLEndpoint, type: .pushAndPull, continuous: false,
                      serverCertVerifyMode: .caCert, serverCert: serverCert)
         }
-// end::listener-auth-tls-ca-cert[]
+// end::xctListener-auth-tls-ca-cert[]
 
         // Replicator - TLS Error:
         self.ignoreException {
@@ -393,7 +393,7 @@ class URLEndpontListenerTest: ReplicatorTest {
     }
 
     func testConnectionStatus() throws {
-// tag::listener-status-check-full[]
+// tag::xctListener-status-check-full[]
         if !self.keyChainAccessAllowed {
             return
         }
@@ -429,7 +429,7 @@ class URLEndpontListenerTest: ReplicatorTest {
         XCTAssertEqual(self.listener!.status.connectionCount, 0)
         XCTAssertEqual(self.listener!.status.activeConnectionCount, 0)
     }
-// end::listener-status-check-full[]
+// end::xctListener-status-check-full[]
 
 }
 
@@ -451,22 +451,22 @@ extension URLEndpointListener {
 }
 // end::start-replication[]
 
-// tag::listener-auth-password-basic[]
+// tag::xctListener-auth-password-basic[]
 listenerConfig.authenticator = ListenerPasswordAuthenticator.init {
             (username, password) -> Bool in
     if (self._allowListedUsers.contains(["password" : password, "name":username])) {
         return true
     }
     return false
-// end::listener-auth-password-basic[]
+// end::xctListener-auth-password-basic[]
 
-// tag::listener-auth-cert-roots[]
+// tag::xctListener-auth-cert-roots[]
 let rootCertData = try dataFromResource(name: "identity/client-ca", ofType: "der")
 let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
 let listenerAuth = ListenerCertificateAuthenticator.init(rootCerts: [rootCert])
-let listener = try listen(tls: true, auth: listenerAuth)// end::listener-auth-cert-roots[]
+let listener = try listen(tls: true, auth: listenerAuth)// end::xctListener-auth-cert-roots[]
 
-// tag::listener-auth-cert-auth[]
+// tag::xctListener-auth-cert-auth[]
 let listenerAuth = ListenerCertificateAuthenticator.init { (certs) -> Bool in
     XCTAssertEqual(certs.count, 1)
     var commongName: CFString?
@@ -476,9 +476,9 @@ let listenerAuth = ListenerCertificateAuthenticator.init { (certs) -> Bool in
     XCTAssertEqual((commongName! as String), "daniel")
     return true
 }
-// end::listener-auth-cert-auth[]
+// end::xctListener-auth-cert-auth[]
 
-// tag::listener-config-basic-auth[]
+// tag::xctListener-config-basic-auth[]
 let listenerConfig = URLEndpointListenerConfiguration(database: db)
 listenerConfig.disableTLS  = true // Use with anonymous self signed cert
 listenerConfig.enableDeltaSync = true
@@ -493,7 +493,7 @@ listenerConfig.authenticator = ListenerPasswordAuthenticator.init {
         }
 
 _websocketListener = URLEndpointListener(config: listenerConfig)
-// end::listener-config-basic-auth[]
+// end::xctListener-config-basic-auth[]
 
 
 
@@ -610,75 +610,88 @@ import Foundation
 import CouchbaseLiteSwift
 import MultipeerConnectivity
 
-class myclass {
-// tag::listener-initialize[]
-    fileprivate  var _allowlistedUsers:[[String:String]] = []
-    fileprivate var _websocketListener:URLEndpointListener?
-    fileprivate var _userDb:Database?
-        // Include websockets listener initializer code
-        let db=_userDb!
+class cMyPassListener {
+  // tag::listener-initialize[]
+  fileprivate  var _allowlistedUsers:[[String:String]] = []
+  fileprivate var _websocketListener:URLEndpointListener?
+  fileprivate var _userDb:Database?
+    // Include websockets listener initializer code
 
-        let listenerConfig = URLEndpointListenerConfiguration(database: db) // <1>
+    // func fMyPassListener() {
+    // tag::listener-config-endpoint[]
+    let db=_userDb!
+    let listenerConfig = URLEndpointListenerConfiguration(database: db) // <.>
+    // tag::listener-config-port[]
+    /* optionally */ let wsPort: UInt16 = 4984
+    /* optionally */ let wssPort: UInt16 = 4985
+    listenerConfig.port =  wssPort
+    // end::listener-config-port[]
 
-        listenerConfig.disableTLS  = false // <2>
-        listenerConfig.tlsIdentity = nil //
-// tag::listener-config-auth[]
-        listenerConfig.authenticator = ListenerPasswordAuthenticator.init { // <3>
-            (username, password) -> Bool in
-                if (self._allowlistedUsers.contains(
-                  ["password" : password, "name":username])) {
-                    return true
-                }
-            return false
-        }
-// end::listener-config-auth[]
+    // tag::listener-config-netw-iface[]
+    listenerConfig.networkInterface = "10.1.1.10"
+    // end::listener-config-netw-iface[]
+    // end::listener-config-endpoint[]
 
-        listenerConfig.enableDeltaSync = true // <4>
+    // tag::listener-config-tls-full[]
+    // This combination will set
+    // tag::listener-config-tls-enable[]
+    // -- TLS on
+    //    optionally switch it off .disableTLS  = true
+    listenerConfig.disableTLS  = false // <.>
+    // end::listener-config-tls-enable[]
+    // tag::listener-config-tls-id-full[]
+    // tag::listener-config-tls-id-nil[]
+    // -- Use anonymous self-cert
+    listenerConfig.tlsIdentity = nil
+    // end::listener-config-tls-id-nil[]
+    // tag::listener-config-tls-id-cert[]
+    // -- Use id and certs from keychain
+    listenerConfig.tlsIdentity = TLSIdentity(withLabel:"CBL-Swift-Server-Cert")
+    // optionally  listenerConfig.tlsIdentity = TLSIdentity(withIdentity:serverSelfCert-id)
+    // end::listener-config-tls-id-cert[]
+    // end::listener-config-tls-id-full[]
 
-        _websocketListener = URLEndpointListener(config: listenerConfig) // <5>
-
-        guard let websocketListener = _websocketListener else {
-          throw print("WebsocketsListenerNotInitialized")
-          // ... take appropriate actions
-        }
-        try websocketListener.start() // <6> <7>
-
-// end::listener-initialize[]
+    // tag::listener-config-auth[]
+    listenerConfig.authenticator = ListenerPasswordAuthenticator.init { // <.>
+        (username, password) -> Bool in
+            if (self._allowlistedUsers.contains(
+              ["password" : password, "name":username])) {
+                return true
+            }
+        return false
     }
+    // end::listener-config-auth[]
+
+    listenerConfig.enableDeltaSync = true // <.>
+
+    // tag::listener-start[]
+    _websocketListener = URLEndpointListener(config: listenerConfig) // <.>
+
+    guard let websocketListener = _websocketListener else {
+      throw print("WebsocketsListenerNotInitialized")
+      // ... take appropriate actions
+    }
+    try websocketListener.start() // <.> <.>
+    // end::listener-start[]
+// end::listener-initialize[]
+
+  }
 }
 
-// tag::listener-config-port[]
-let wsPort: UInt16 = 4984
-let wssPort: UInt16 = 4985
-    listenerConfig.port = listener.config.disableTLS ? wsPort, wssPort
-// end::listener-config-port[]
 
-// tag::listener-config-netw-iface[]
-listenerConfig.networkInterface = "10.1.1.10"
-// end::listener-config-netw-iface[]
-
-// tag::listener-config-disable-tls[]
-// This combination will force non-TLS communication
+// tag::listener-config-tls-disable[]
 listenerConfig.disableTLS  = true
-// end::listener-config-disable-tls[]
+// end::listener-config-tls-disable[]
 
-// tag::listener-config-tls-id[]
+// tag::listener-config-tls-id-nil[]
 listenerConfig.tlsIdentity = nil
-// end::listener-config-tls-id[]
+// end::listener-config-tls-id-nil[]
+
 
 // tag::listener-config-delta-sync[]
 listenerConfig.enableDeltaSync = true
 // end::listener-config-delta-sync[]
 
-
-// tag::listener-start[]
-_websocketListener = URLEndpointListener(config: listenerConfig)
-guard let websocketListener = _websocketListener else {
-  throw print("WebsocketsListenerNotInitialized")
-  // ... take appropriate actions
-    }
-try websocketListener.start()
-// end::listener-start[]
 
 // tag::listener-status-check[]
 let totalConnections = websocketListener.status.connectionCount
