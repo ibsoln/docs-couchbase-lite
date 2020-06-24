@@ -1,28 +1,11 @@
 //= Using Peer-to-Peer Sync (websockets)
-//:page-layout: article
-//:page-status: {release-status-cbl} -- {release-comments-cbl}
-//:page-edition: Enterprise
-//:page-role:
-//
-//include::partial$_std-cbl-hdr-{param-module}.adoc[]
-//
-// BEGIN::Local page attributes
-//
-//:url-issues-java: {url-github-cbl}{module}/issues
-//:ziputils: {snippets-pfx--android}/code_snippets/ZipUtils.java
-//
-
-// DONE: TODO:  Replace the throw ListDocError. in all code snippets to be a comment // throw appropriate exception
-
-// ifeval::["{page-edition}"=="Enterprise"]
-// .Enterprise Edition only
-// IMPORTANT: This an {url-enterprise} feature.
-// Purchase the _Enterprise License_, which includes official {url-support-policy}, to use it in production (see the license and support {url-license-and-supp-faq}).
-// endif::[]
 
 [abstract]
+--
 {description}
+
 {param-abstract}
+--
 
 ifndef::release-status-cbl[:release-status-cbl!:]
 ifeval::["{release-status-cbl}" == "gamma"]
@@ -37,51 +20,33 @@ This is the how-to for P2P snc using websockets
 --
 endif::[]
 
-[.pane__frames]
 == Overview
 
-[.no-title.no-color]
-.{empty}
-* {empty}
-+
---
-This content provides sample code covering the implementation of {glos-term-peer-to-peer-sync} over websockets. Specifically it covers the implementation of a {glos-term-passive-peer} listener, that will accept and apply database changes replicated by a connected active peer.
-
-In the context of this content the term _client_ refers to the _active peer_ and the term _server_ to the _passive peer_
+This content provides sample code covering the implementation of {glos-term-peer-to-peer-sync} over websockets.
+Specifically it covers the implementation of a {glos-term-passive-peer} listener, that will accept and apply database changes replicated by a connected {glos-term-passive-peer}. In this context the term _client_ refers to the _active peer_ and the term _server_ to the _passive peer_
 
 You will need to initialize and configure a listener for each Couchbase Lite database instance that you want to sync with other peers.
 
-The <<simple-listener-initialization>> example below shows a simple initialization and configuration process.
+<<simple-listener-initialization>> shows a simple initialization and configuration process.
 
-The subsequent sections show additional details on the configuration options with examples. You do not need to provide configuration values for all properties, only those necessary to meet the requirements of your sync process.
---
-
-[.narrow]
-.Key concepts
-* {url-api-references}[API Reference]
-* {xref-cbl-pg-p2psync-websocket}
-
-[.no-title]
-
-== {empty}
+The subsequent sections show additional details on the configuration options with examples.
+You do not need to provide configuration values for all properties, only those necessary to meet the requirements of your sync process.
 
 [#simple-listener-initialization]
 .Simple Listener Initialization
 ====
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-initialize", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-initialize";!listener-config-tls-id-cert, indent=0]
 ----
-
-<1> <<initialize-the-listener>>
-<2> <<configure-server-security>>
-<3> <<configure-client-security>>
-<4> <<configure-delta-sync>>
-<5> Initialize the listener using the configuration settings
-<6> Start the listener
-<7> <<conflict-resolution>>
+<.> <<configure-listener-endpoint>>
+<.> <<configure-server-security>>
+<.> <<configure-client-security>>
+<.> <<configure-delta-sync>>
+<.> Initialize the listener using the configuration settings
+<.> <<start-listening>>
+<.> On-going listener <<monitor-the-listener, monitoring>>, including <<conflict-resolution>>
 ====
-
 
 == Discovery
 An optional, but typical step.
@@ -91,86 +56,59 @@ Prior to initiating the listener you may execute the peer discovery phase or use
 For the passive peer discovery involves advertising the service using, for example _Bonjour_, and waiting for an invite from the {glos-term-active-peer}.
 The connection is established once the passive peer has authenticated and accepted an active peer's invitation.
 
-//[#pass-initialize]
-//====
-// include::{snippet-p2psync-ws}[tags="startWebsocketsListener"]
-//[source, {source-language}]
-//----
-//include::{snippet-p2psync-ws}[tags="listener-config"]
-//----
-//====
+== Configure Listener Endpoint
 
-== Initialize the Listener
+Set the listener endpoint.
+As a minimum this must include the local database name.
+You can also over-ride the auto-seleted default port number and-or configure a specific network-interface.
 
-You will need to initialize a listener for each Couchbase Lite database instance that you want to sync with other peers.
-
-Use the `URLEndpointListenerConfiguration` constructor `public init(database: Database)` to set the end point of the database. This will comprise <<Database>>, <<Port>> and <<network-interface,IP>>.
-
-=== Database
-
-Property name::
-`database:`
-
-Description::
-+
---
-Using the `init(database)` constructor, as in <<simple-listener-initialization>> this example, will initialize the configuration parameters with details of the local database endpoint.
 All other configuration values will take their default setting.
 
-NOTE: Database is read-only, and can only be set using this constructor.
+Database name::
++
 --
-Default::
-Mandatory
-Example::
-See callout 1 in <<simple-listener-initialization>>
-API Reference::
-{url-api-reference-urlendpointconfiguration-initdb} |
-{url-api-reference-urlendpointconfiguration-database}
+The database name is set using the {url-api-reference-urlendpointconfiguration-database} property.
+It is a mandatory, read-only property that is set only by using the `{url-api-class-urlendpointconfiguration}` constructor
+//`public init(database: Database)`.
+{url-api-reference-urlendpointconfiguration-initdb}.
+--
 
-=== Port
-Property name::
-`port`
+Port number::
+The listener will auto-select an available port.
+Use the {url-api-reference-urlendpointconfiguration-port} property to configure use of a specific port.
 
-Description::
-+
-Use this configuration parameter to specify the port that the listener will listen to.
-If this is null or zero, the port is auto-assigned.
+// Example::
+// +
+// [source, {source-language}]
+// ----
+// include::{snippet-p2psync-ws}[tags="listener-config-port", indent=0]
+// ----
 
-Default::
-Null or zero depending on platform.
+// API Reference::
 
-Example::
-+
+Network Interface::
+The listener will listen on all network interfaces.
+Use the
+{url-api-reference-urlendpointconfiguration-netwk-iface} property
+to configure a specific the network interface.
+This must be either an IP Address or network interface name such as `en0`.
+
+.Configure Endpoint
+====
+In this example `_userDb` has previously been declared as an object of type Database.
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-config-port", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-config-endpoint", indent=0]
 ----
+====
 
-API Reference::
-{url-api-reference-urlendpointconfiguration-port}
+// Example::
+// +
+// [source, {source-language}]
+// ----
+// include::{snippet-p2psync-ws}[tags="listener-config-netw-iface", indent=0]
+// ----
 
-=== Network Interface
-
-Property name::
-`networkInterface`
-
-Description::
-+
---
-Use this configuration parameter to specify the network interface the listener is to listen on.
-Specify either an IP Address or network interface name such as `en0`
---
-
-Default:: nil -- the listener will listen to all network interfaces
-
-Example::
-+
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-config-netw-iface", indent=0]
-----
-API Reference::
-{url-api-reference-urlendpointconfiguration-netwk-iface}
 
 //== Configure the Listener
 
@@ -181,79 +119,53 @@ API Reference::
 
 == Configure Server Security
 // DONE: TODO: Move under top level security section
-_In this section_:
-<<enable-or-disable-tls,Use TLS>>
-| <<configure-tls-server-identity, Set the TLS Identity>>
-| back to: <<simple-listener-initialization>>
+// _In this section_:
+// <<enable-or-disable-tls,Use TLS>>
+// | <<configure-tls-server-identity, Set the TLS Identity>>
+// | back to: <<simple-listener-initialization>>
 
-=== Enable or Disable TLS
-
-Property name::
-`disableTLS`
-
-Description::
+Enable or Disable TLS::
 +
 --
 include::{root-partials}p2p-api.adoc[tag=config-disable-tls]
 --
 
-Default::
-include::{root-partials}p2p-api.adoc[tag=config-disable-tls-default]
-
-Example::
-+
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-config-disable-tls", indent=0]
-----
-
-API Reference::
-{url-api-reference-urlendpointconfiguration-disable-tls}
-
-=== Configure TLS Server Identity
-
-Property name::
-`tlsIdentity`
-
-Description::
+Set TLS Server Id::
 +
 --
-Use this property to set the required TLS Server identity.
+include::{root-partials}p2p-api.adoc[tag=config-tls-id]
 
 Typically, you will configure the TLS Server identity once during initial launch.
-Subsequent starts of the listener will then reuse the identity from the keychain, or (re)create it if it doesn't exist.
+Subsequent starts of the listener will then reuse the identity from the keychain, or (re)create it if it doesn't exist -- see: {xref-cbl-pg-p2p-manage-tls-id}
 
-include::{root-partials}p2p-api.adoc[tag=config-tls-id]
 --
 
-Default::
-include::{root-partials}p2p-api.adoc[tag=config-tls-id-default]
-
-Example::
-{empty}
+[#1]
+.Set TLS server identity
+[{tabs}]
+====
+Use nil id::
 +
+--
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-config-tls-id", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-config-tls-id-nil", indent=0]
 ----
+--
 
-API Reference::
-{url-api-reference-urlendpointconfiguration-tls-id}
-
-Related-items::
-{url-api-reference-tlsidentity}
+Use id from keychain::
++
+--
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-config-tls-id-cert", indent=0]
+----
+--
+====
 
 == Configure Client Security
-// DONE: TODO: Moove to top level security section.
-_In this section_:
-<<authenticate-using-the-client-username-and-password>>
-| <<authenticate-using-the-client-certificate>>
-| <<the-impact-of-tls-settings>>
-// | <<expected-system-behavior>>
-| back to: <<simple-listener-initialization>>
-
-[pass]
----
+// DONE: TODO: Mo
+ve to top level security section.
 
 Use the
 {url-api-class-urlendpointconfiguration} class's {url-api-reference-urlendpointconfiguration-auth} property to specify how client credentials are to be authenticated.
@@ -283,53 +195,38 @@ include::{snippet-p2psync-ws}[tags=listener-config-auth, indent=0]
 ----
 ====
 
+
 === Authenticate using the Client Certificate
 
+--
 include::{root-partials}p2p-api.adoc[tag=ListenerCertificateAuthenticator]
-
-==== Using Root CA Certificate Chains
+--
 
 include::{root-partials}p2p-api.adoc[tag=ListenerCertificateAuthenticator-root]
 
-==== Using Application Logic
-
 include::{root-partials}p2p-api.adoc[tag=ListenerCertificateAuthenticatorDelegate]
 
-// Examples::
-
-// [{tabs}]
-// ====
-
-// Password authentication::
-// +
-// --
-// In this example, `allowlistedUsers` is a dictionary comprising the usernames and passwords of valid users. Credentials not in `allowlistedUsers` are denied access.
-
-// [source, {source-language}]
-// ----
-// include::{snippet-p2psync-ws}[tags=listener-config-auth, indent=0]
-// ----
-// --
-
-// Root cert authentication::
-// +
-// --
-// [source, {source-language}]
-// ----
-// include::{snippet-p2psync-ws}[tags="listener-config-client-auth-root", indent=0]
-// ----
-// --
-
-// Cert authentication::
-// +
-// --
-// [source, {source-language}]
-// ----
-// include::{snippet-p2psync-ws}[tags="listener-config-client-auth-self-signed", indent=0]
-// ----
-// --
-
-// ====
+.Set Cert Auth
+[{tabs}]
+====
+Using Root CA Certificate Chains::
++
+--
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-config-client-auth-root", indent=0]
+----
+--
++
+Using Application Logic::
++
+--
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-config-client-auth-self-signed", indent=0]
+----
+--
+====
 
 === The Impact of TLS Settings
 
@@ -378,44 +275,38 @@ a|. System will use the provided self- or CA-signed cert.
 |===
 
 == Configure Delta Sync
-back to: <<simple-listener-initialization>>
 
-Property name::
-{url-api-reference-urlendpointconfiguration-delta-sync}
+Delta sync replication is not enabled by default.
 
-Description::
-+
---
-Use the `enableDeltaSync` property to activate or deactivate delta sync mode when replicating.
---
+Use the `{url-api-reference-urlendpointconfiguration-delta-sync}
+` property of `{url-api-class-urlendpointconfiguration}` to activate or deactivate delta sync mode when replicating.
 
-Default::
-False -- delta sync is not allowed in replication.
-
-Example::
-+
+.Enable delta sync
+====
 [source, {source-language}]
 ----
 include::{snippet-p2psync-ws}[tags="listener-config-delta-sync", indent=0]
 ----
+====
 
-API Reference::
-{url-api-reference-urlendpointconfiguration-delta-sync}
+== Start Listening
+
+Once you have completed the listener's configuration settings you can initialize the listener instance and start listening -- see: <<initialize-and-start-listener>>
 
 
-//[#pass-start]
-== Start Listener
-
-Once you have configured the listener, you can start listening, ready to accept incoming data from active peers.
-//====
-// include::{snippet-p2psync-ws}[tags="initWebsocketsListener"]
+[#initialize-and-start-listener]
+.Initialize and start listener
+====
 [source, {source-language}]
 ----
 include::{snippet-p2psync-ws}[tags="listener-start", indent=0]
 ----
-//====
+<.> Initialize the listener instance using the configuration settings.
+<.> Start the listener, ready to accept connections and incoming data from active peers.
+<.> Start and required on-going listener <<monitor-the-listener, Monitoring>>, including <<conflict-resolution>>
+====
 
-== Check the Status
+== Monitor the Listener
 
 You can use the `status` property of the listener to check on the number of total and active connections.
 The object returned is of type `ConnectionStatus` and comprises:
@@ -423,16 +314,18 @@ The object returned is of type `ConnectionStatus` and comprises:
 * ConnectionCount -- the total number of connections served by the listener
 * activeConnectionCount -- the number of active (BUSY) connections currently being served by the listener
 
+.Using status to monitor listener
+====
 [source, {source-language}]
 ----
 include::{snippet-p2psync-ws}[tags="listener-status-check", indent=0]
 ----
-
+====
 
 == Conflict Resolution
 
+All conflicts are resolved on the active peer, which supports both automatic and custom conflict resolution.
 The listener returns a 409 response on detecting a conflict.
-All conflicts are resolved on the active peer, which supports both  automatic and custom conflict resolution.
 
 // [source, {source-language}]
 // ----
@@ -440,9 +333,11 @@ All conflicts are resolved on the active peer, which supports both  automatic an
 // ----
 
 == Stop the Listener
-//====
+====
 // include::{snippet-p2psync-ws}[tags="stopWebsocketsListener"]config
+.Stop listening using `stop` method
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-stop"]
+include::{snippet-p2psync-ws}[tags="listener-stop", indent=0]
 ----
+====

@@ -278,12 +278,14 @@ a|
 // tag::config-disable-tls-full[]
 // tag::config-disable-tls[]
 TLS is enabled by default.
-Use `disableTLS` to disable TLS communication if necessary
+Use the `{url-api-reference-urlendpointconfiguration-disable-tls}`  property of `{url-api-class-urlendpointconfiguration}` to disable TLS communication if necessary
 
 This property works in conjunction with `TLSidentity`, which enables developers to define the key and-or certificate to be used.
 
-NOTE: If `disableTLS` is true, TLS communication is disabled and the `tlsIdentity` property is ignored.
-So, the URL scheme used to connect to the listener will be `ws://` NOT `wss://`.
+* If `disableTLS` is true -- TLS communication is disabled and the `{url-api-reference-urlendpointconfiguration-tls-id}` property is ignored.
+* If `disableTLS` is false or not specified -- TLS communication is enabled.
+Set the required `{url-api-reference-urlendpointconfiguration-tls-id}` property.
+Use the `wss://` URL scheme used to connect to the listener.
 // end::config-disable-tls[]
 
 See also:: `TLSIdentity`
@@ -303,14 +305,15 @@ a|
 
 // tag::config-tls-id-full[]
 // tag::config-tls-id[]
-Use this configuration property to specify the TLS Identity used in TLS communication.
+
+Use the
+{url-api-reference-urlendpointconfiguration-tls-id} property of
+{url-api-class-urlendpointconfiguration} to configure the TLS Identity used in TLS communication.
 
 If `TLSIdentity` is not set when TLS is enabled (default), the listener uses an auto-generated anonymous self-signed identity.
 This doesn't authenticate or verify trust (on the client side) but it does encrypt communication, giving a more secure option than Non-TLS communication.
 
-.Resuable Id
-[NOTE]
- If the platform supports secure storage, you can save and re-use the auto-generated identity. This avoids the need to generate new identities every time.
+*Resuable Id* -- If the platform supports secure storage, you can save and re-use the auto-generated identity. This avoids the need to generate new identities every time.
 
 // end::config-tls-id[]
 
@@ -468,6 +471,7 @@ You can verify the certificate using either:
 * Root CA certificate chains -- any client cert signed by the given root CA cert chains is authenticated
 
 * Application logic -- an option used mainly for authenticating self-signed certificates
+
 // end::ListenerCertificateAuthenticator[]
 
 // [source,{source-language}]
@@ -494,14 +498,16 @@ init(rootCerts: [SecCertificate])
 // tag::ListenerCertificateAuthenticator-root[]
 Initialize the `ListenerCertificateAuthenticator` using the `rootCert` interface. This identifies the Root CA Chain to be used to verify a certificate chain received from the client.
 
+// end::ListenerCertificateAuthenticator-root[]
 .Root Cert authentication
 ====
+// tag::ListenerCertificateAuthenticator-root-snip[]
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-config-client-auth-root", indent=0]
+include::{snippet-p2psync-ws}[tags=" ", indent=0]
 ----
+// end::ListenerCertificateAuthenticator-root-snip[]
 ====
-// end::ListenerCertificateAuthenticator-root[]
 
 [cols="2,8"]
 |===
@@ -525,8 +531,11 @@ init(delegate: ListenerCertificateAuthenticatorDelegate)
 
 Usage
 
-// tag::ListenerCertificateAuthenticatorDelegate[]
+tag::ListenerCertificateAuthenticatorDelegate[]
 Initialize the `ListenerCertificateAuthenticator` using the `ListenerCertificateAuthenticatorDelegate` interface. This identifies the application logic to be used to verify a certificate chain received from the client.
+
+The logic should take the form of function or block (such as, a closure expression) if the platform allows.
+// end::ListenerCertificateAuthenticatorDelegate[]
 
 [source, {source-language}]
 ----
@@ -535,16 +544,15 @@ public protocol ListenerCertificateAuthenticatorDelegate {
 }
 ----
 
-The logic should take the form of function or block (such as, a closure expression) if the platform allows.
-
 .Cert authentication closure
 ====
+tag::ListenerCertificateAuthenticatorDelegate-snip[]
 [source, {source-language}]
 ----
 include::{snippet-p2psync-ws}[tags="listener-config-client-auth-self-signed", indent=0]
 ----
+// end::ListenerCertificateAuthenticatorDelegate-snip[]
 ====
-// end::ListenerCertificateAuthenticatorDelegate[]
 
 
 [cols="2,8"]
