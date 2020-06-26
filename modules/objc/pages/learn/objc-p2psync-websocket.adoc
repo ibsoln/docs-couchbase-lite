@@ -1,13 +1,17 @@
-= Peer-to-Peer Sync -- Websockets
+= Peer-to-Peer Sync - Using Websockets
 :page-layout: article
 :page-status: {release-status-cbl} -- {release-comments-cbl}
 :page-edition: Enterprise
 :page-role:
 :description: Couchbase Lite database peer-to-peer sync concepts using websockets
-
-:param-abstract:
+:param-abstract!:
 
 include::partial$_std-cbl-hdr-objc.adoc[]
+
+:param-abstract: Related Concepts: {xref-cbl-pg-p2psync-custom}
+:topic-group: Topic Group: Using Peer-to-Peer Sync (web sockets)
+// include::{root-partials}block-abstract.adoc[]
+
 // :param-name: {lang-name-objc}
 // :param-title: {lang-title-objc}
 // :param-module: {lang-mod-objc}

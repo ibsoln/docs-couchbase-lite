@@ -4,16 +4,15 @@
 :page-edition: Enterprise
 :page-role:
 :description: Couchbase Lite - this content covers how to manage TLS identities using Couchbase Lite
-:param-abstract!:
+:param-abstract:
 
-include::partial$_std-cbl-hdr-swift.adoc[]
-// :param-name: {lang-name-swift}
-// :param-title: {lang-title-swift}
-// :param-module: {lang-mod-swift}
+include::partial$_std-cbl-hdr-android.adoc[]
+// :param-name: {lang-name-android}
+// :param-title: {lang-title-android}
+// :param-module: {lang-mod-android}
 
 :param-abstract: Related Concepts: {url-api-references}[API Reference] | {xref-cbl-pg-p2psync-websocket}
-:topic-group: Topic Group: Using Peer-to-Peer Sync (web sockets)
-// include::{root-partials}block-abstract.adoc[]
+:topic-group: _Using Peer-to-Peer Sync (web sockets)_
 
 include::{root-partials}commons/common-p2psync-websocket-manage-tls-id.adoc[subs="macros,attributes"]
 

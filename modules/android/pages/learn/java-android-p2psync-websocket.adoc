@@ -1,6 +1,7 @@
-= Peer-to-Peer Sync -- Custom
+= Peer-to-Peer Sync - Using Websockets
 :page-layout: article
 :page-status: {release-status-cbl} -- {release-comments-cbl}
+:page-edition: Enterprise
 :page-role:
 :description: Couchbase Lite database peer-to-peer sync concepts using websockets
 
@@ -9,6 +10,9 @@ include::partial$_std-cbl-hdr-android.adoc[]
 // :param-name: {lang-name-android}
 // :param-title: {lang-title-android}
 // :param-module: {lang-mod-android}
+
+:param-abstract: Related Concepts: {url-api-references}[API Reference] | {xref-cbl-pg-p2psync-websocket} | {xref-cbl-pg-p2psync-custom}
+:topic-group: Using Peer-to-Peer Sync (web sockets)
 
 include::{root-partials}commons/common-p2psync-websocket.adoc[subs="macros,attributes"]
 

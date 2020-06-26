@@ -10,11 +10,12 @@
 
 :xref-cbl-pg-index: {xref-pfx-root}{cbl-pg-index}[Couchbase Lite]
 :xref-cbl-pg-introduction: {xref-pfx-root}{cbl-pg-introduction}[About CBL]
-:xref-cbl-pg-whatsnew: {xref-pfx-root}{cbl-pg-whatsnew}[What's New]
+:xref-cbl-pg-whatsnew: {xref-pfx-cbl}product/{cbl-pg-whatsnew}[What's New]
 
 
 // Begin -- Ref - Page Targets
 //
+:cbl-pg-quickstart-index: quickstart-index.adoc
 :cbl-pg-blob: learn/{param-name}-blob.adoc
 :cbl-pg-build: start/{param-name}-gs-build.adoc
 :cbl-pg-cert-pinning: learn/{param-name}-cert-pinning.adoc
@@ -28,6 +29,7 @@
 :cbl-pg-dbo-crud: next/{param-name}-dbo-crud.adoc
 :cbl-pg-dbo-query: next/{param-name}-dbo-query.adoc
 :cbl-pg-dbo-p2psync-websocket-using-passive: advance/{param-name}-p2psync-websocket-using-passive.adoc
+:cbl-pg-dbo-p2psync-websocket-using-passive--delta-sync: {cbl-pg-dbo-p2psync-websocket-using-passive}#configure-delta-sync
 :cbl-pg-dbo-p2psync-websocket-using-active: advance/{param-name}-p2psync-websocket-using-active.adoc
 :cbl-pg-dbo-p2psync-cloud-using: advance/{param-name}-p2psync-cloud-using.adoc
 :cbl-pg-dbreplica: learn/{param-name}-dbreplica.adoc
@@ -54,6 +56,7 @@
 :cbl-pg-releasenotes: product/{param-name}-releasenotes.adoc
 :cbl-pg-replication: learn/{param-name}-replication.adoc
 :cbl-pg-replication--status: {cbl-pg-replication}#replication-status
+:cbl-pg-replication--delta-sync: {cbl-pg-replication}#delta-sync
 :cbl-pg-supportnotes: product/{param-name}-pn-supportnotes.adoc
 :cbl-pg-sync-p2p: learn/{param-name}-sync-p2p.adoc
 :cbl-pg-sync-svr: learn/{param-name}-sync-svr.adoc
@@ -65,6 +68,7 @@
 // Being -- Ref - xrefs
 //
 //:xref-cbl-pg-query-using: {xref-pfx-cbl}{cbl-pg-queryxref-cbl-pg-query-using}[Using Queries]
+:xref-cbl-pg-quickstart-index: {xref-pfx-cbl}{cbl-pg-quickstart-index}[{param-title}]
 :xref-cbl-pg-query: {xref-pfx-cbl}{cbl-pg-query}[Query the data]
 :xref-cbl-pg-query-live: {xref-pfx-cbl}{cbl-pg-query-live}[Live Query]
 :xref-cbl-pg-query-predictive: {xref-pfx-cbl}{cbl-pg-query-predictive}[Predictive Query]
@@ -78,6 +82,7 @@
 :xref-cbl-pg-dbo-crud: {xref-pfx-cbl}{cbl-pg-dbo-crud}[Using CRUD Operations]
 :xref-cbl-pg-dbo-query: {xref-pfx-cbl}{cbl-pg-dbo-query}[Using Query Operations]
 :xref-cbl-pg-dbo-p2psync-websocket-using-passive: {xref-pfx-cbl}{cbl-pg-dbo-p2psync-websocket-using-passive}[Deploy Passive Peer]
+:xref-cbl-pg-dbo-p2psync-websocket-using-passive--delta-sync: {xref-pfx-cbl}{cbl-pg-dbo-p2psync-websocket-using-passive--delta-sync}[Configure Delta Sync]
 :xref-cbl-pg-dbo-p2psync-websocket-using-active: {xref-pfx-cbl}{cbl-pg-dbo-p2psync-websocket-using-active}[Deploy Active Peer]
 :xref-cbl-pg-dbo-p2psync-cloud-using: {xref-pfx-cbl}{cbl-pg-dbo-p2psync-cloud-using}[Peer-to-Peer Sync (cloud)]
 :xref-cbl-pg-build: {xref-pfx-cbl}{cbl-pg-build}[Test Build]
@@ -97,7 +102,7 @@
 :xref-cbl-pg-index: {xref-pfx-cbl}{cbl-pg-index}[{component-title-cbl}]
 :xref-cbl-pg-indexing: {xref-pfx-cbl}{cbl-pg-indexing}[Indexing]
 :xref-cbl-pg-install: {xref-pfx-cbl}{cbl-pg-install}[Install]
-:xref-cbl-pg-p2p-manage-tls-id: {xref-pfx-cbl}{cbl-pg-p2p-manage-tls-id}[Manage TLS Identity]
+:xref-cbl-pg-p2p-manage-tls-id: {xref-pfx-cbl}{cbl-pg-p2p-manage-tls-id}[Manage TLS Identities]
 :xref-cbl-pg-p2psync: {xref-pfx-cbl}{cbl-pg-p2psync}[Peer-to_peer Synchronization]
 :xref-cbl-pg-p2psync-http: {xref-pfx-cbl}{cbl-pg-p2psync-http}[P2P - http]
 :xref-cbl-pg-p2psync-custom: {xref-pfx-cbl}{cbl-pg-p2psync-custom}[P2P - Custom]
@@ -111,6 +116,7 @@
 :xref-cbl-pg-releasenotes: {xref-pfx-cbl}{cbl-pg-releasenotes}[Release Notes]
 :xref-cbl-pg-replication: {xref-pfx-cbl}{cbl-pg-replication}[Working with Replications]
 :xref-cbl-pg-replication--status: {xref-pfx-cbl}{cbl-pg-replication--status}[Replication Status]
+:xref-cbl-pg-replication--delta-sync: {xref-pfx-cbl}{cbl-pg-replication--delta-sync}[Replication Delta-Sync]
 :xref-cbl-pg-supportnotes: {xref-pfx-cbl}{cbl-pg-supportnotes}[Support Notices]
 :xref-cbl-pg-sync-p2p: {xref-pfx-cbl}{cbl-pg-sync-p2p}[Synchronization - P2P]
 :xref-cbl-pg-sync-svr: {xref-pfx-cbl}{cbl-pg-sync-svr}[Synchronization - Server]

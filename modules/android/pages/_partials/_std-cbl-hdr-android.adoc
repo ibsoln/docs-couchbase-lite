@@ -2,5 +2,6 @@
 :param-name: java-android
 :param-title: Android (Java)
 :param-platform: android
+:source-language: Java
 
 include::ROOT:partial$_std-cbl-hdr.adoc[]

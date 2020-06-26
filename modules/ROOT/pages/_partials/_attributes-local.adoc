@@ -122,7 +122,7 @@
 :nmLangJS: javascript
 :nmLangNet: C#/.Net
 :nmLangSwift: Swift
-:nmLangObcJ: Objective-C
+:nmLangobjc: Objective-C
 :nmLangAndroid: Android
 
 
@@ -176,6 +176,7 @@ endif::[]
 :root-images: ROOT:assets/images/
 :root-attachments: ROOT:assets/attachments/
 
+:android-pages: {lang-mod-android}:page$
 :android-examples: {lang-mod-android}:example$
 :csharp-examples: {lang-mod-csharp}:example$
 :java-examples: {lang-mod-java}:example$
