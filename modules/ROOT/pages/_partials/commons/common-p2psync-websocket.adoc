@@ -6,9 +6,7 @@
 // :description: Couchbase mobile database queries - concepts
 //
 // include::partial$_std-cbl-hdr-android.adoc[]
-[abstract]
-{description}
-{param-abstract}
+include::{root-partials}block-abstract.adoc[]
 
 ifndef::release-status-cbl[:release-status-cbl!:]
 ifeval::["{release-status-cbl}" == "gamma"]

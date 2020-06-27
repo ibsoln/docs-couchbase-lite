@@ -1,11 +1,6 @@
 //= Using Peer-to-Peer Sync (websockets)
 
-[abstract]
---
-{description}
-
-{param-abstract}
---
+include::{root-partials}block-abstract.adoc[]
 
 ifndef::release-status-cbl[:release-status-cbl!:]
 ifeval::["{release-status-cbl}" == "gamma"]
@@ -48,6 +43,9 @@ include::{snippet-p2psync-ws}[tags="listener-initialize";!listener-config-tls-id
 <.> On-going listener <<monitor-the-listener, monitoring>>, including <<conflict-resolution>>
 ====
 
+== API References
+You can find {url-api-references}[{param-title} API References] here.
+
 == Discovery
 An optional, but typical step.
 
@@ -67,15 +65,15 @@ All other configuration values will take their default setting.
 Database name::
 +
 --
-The database name is set using the {url-api-reference-urlendpointconfiguration-database} property.
+The database name is set using the {url-api-references-urlendpointconfiguration-database} property.
 It is a mandatory, read-only property that is set only by using the `{url-api-class-urlendpointconfiguration}` constructor
 //`public init(database: Database)`.
-{url-api-reference-urlendpointconfiguration-initdb}.
+{url-api-references-urlendpointconfiguration-initdb}.
 --
 
 Port number::
 The listener will auto-select an available port.
-Use the {url-api-reference-urlendpointconfiguration-port} property to configure use of a specific port.
+Use the {url-api-references-urlendpointconfiguration-port} property to configure use of a specific port.
 
 // Example::
 // +
@@ -89,7 +87,7 @@ Use the {url-api-reference-urlendpointconfiguration-port} property to configure 
 Network Interface::
 The listener will listen on all network interfaces.
 Use the
-{url-api-reference-urlendpointconfiguration-netwk-iface} property
+{url-api-references-urlendpointconfiguration-netwk-iface} property
 to configure a specific the network interface.
 This must be either an IP Address or network interface name such as `en0`.
 
@@ -168,7 +166,7 @@ include::{snippet-p2psync-ws}[tags="listener-config-tls-id-cert", indent=0]
 ve to top level security section.
 
 Use the
-{url-api-class-urlendpointconfiguration} class's {url-api-reference-urlendpointconfiguration-auth} property to specify how client credentials are to be authenticated.
+{url-api-class-urlendpointconfiguration} class's {url-api-references-urlendpointconfiguration-auth} property to specify how client credentials are to be authenticated.
 
 Valid options are:
 
@@ -278,8 +276,7 @@ a|. System will use the provided self- or CA-signed cert.
 
 Delta sync replication is not enabled by default.
 
-Use the `{url-api-reference-urlendpointconfiguration-delta-sync}
-` property of `{url-api-class-urlendpointconfiguration}` to activate or deactivate delta sync mode when replicating.
+Use the `{url-api-references-urlendpointconfiguration-delta-sync}` property of `{url-api-class-urlendpointconfiguration}` to activate or deactivate delta sync mode when replicating.
 
 .Enable delta sync
 ====

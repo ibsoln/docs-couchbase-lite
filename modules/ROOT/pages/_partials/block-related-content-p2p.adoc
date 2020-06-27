@@ -2,20 +2,20 @@
 == Related Content
 
 .How-to ...
-
-* Write peer-to-peer listener (websockets)
-** Write {xref-cbl-pg-dbo-p2psync-websocket-using-passive} listener
-** Write {xref-cbl-pg-dbo-p2psync-websocket-using-active} listener
-* Write {xref-cbl-pg-p2psync-custom} listener
+* Peer-to-peer (websocket) sync
+** {xref-cbl-pg-dbo-p2psync-websocket-using-passive} listener
+** {xref-cbl-pg-dbo-p2psync-websocket-using-active} listener
+** {xref-cbl-pg-p2p-manage-tls-id}
 
 .Learn more ...
-
-* {xref-cbl-pg-p2psync}
-* include how-to links as relevant,
-* include how-to links as relevant,
+* Peer-to-peer  sync
+** {xref-cbl-pg-p2psync-websocket}
+** {xref-cbl-pg-p2psync-custom}
+* Related replication topics
+** {xref-cbl-pg-replication}
+** {xref-cbl-pg-conflict}
 
 .Dive Deeper ...
-
 * Reference content
 ** {url-api-references}[API References]
 +

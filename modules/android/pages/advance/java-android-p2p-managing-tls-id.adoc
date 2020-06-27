@@ -1,0 +1,20 @@
+= Managing TLS Identities -- Working with Peer-to-Peer Syncs
+:page-layout: article
+:page-status: {release-status-cbl} -- {release-comments-cbl}
+:page-edition: Enterprise
+:page-role:
+:description: Couchbase Lite - this content covers how to manage TLS identities using Couchbase Lite
+:param-abstract:
+
+include::partial$_std-cbl-hdr-android.adoc[]
+// :param-name: {lang-name-android}
+// :param-title: {lang-title-android}
+// :param-module: {lang-mod-android
+
+include::{root-partials}block-related-concepts-p2psync-ws.adoc[]
+
+include::{root-partials}commons/common-p2psync-websocket-manage-tls-id.adoc[subs="macros,attributes"]
+
+include::{root-partials}block-related-content-p2p.adoc[]
+
+include::{root-partials}block-enterprise-only.adoc[]

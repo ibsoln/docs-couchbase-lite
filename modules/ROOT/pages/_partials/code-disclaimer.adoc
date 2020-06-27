@@ -1,5 +1,0 @@
-.Code Snippets
-[NOTE]
---
-The code snippets demonstrate basic concepts and approaches to using a feature. Adapt these examples= to best practice when developing applications for your platform.
---

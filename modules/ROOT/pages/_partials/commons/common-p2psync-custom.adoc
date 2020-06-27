@@ -17,11 +17,7 @@
 // :url-issues-java: {url-github-cbl}{module}/issues
 // :ziputils: {snippets-pfx--android}/code_snippets/ZipUtils.java
 
-[abstract]
---
-{description}
-{param-abstract}
---
+include::{root-partials}block-abstract.adoc[]
 
 ifndef::release-status-cbl[:release-status-cbl!:]
 ifeval::["{release-status-cbl}" == "gamma"]

@@ -4,15 +4,18 @@
 :page-edition: Enterprise
 :page-role:
 :description: Couchbase Lite - this content covers how to set up an active peer to replicate CBL database changes using peer-to-peer sync over websockets
-:param-abstract:
-
-*Topic group*: _Using Peer-to-Peer Sync (web sockets)_
 
 include::partial$_std-cbl-hdr-swift.adoc[]
 // :param-name: {lang-name-swift}
 // :param-title: {lang-title-swift}
 // :param-module: {lang-mod-swift}
 
+:param-abstract: Related Concepts: {url-api-references}[API Reference] | {xref-cbl-pg-p2psync-websocket}
+:topic-group: Topic Group: Using Peer-to-Peer Sync (web sockets)
+// include::{root-partials}block-abstract.adoc[]
+
 include::{root-partials}commons/common-p2psync-websocket-using-active.adoc[subs="macros,attributes"]
 
 include::{root-partials}block-related-content-p2p.adoc[]
+
+include::{root-partials}block-enterprise-only.adoc[]

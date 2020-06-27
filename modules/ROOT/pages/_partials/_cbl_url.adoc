@@ -9,7 +9,7 @@
 
 :url-support-policy: https://www.couchbase.com/support-policy[Couchbase Support]
 
-:url-license-and-supp-faq: https://www.couchbase.com/licensing-and-support-faq[FAQ]
+:url-license-and-supp-faq: https://www.couchbase.com/licensing-and-support-faq[Licensing]
 
 // END:: Common CBL URL Declarations
 
