@@ -72,22 +72,18 @@ Since this is a private release, please direct all questions to the Product Mana
 
 include::{android-pages}product/cbl-whatsnew.adoc[tag=whatsnew]
 
-include::couchbase-lite:{param-module}:product/cbl-whatsnew.adoc[tag=whatsnew]
+//include::couchbase-lite:{param-module}:product/cbl-whatsnew.adoc[tag=whatsnew]
 
 
 === Documentation
-* link:https://ibsoln.github.io/stage/h2beta/couchbase-lite/2.8/android/learn/java-android-p2psync-websocket.html[Beta Documentation for peer-to-peer]
-* link:https://ibsoln.github.io/stage/api/mobile/2.8.0/couchbase-lite-android/Classes/URLEndpointListener.html[API References]
+* Beta Documentation: {xref-cbl-pg-p2psync-websocket}
+* {url-api-reference-URLEndpointListener}[API References]
 
 // === Sample App
 // You can download a detailed tutorial and corresponding android app project from the <<Download Links>> section. The sample app demonstrates the websockets listener based peer-to-peer capability.
 
 == OS Support
-Couchbase Lite {param-platform} peer-to-peer functionality will be supported on
-
-- iOS 10+
-- macOS 10.12.6+ (High Sierra) - for dev and testing
-
+Couchbase Lite for Android OS will support peer-to-peer functionality on Android API 22+.
 
 == Download Links
 
