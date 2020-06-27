@@ -278,13 +278,13 @@ a|
 // tag::config-disable-tls-full[]
 // tag::config-disable-tls[]
 TLS is enabled by default.
-Use the `{url-api-reference-urlendpointconfiguration-disable-tls}`  property of `{url-api-class-urlendpointconfiguration}` to disable TLS communication if necessary
+Use the `{url-api-references-urlendpointconfiguration-disable-tls}`  property of `{url-api-class-urlendpointconfiguration}` to disable TLS communication if necessary
 
 This property works in conjunction with `TLSidentity`, which enables developers to define the key and-or certificate to be used.
 
-* If `disableTLS` is true -- TLS communication is disabled and the `{url-api-reference-urlendpointconfiguration-tls-id}` property is ignored.
+* If `disableTLS` is true -- TLS communication is disabled and the `{url-api-references-urlendpointconfiguration-tls-id}` property is ignored.
 * If `disableTLS` is false or not specified -- TLS communication is enabled.
-Set the required `{url-api-reference-urlendpointconfiguration-tls-id}` property.
+Set the required `{url-api-references-urlendpointconfiguration-tls-id}` property.
 Use the `wss://` URL scheme used to connect to the listener.
 // end::config-disable-tls[]
 
@@ -294,7 +294,7 @@ Default:
 // tag::config-disable-tls-default[]
 False -- that is, TLS is enabled by default and the URL scheme to connect to the listener is `wss://`.
 // end::config-disable-tls-default[]
-API Reference:  {url-api-reference-urlendpointconfiguration-disable-tls}
+API Reference:  {url-api-references-urlendpointconfiguration-disable-tls}
 
 // end::config-disable-tls-full[]
 |tlsIdentity
@@ -307,7 +307,7 @@ a|
 // tag::config-tls-id[]
 
 Use the
-{url-api-reference-urlendpointconfiguration-tls-id} property of
+{url-api-references-urlendpointconfiguration-tls-id} property of
 {url-api-class-urlendpointconfiguration} to configure the TLS Identity used in TLS communication.
 
 If `TLSIdentity` is not set when TLS is enabled (default), the listener uses an auto-generated anonymous self-signed identity.
@@ -322,7 +322,7 @@ Default:
 Nil -- in this case an auto-generated anonymous self-signed identity is used unless `disableTLS = true`
 // end::config-tls-id-default[]
 
-API Reference:  {url-api-reference-urlendpointconfiguration-tls-id}
+API Reference:  {url-api-references-urlendpointconfiguration-tls-id}
 
 // end::config-tls-id-full[]
 
@@ -345,7 +345,7 @@ Default:
 // tag::config-auth-default[]
 Null -- there is no authentication.
 // tag::config-auth-default[]
-API Reference:  {url-api-reference-urlendpointconfiguration-auth}
+API Reference:  {url-api-references-urlendpointconfiguration-auth}
 
 // end::config-auth-full[]
 

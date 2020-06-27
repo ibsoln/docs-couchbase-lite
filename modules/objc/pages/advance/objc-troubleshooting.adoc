@@ -22,9 +22,7 @@ include::{lang-mod-objc}:partial$_attributes-module.adoc[]
 
 // END::Local page attributes
 
-[abstract]
-{description}
-
+include::{root-partials}block-abstract.adoc[]
 
 As always, when there is a problem with replication, logging is your friend.
 The following example increases the log output for activity related to replication with Sync Gateway.
@@ -33,3 +31,5 @@ The following example increases the log output for activity related to replicati
 ----
 include::{snippet}[tag=replication-logging,indent=0]
 ----
+
+include::{root-partials}block-related-content-std.adoc[]

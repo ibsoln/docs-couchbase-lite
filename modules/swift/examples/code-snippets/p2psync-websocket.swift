@@ -783,7 +783,7 @@ class myActPeerClass {
     // tag::p2p-act-rep-initialize[]
     let tgtUrl = URL(string: "wss://10.1.1.12:8092/actDb")!
     let targetEndpoint = URLEndpoint(url: tgtUrl)
-    var config = ReplicatorConfiguration(database: actDb!, target: targetEndpoint) // <1>
+    var config = ReplicatorConfiguration(database: actDb!, target: targetEndpoint) // <.>
     // end::p2p-act-rep-initialize[]
 
     // tag::p2p-act-rep-config[]
@@ -795,24 +795,24 @@ class myActPeerClass {
     // end::p2p-act-rep-config-cont[]
     // tag::p2p-act-rep-config-cert-verify[]
     // serverCertificateVerificationMode=.selfSignedCert effectively disables cert validation
-    config.serverCertificateVerificationMode = .selfSignedCert // <2>
+    config.serverCertificateVerificationMode = .selfSignedCert // <.>
     // end::p2p-act-rep-config-cert-verify[]
     // end::p2p-act-rep-config[]
 
     // tag::p2p-act-rep-auth[]
     //  Set Authentication Mode
-    let authenticator = BasicAuthenticator(username: user, password: password) // <3>
+    let authenticator = BasicAuthenticator(username: user, password: password) // <.>
     config.authenticator = authenticator
     // end::p2p-act-rep-auth[]
 
     // tag::p2p-act-rep-start-full[]
     // Apply configuration settings to the replicator
-    thisReplicator = Replicator.init( config: config) // <4>
+    thisReplicator = Replicator.init( config: config) // <.>
 
     // Optionally add a change listener
     // tag::p2p-act-rep-add-change-listener[]
     // add change listener and retain token for use in deletion
-    let pushPullReplListener:ListenerToken? = thisReplicator?.addChangeListener({ (change) in // <5>
+    let pushPullReplListener:ListenerToken? = thisReplicator?.addChangeListener({ (change) in // <.>
       if change.status.activity == .stopped {
           print("Replication stopped")
       }
@@ -826,7 +826,7 @@ class myActPeerClass {
 
 // tag::p2p-act-rep-start[]
     // Run the replicator using the config settings
-    thisReplicator?.start()  // <6>
+    thisReplicator?.start()  // <.>
 // end::p2p-act-rep-start[]
 // end::p2p-act-rep-start-full[]
 

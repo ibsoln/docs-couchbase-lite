@@ -3,9 +3,8 @@
 //
 
 // BEGIN CONTENT
-[abstract]
-{description}
-{param-abstract}
+
+include::{root-partials}block-abstract.adoc[]
 
 [.pane__frames]
 == Overview
@@ -17,6 +16,10 @@
 .Key Concepts
 * API: {url-api-class-tlsidentity}
 * {xref-cbl-pg-p2psync-websocket}
+
+== API References
+
+You can find {url-api-references}[{param-title} API References] here.
 
 == Creating TLS Identity
 
@@ -39,7 +42,7 @@ listenerConfig.tlsIdentity = nil
 
 == Import a Cert
 
-Import a cert that can be bundled with the app and-or added to the keychain.
+Use the {url-api-class-tlsidentity} class's  {url-api-method-tls-identity-import} method to import a cert that can be bundled with the app and-or added to the keychain.
 
 . First check the keychain to see if the identity already exists
 +

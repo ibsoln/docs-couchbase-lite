@@ -6,7 +6,7 @@
 :description: Couchbase Lite database peer-to-peer sync concepts using websockets
 :param-abstract:
 
-*Topic group*: _Using Peer-to-Peer Sync (web sockets)_
+:topic-group: Using Peer-to-Peer Sync (web sockets)
 
 include::partial$_std-cbl-hdr-swift.adoc[]
 // :param-name: {lang-name-swift}

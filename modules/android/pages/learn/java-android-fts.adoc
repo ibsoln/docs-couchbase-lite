@@ -1,24 +1,31 @@
-= Using Full-Text Search
+= Using Full-Text Search -- Working with Queries
 :page-layout: article
 :page-status: {release-status-cbl} -- {release-comments-cbl}
 :page-edition: Under Development
 :page-role:
+:description: Couchbase Lite database data querying concepts -- full text search
 
-include::shared-mobile::partial$_attributes-shared.adoc[]
-include::ROOT:partial$_page-index.adoc[]
-include::ROOT:partial$_glossary-links.adoc[]
-include::ROOT:partial$_attributes-local.adoc[]
-include::{lang-mod-android}:partial$_attributes-module.adoc[]
+include::partial$_std-cbl-hdr-android.adoc[]
 
+:param-abstract: Related Concepts: {xref-cbl-pg-query-predictive} | {xref-cbl-pg-query-live} | {xref-cbl-pg-query}
+:topic-group: Topic Group -- Querying
+include::{root-partials}block-abstract.adoc[]
+
+//include::shared-mobile::partial$_attributes-shared.adoc[]
+//include::ROOT:partial$_page-index.adoc[]
+//include::ROOT:partial$_glossary-links.adoc[]
+//include::ROOT:partial$_attributes-local.adoc[]
+//include::{lang-mod-android}:partial$_attributes-module.adoc[]
+//
 // BEGIN::Local page attributes
-:blank-field: ____
-:lang-title: {lang-title-android}
-:module: {lang-mod-android}
-:packageNm: couchbase-lite-{module}
-:source-language: {lang-name-android}
-:snippet: {snippets-content--android}
-:url-issues-java: {url-github-cbl}{module}/issues
-:ziputils: {snippets-pfx--android}/code_snippets/ZipUtils.java
+//:blank-field: ____
+//:lang-title: {lang-title-android}
+//:module: {lang-mod-android}
+//:packageNm: couchbase-lite-{module}
+//:source-language: {lang-name-android}
+//:snippet: {snippets-content--android}
+//:url-issues-java: {url-github-cbl}{module}/issues
+//:ziputils: {snippets-pfx--android}/code_snippets/ZipUtils.java
 
 ifndef::release-status-cbl[:release-status-cbl!:]
 ifeval::["{release-status-cbl}" = "gamma"]
@@ -57,6 +64,7 @@ Search is supported for all languages that use whitespace to separate words.
 
 Stemming, which is the process of fuzzy matching parts of speech, like "fast" and "faster", is supported in the following languages: danish, dutch, english, finnish, french, german, hungarian, italian, norwegian, portuguese, romanian, russian, spanish, swedish and turkish.
 
+== Pattern Matching Forms
 The pattern to match can also be in the following forms:
 
 prefix queries::
@@ -133,3 +141,5 @@ It's very common to sort full-text results in descending order of relevance.
 This can be a very difficult heuristic to define, but Couchbase Lite comes with a ranking function you can use.
 In the `OrderBy` array, use a string of the form `Rank(X)`, where `X` is the property or expression being searched, to represent the ranking of the result.
 
+
+include::{root-partials}block-related-content-query.adoc[]

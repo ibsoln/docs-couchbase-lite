@@ -10,7 +10,7 @@
 
 // include::partial$_std-cbl-hdr-{param-module}.adoc[]
 
-== Overview
+// == Overview
 
 A `Blob` is an object that can appear in a document as a property value.
 Just instantiate a `Blob` and set it as the value of a property.
