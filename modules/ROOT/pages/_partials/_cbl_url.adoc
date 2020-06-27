@@ -11,6 +11,18 @@
 
 :url-license-and-supp-faq: https://www.couchbase.com/licensing-and-support-faq[Licensing]
 
+
+:url-download-swift: https://packages.couchbase.com/releases/couchbase-lite-ios/2.8.0-beta/couchbase-lite-swift_enterprise_2.8.0.zip[Couchbase Lite Swift]
+
+:url-download-objc: https://packages.couchbase.com/releases/couchbase-lite-ios/2.8.0-beta/couchbase-lite-objc_enterprise_2.8.0.zip[Couchbase Lite ObjC]
+
+:url-download-android: https://packages.couchbase.com/releases/couchbase-lite-ios/2.8.0-beta/couchbase-lite-android_enterprise_2.8.0.zip[Couchbase Lite Android]
+
+
+
+
+
+
 // END:: Common CBL URL Declarations
 
 

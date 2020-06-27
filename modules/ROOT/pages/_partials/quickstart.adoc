@@ -9,9 +9,7 @@
 == {empty}
 
 .Download
-* {empty}
-** https://packages.couchbase.com/releases/couchbase-lite-ios/2.8.0-beta/couchbase-lite-swift_enterprise_2.8.0.zip[Couchbase Lite Swift]
-** https://packages.couchbase.com/releases/couchbase-lite-ios/2.8.0-beta/couchbase-lite-objc_enterprise_2.8.0.zip[Couchbase Lite ObjC]
+* {url-download-package}
 
 .Deploy
 * {empty}
@@ -31,7 +29,7 @@
 == {empty}
 
 [.no-color]
-.Study Up
+.Learn More
 * *Data Model*
 +
 {xref-cbl-pg-database} |  {xref-cbl-pg-document} |  {xref-cbl-pg-blob}
