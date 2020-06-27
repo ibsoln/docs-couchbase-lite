@@ -5,5 +5,4 @@
 
 include::partial$_std-cbl-hdr-android.adoc[]
 
-
 include::{root-partials}quickstart.adoc[]
