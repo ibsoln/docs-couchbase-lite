@@ -86,13 +86,15 @@ When the listener is not started, the port will be null (if the platform can hav
 |Yes
 |Yes
 |The TLS identity used by the listener.
-The identity could be specified by users or the generated anonymous identity.
+The identity may be as specified by users or be the generated anonymous identity.
 
-When the TLS is enabled and the tlsIdentity is not specified, the listener will generate an anonymous self-signed identity when the listener starts.
+When TLS is enabled and `tlsIdentity` is not specified, the listener generates an anonymous self-signed identity on start up.
 
-*Note*: the auto-generated anonymous self-signed identity could be saved for future use so that the identity doesn’t need to be re-generated every time if the platform (for example, Apple platforms) supports secure storage.
+*Note*: The auto-generated anonymous self-signed identity can be saved for future use so that the identity doesn’t need to be re-generated every time if the platform (for example, Apple platforms) supports secure storage.
 
-When the listener is not started, the identity property will be null, and when the TLS is distabled, the identity property will be always null.
+When the listener is not started, the identity is null.
+
+When TLS is disabled, the identity is always null.
 
 |urls
 |Array<URL>
@@ -128,7 +130,7 @@ The value will be null if the listener is not started.
 If the listener has already been started, the `start()` operation will be no-ops.
 
 |Post conditions
-|The listener is an a `started` state
+|The listener is in a `started` state
 
 |Exceptions
 |A CouchbaseLiteException is thrown if the listener cannot be started.
@@ -165,7 +167,6 @@ If the listener has already been stopped, the `stop()` operation will be no-ops.
 link:{url-api-references}/Classes/CBLURLEndpointListenerConfiguration.html[API Reference]
 
 A configuration class used for creating a _URLEndpointListener_ object.
-The property setters should be made fluent API if the platform allows.
 
 // [source, {source-language}]
 // ----
@@ -175,7 +176,6 @@ The property setters should be made fluent API if the platform allows.
 [#URLEndpointListenerConfiguration-class]
 .Class Definition
 A configuration class used for creating a _URLEndpointListener_ object.
-The property setters should be made fluent API if the platform allows.
 
 [source, {source-language}]
 ----
@@ -278,14 +278,15 @@ a|
 // tag::config-disable-tls-full[]
 // tag::config-disable-tls[]
 TLS is enabled by default.
-Use the `{url-api-references-urlendpointconfiguration-disable-tls}`  property of `{url-api-class-urlendpointconfiguration}` to disable TLS communication if necessary
 
-This property works in conjunction with `TLSidentity`, which enables developers to define the key and-or certificate to be used.
+Use the `{url-api-references-urlendpointconfiguration-disable-tls}`  parameter to `{url-api-class-urlendpointconfiguration}` to disable TLS communication if necessary
 
-* If `disableTLS` is true -- TLS communication is disabled and the `{url-api-references-urlendpointconfiguration-tls-id}` property is ignored.
+`{url-api-references-urlendpointconfiguration-disable-tls}` works in conjunction with `TLSIdentity`, to enable developers to define the key and-or certificate to be used.
+
+* If `disableTLS` is true -- TLS communication is disabled and `{url-api-references-urlendpointconfiguration-tls-id}` is ignored.
 * If `disableTLS` is false or not specified -- TLS communication is enabled.
-Set the required `{url-api-references-urlendpointconfiguration-tls-id}` property.
-Use the `wss://` URL scheme used to connect to the listener.
++
+Set the required `{url-api-references-urlendpointconfiguration-tls-id}` and use the `wss://` URL scheme used to connect to the listener.
 // end::config-disable-tls[]
 
 See also:: `TLSIdentity`
@@ -307,13 +308,13 @@ a|
 // tag::config-tls-id[]
 
 Use the
-{url-api-references-urlendpointconfiguration-tls-id} property of
+{url-api-references-urlendpointconfiguration-tls-id} parameter of
 {url-api-class-urlendpointconfiguration} to configure the TLS Identity used in TLS communication.
 
 If `TLSIdentity` is not set when TLS is enabled (default), the listener uses an auto-generated anonymous self-signed identity.
 This doesn't authenticate or verify trust (on the client side) but it does encrypt communication, giving a more secure option than Non-TLS communication.
 
-*Resuable Id* -- If the platform supports secure storage, you can save and re-use the auto-generated identity. This avoids the need to generate new identities every time.
+*Reusable Id* -- If the platform supports secure storage, you can save and re-use the auto-generated identity. This avoids the need to generate new identities every time.
 
 // end::config-tls-id[]
 
@@ -333,7 +334,7 @@ API Reference:  {url-api-references-urlendpointconfiguration-tls-id}
 a|
 // tag::config-auth-full[]
 // tag::config-auth[]
-Use this configuration property to specify the authenticator to be used by the listener to authenticate the request.
+Use this configuration parameter to specify the authenticator to be used by the listener to authenticate the request.
 
 This should be set to one of the following:
 
@@ -532,7 +533,8 @@ init(delegate: ListenerCertificateAuthenticatorDelegate)
 Usage
 
 tag::ListenerCertificateAuthenticatorDelegate[]
-Initialize the `ListenerCertificateAuthenticator` using the `ListenerCertificateAuthenticatorDelegate` interface. This identifies the application logic to be used to verify a certificate chain received from the client.
+Initialize the `ListenerCertificateAuthenticator` using the `ListenerCertificateAuthenticatorDelegate` interface.
+This identifies the application logic to be used to verify a certificate chain received from the client.
 
 The logic should take the form of function or block (such as, a closure expression) if the platform allows.
 // end::ListenerCertificateAuthenticatorDelegate[]
