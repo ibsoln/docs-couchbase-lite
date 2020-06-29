@@ -80,7 +80,7 @@
 
 :url-api-method-replicator-stop: {url-api-properties-replicator}(im)stop[stop()]
 
-:url-api-property-replicator-status: {url-api-properties-replicator}(py)status[status]
+:url-api-property-replicator-status: {url-api-properties-replicator}(py)status[replicator.getStatus]
 //:url-api-property-replicator-status-activity: {url-api-references-replicator}{sep}s:18CouchbaseLiteandroid10ReplicatorC13ActivityLevelO
 
 :url-api-references-replicator-status: {url-api-references-classes}/{api-pfx}ReplicatorStatus.html
@@ -110,7 +110,7 @@
 
 :url-api-prop-replicator-config-cont: {url-api-references-replicator-config-prop}(py)continuous)[continuous]
 
-:url-api-prop-replicator-config-rep-type: {{url-api-references-replicator-config-prop}(py)replicatorType[replicatorType]
+:url-api-prop-replicator-config-rep-type: {url-api-references-replicator-config-prop}(py)replicatorType[replicatorType]
 
 :url-api-prop-replicator-config-ServerCertificateVerificationMode: {url-api-references-replicator-config-prop}(py)serverCertificateVerificationMode[serverCertificateVerificationMode]
 

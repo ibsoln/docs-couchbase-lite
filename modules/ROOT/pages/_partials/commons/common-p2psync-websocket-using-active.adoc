@@ -47,7 +47,7 @@ IMPORTANT: Peer-to-peer sync is an {url-enterprise} feature.
 You must purchase the Enterprise License which includes official {url-support-policy} to use it in production (also see the {url-license-and-supp-faq}).
 endif::[]
 
-This content provides sample code covering the implementation of peer-to-peer sync over websockets. Specifically it covers the implementation of an active peer, that will sync database changes with a connected passive peer.
+This content provides sample code covering the implementation of peer-to-peer sync over websockets. Specifically it covers the implementation of an {glos-term-active-peer}, that will sync database changes with a connected {glos-term-passive-peer}.
 
 The code snippet in <<simple-replication-to-listener>> covers the configuration, initialization and replication is expanded upon in subsequent sections in this content.
 
@@ -65,14 +65,14 @@ include::{snippet-p2psync-ws}[tag=p2p-act-rep-func, indent=0]
 <.> Use the `ReplicationConfiguration` class's `init(database:target:)` constructor to initialize the replicator configuration with the local database and remote listener endpoint -- see <<configure-target>>
 
 <.> The `ServerCertificateVerificationMode` can be: `.caCert` (default) or `.selfSignedCert`.
-Use the `.selfSignedCert` to skip listener cert validation. -- see <<configure-server-security>>.
+Use the `.selfSignedCert` to skip listener cert validation. -- see <<configure-server-authentication>>
 
-<.> The `authenticator` mode is configured to use basic auth.
-Other supported options are `ClientCertificateAuthenticator` if you want to use client cert based authentication -- see <<configure-client-security>>
+<.> The `authenticator` mode is configured to use basic authentication.
+Other supported options are `ClientCertificateAuthenticator` if you want to use client cert based authentication -- see <<configure-client-authentication>>
 
 <.> Initialize the replicator with specified configuration
 
-<.> Register a observer to be notified of changes to the replication status
+<.> Register an observer to be notified of changes to the replication status
 
 <.> Start the replicator
 ====
@@ -81,31 +81,30 @@ Other supported options are `ClientCertificateAuthenticator` if you want to use 
 
 You can find {url-api-references}[{param-title} API References] here.
 
-== Discovery
-Optional, but typical step.
+== Device Discovery
+*This phase is optional:* If the listener is initialized on a well known URL endpoint (for example, a static IP Address or well known DNS address) then you can configure active peers to connect to those.
 
 Prior to connecting with a listener you may execute a peer discovery phase to dynamically discover peers.
-For the active peer this involves browsing-for and selecting the appropriate service using a zero-config protocol such as _Bonjour_.
 
-Alternatively if the listener is configured to use a known endpoint (eg. static IP Address or well known DNS address) then the client can instead be statically pre-configured to connect to the listener at that known endpoint.
+For the active peer this involves browsing-for and selecting the appropriate service using a zero-config protocol such as _Bonjour_.
 
 // image::ROOT:replication.svg[,800]
 
 == Configure Target
 
 Use the
-{url-api-class-replicator-config} class to initialize the replication configuration by the
+{url-api-class-replicator-config} class to initialize the replication configuration with the
 {url-api-constructor-replicator-config-db-tgt} constructor.
 
-This constructor provides the target (server/passive peer's) endpoint details, whether pre-configured or gathered during a discovery phase, together with the name of the local database to be synced.
+This constructor provides the target (server/passive peer's) endpoint details -- whether pre-configured or gathered during a discovery phase -- together with the name of the local database to be synced.
 
 The required parameters are:
 
-* Use the {url-api-prop-replicator-config-target} property to specify the passive peer's URL including the port the listener is listening on.
+* Use the {url-api-prop-replicator-config-target} parameter to specify the passive peer's URL including the port the listener is listening on.
 The URL scheme for web socket URLs uses `ws:` (non-TLS) or `wss:` (SSL/TLS) prefixes.
 
 * Use the
-{url-api-prop-replicator-config-database} property to specify the local database to be synced.
+{url-api-prop-replicator-config-database} parameter to specify the local database to be synced.
 
 You will also need any security credentials provided (for example, user name and password or Cert) for use in the authentication phase of configuration.
 
@@ -119,11 +118,10 @@ include::{snippet-p2psync-ws}[tags="p2p-act-rep-initialize"]
 
 == Configure Sync Mode
 
-Use the `{url-api-prop-replicator-config-rep-type}` and
-`{url-api-prop-replicator-config-cont}` properties of
-`{url-api-class-replicator-config}` to tell the replicator:
+Use `{url-api-class-replicator-config}`, with its {url-api-prop-replicator-config-rep-type} and
+`{url-api-prop-replicator-config-cont}` parameters, to tell the replicator:
 
-* The direction of the replication: `push`; `pushAndPull`; `pull`.
+* The direction of the replication: `*pushAndPull*`; `pull`; `push`
 * Whether the replicator should:
 ** Stay active indefinitely to replicate changed documents: `continuous=true`
 ** Be a one-shot replication of changed documents: `continuous=false`
@@ -139,11 +137,11 @@ include::{snippet-p2psync-ws}[tags=p2p-act-rep-config-cont, indent=0]
 
 ====
 
-== Configure Server Security
+== Configure Server Authentication
 
 :this-prop: ServerCertificateVerificationMode
 
-Use the {url-api-prop-replicator-config-ServerCertificateVerificationMode} property to tell the replicator how to verify TLS server certificates.
+Use `{url-api-class-replicator-config}`, with its {url-api-prop-replicator-config-ServerCertificateVerificationMode} parameter, to tell the replicator how to verify TLS server certificates.
 
 The valid options at this stage are:
 
@@ -183,15 +181,15 @@ include::{snippet-p2psync-ws}[tag=p2p-act-rep-config-cacert-pinned, indent=0]
 --
 ====
 
-== Configure Client Security
+== Configure Client Authentication
 
-Use the {url-api-prop-replicator-config-auth} property to provide client authentication credentials to the replicator.
+Use the {url-api-prop-replicator-config-auth} property object to provide client authentication credentials to the replicator.
 
 Valid options include:
 
-* Use the `{url-api-class-replicator-config-basic-auth}` property to set up basic authentication with the username and password credentials.
+* Use the `{url-api-class-replicator-config-basic-auth}` parameter to set up basic authentication with the username and password credentials.
 
-* Use the `{url-api-class-replicator-config-cert-auth}` property to configure the client TLS certs to be presented to the server, on connection. This applies only to the {url-api-class-urlendpointlistener}.
+* Use the `{url-api-class-replicator-config-cert-auth}` parameter to configure the client TLS certs to be presented to the server, on connection. This applies only to the {url-api-class-urlendpointlistener}.
 
 If you are using certificates, you have the option to either:
 
@@ -236,7 +234,7 @@ For how to import identities and add them to the {securestorage} see {xref-cbl-p
 
 == Initiate Sync
 
-Initialize the replicator using the {url-api-constructor-replicator-init-config} specifying the configuration set you have defined, optionally add a change listener <<monitor-sync>> and start the replicator running using {url-api-method-replicator-start}.
+Use `{url-api-class-replicator-config}`, with its {url-api-constructor-replicator-init-config} parameter, to specify the configuration set you have defined. You may also optionally add a change listener (see <<monitor-sync>>) before starting the replicator running using {url-api-method-replicator-start}.
 
 .Initialize and run replicator
 ====
@@ -254,7 +252,7 @@ You will then be asynchronously notified of state changes.
 Use this to monitor changes and to inform on sync progress, as shown below; this is an optional step.
 
 === Replicator Status
-You can also use the {url-api-property-replicator-status} property to monitor replicator status.
+You can also use {url-api-property-replicator-status} to monitor replicator status.
 That is, when it is actively transferring data and when it has stopped.
 
 The {url-api-class-replicator-status} structure comprises the following elements:
@@ -306,11 +304,11 @@ include::{snippet-p2psync-ws}[tags=p2p-act-rep-stop, indent=0]
 
 == Conflict Resolution
 
-The default conflict resolver is applied (see {xref-cbl-pg-conflict-auto}) unless you use the {url-api-prop-replicator-config-conflict} property to specify a custom conflict resolver object (see: {xref-cbl-pg-conflict-custom}).
+The default conflict resolver is applied (see {xref-cbl-pg-conflict-auto}) unless you use the {url-api-prop-replicator-config-conflict} parameter to specify a custom conflict resolver object (see: {xref-cbl-pg-conflict-custom}).
 
 For more on replicator conflict resolution see: {xref-cbl-pg-conflict}.
 
-//TODO: Update example to show how the confog resolver property is set (refer to the stanadrd replicator code)
+//TODO: Update example to show how the confog resolver parameter is set (refer to the stanadrd replicator code)
 
 .Conflict resolving
 
@@ -318,7 +316,7 @@ include::{root-partials}handling-conflicts.adoc[tags=conflict-custom-resolution-
 
 
 == Delta Sync
-// DONE: Add reference to listener section tht oincludes enableDeltaSync property being set to true
+// DONE: Add reference to listener section tht includes enableDeltaSync parameter being set to true
 If delta sync is enabled on the listener, then replication will use delta sync.
 
 For more on how to:

@@ -18,7 +18,7 @@ endif::[]
 == Overview
 
 This content provides sample code covering the implementation of {glos-term-peer-to-peer-sync} over websockets.
-Specifically it covers the implementation of a {glos-term-passive-peer} listener, that will accept and apply database changes replicated by a connected {glos-term-passive-peer}. In this context the term _client_ refers to the _active peer_ and the term _server_ to the _passive peer_
+Specifically it covers the implementation of a {glos-term-passive-peer} listener, that will accept and apply database changes replicated by a connected {glos-term-active-peer}. In this context the term _client_ refers to the _active peer_ and the term _server_ to the _passive peer_
 
 You will need to initialize and configure a listener for each Couchbase Lite database instance that you want to sync with other peers.
 
@@ -35,8 +35,8 @@ You do not need to provide configuration values for all properties, only those n
 include::{snippet-p2psync-ws}[tags="listener-initialize";!listener-config-tls-id-cert, indent=0]
 ----
 <.> <<configure-listener-endpoint>>
-<.> <<configure-server-security>>
-<.> <<configure-client-security>>
+<.> <<configure-tls-security>>
+<.> <<configure-client-authentication>>
 <.> <<configure-delta-sync>>
 <.> Initialize the listener using the configuration settings
 <.> <<start-listening>>
@@ -46,12 +46,12 @@ include::{snippet-p2psync-ws}[tags="listener-initialize";!listener-config-tls-id
 == API References
 You can find {url-api-references}[{param-title} API References] here.
 
-== Discovery
-An optional, but typical step.
+== Device Discovery
+*This phase is optional:* If the listener is initialized on a well known URL endpoint (for example, a static IP Address or well known DNS address) then you can configure active peers to connect to those.
 
-Prior to initiating the listener you may execute the peer discovery phase or use a pre-configured endpoint.
+Prior to initiating the listener you may execute a peer discovery phase.
 
-For the passive peer discovery involves advertising the service using, for example _Bonjour_, and waiting for an invite from the {glos-term-active-peer}.
+For the passive peer, this involves advertising the service using, for example _Bonjour_, and waiting for an invite from the active peer.
 The connection is established once the passive peer has authenticated and accepted an active peer's invitation.
 
 == Configure Listener Endpoint
@@ -65,15 +65,17 @@ All other configuration values will take their default setting.
 Database name::
 +
 --
-The database name is set using the {url-api-references-urlendpointconfiguration-database} property.
-It is a mandatory, read-only property that is set only by using the `{url-api-class-urlendpointconfiguration}` constructor
+The database name is set using the mandatory, read-only {url-api-references-urlendpointconfiguration-database} parameter to the `{url-api-class-urlendpointconfiguration}` constructor
 //`public init(database: Database)`.
 {url-api-references-urlendpointconfiguration-initdb}.
 --
 
 Port number::
++
+--
 The listener will auto-select an available port.
-Use the {url-api-references-urlendpointconfiguration-port} property to configure use of a specific port.
+
+Alternatively, use the {url-api-references-urlendpointconfiguration-port} parameter to specify a known port.
 
 // Example::
 // +
@@ -81,15 +83,18 @@ Use the {url-api-references-urlendpointconfiguration-port} property to configure
 // ----
 // include::{snippet-p2psync-ws}[tags="listener-config-port", indent=0]
 // ----
-
-// API Reference::
+--
 
 Network Interface::
++
+--
 The listener will listen on all network interfaces.
-Use the
-{url-api-references-urlendpointconfiguration-netwk-iface} property
-to configure a specific the network interface.
+
+Alternatively, use
+{url-api-references-urlendpointconfiguration-netwk-iface} parameter
+to specify the network interface.
 This must be either an IP Address or network interface name such as `en0`.
+--
 
 .Configure Endpoint
 ====
@@ -115,7 +120,7 @@ include::{snippet-p2psync-ws}[tags="listener-config-endpoint", indent=0]
 // | <<configure-delta-sync>>
 // | <<conflict-resolution>>
 
-== Configure Server Security
+== Configure TLS Security
 // DONE: TODO: Move under top level security section
 // _In this section_:
 // <<enable-or-disable-tls,Use TLS>>
@@ -161,12 +166,11 @@ include::{snippet-p2psync-ws}[tags="listener-config-tls-id-cert", indent=0]
 --
 ====
 
-== Configure Client Security
-// DONE: TODO: Mo
-ve to top level security section.
+== Configure Client Authentication
+// DONE: TODO: Move to top level security section.
 
 Use the
-{url-api-class-urlendpointconfiguration} class's {url-api-references-urlendpointconfiguration-auth} property to specify how client credentials are to be authenticated.
+{url-api-class-urlendpointconfiguration} class's {url-api-references-urlendpointconfiguration-auth} parameter to specify how client credentials are to be authenticated.
 
 Valid options are:
 
@@ -177,7 +181,8 @@ Valid options are:
 
 === Authenticate Using the Client Username and Password
 
-This content shows how to authenticate using the client username and password. For how authenticate using client certs see: <<authenticating-with-certificate>>
+This section shows how to authenticate client username and password using basic authentication.
+For how to authenticate using client certs see: <<authenticating-with-certificate>>
 
 include::{root-partials}p2p-api.adoc[tag=ListenerPasswordAuthenticator]
 
@@ -255,9 +260,8 @@ a|Set to server identity generated from a self- or CA-signed certificate
 
 See: {xref-cbl-pg-p2p-manage-tls-id} for more on how to store and use identities.
 
-a|. System will use the provided self- or CA-signed cert.
-. Active peers will validate the cert.
-. Communication is encrypted.
+a|* System will use the configured identity.
+* Active peers will validate the server cert corresponding to the TLSIdenity (as long as they are configured to not skip validation -- see <<configure-tls-security>>.
 
 // |false
 // a|
@@ -276,7 +280,7 @@ a|. System will use the provided self- or CA-signed cert.
 
 Delta sync replication is not enabled by default.
 
-Use the `{url-api-references-urlendpointconfiguration-delta-sync}` property of `{url-api-class-urlendpointconfiguration}` to activate or deactivate delta sync mode when replicating.
+Use the `{url-api-references-urlendpointconfiguration-delta-sync}` parameter of `{url-api-class-urlendpointconfiguration}` to activate or deactivate delta sync mode when replicating.
 
 .Enable delta sync
 ====
@@ -305,7 +309,7 @@ include::{snippet-p2psync-ws}[tags="listener-start", indent=0]
 
 == Monitor the Listener
 
-You can use the `status` property of the listener to check on the number of total and active connections.
+You can use the `status` parameter of the listener to check on the number of total and active connections.
 The object returned is of type `ConnectionStatus` and comprises:
 
 * ConnectionCount -- the total number of connections served by the listener
