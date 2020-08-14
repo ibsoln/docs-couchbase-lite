@@ -29,6 +29,8 @@ https://issues.couchbase.com/browse/DOC-6340
 This is the main P2P content covering CBL P2P:
 
 Create a parent topic P2P Sync that will cover the generic sync concepts and then branch to cover new WebsocketEndpointListener topic, existing EndpointListener topic
+--
+endif::[]
 
 .Enterprise Edition only
 IMPORTANT: Peer-to-peer sync is an https://www.couchbase.com/products/editions[Enterprise Edition] feature.
@@ -66,14 +68,9 @@ The peer that initializes the connection and replication (i.e the "client" side)
 Passive Peer::
 The passive side reacts to things that it receives but does not initiate any communication on its own (i.e. the "server" side).
 
-[.pane__frames.no-title]
-== {empty}
-
-=== Websocket Listener
-
+Websocket Listener::
 {xref-cbl-pg-p2psync-websocket}
 
-=== Custom Listener
-
+Custom Listener::
 {xref-cbl-pg-p2psync-custom}
 

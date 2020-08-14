@@ -142,28 +142,49 @@ Typically, you will configure the TLS Server identity once during initial launch
 Subsequent starts of the listener will then reuse the identity from the keychain, or (re)create it if it doesn't exist -- see: {xref-cbl-pg-p2p-manage-tls-id}
 
 --
+// include::{snippet-p2psync-ws}[tags="listener-config-tls-id-cert", indent=0]
+// include::{snippet-p2psync-ws}[tags="listener-config-tls-id-cert", indent=0]
+// include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full,!createTlsIdentity,!retrieveTlsIdentity,!listener-config-tls-id-cert", indent=0]
 
 [#1]
 .Set TLS server identity
 [{tabs}]
 ====
-Use nil id::
+
+Use Anonymous Certificate::
 +
 --
+Use “anonymous” certificate.
+These are self signed certificates created by the system.
+
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-config-tls-id-nil", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-config-tls-id-nil,!listener-config-tls-id-cert", indent=0]
 ----
 --
 
-Use id from keychain::
+Retrieve TLS Identity to Use::
 +
 --
+This examples retrieves a TLS identity previously stored in the {securestorage} using its alias.
+
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-config-tls-id-cert", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full,!listener-config-tls-id-nil,!createTlsIdentity", indent=0]
 ----
 --
+
+Create TLS Identity to Use::
++
+--
+This example creates a new identity using a set of credentials. It stores the identity in the {securestorage} and then adds the identity to the listener's configuration.
+
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full,!listener-config-tls-id-nil,!retrieveTlsIdentity", indent=0]
+----
+--
+
 ====
 
 == Configure Client Authentication

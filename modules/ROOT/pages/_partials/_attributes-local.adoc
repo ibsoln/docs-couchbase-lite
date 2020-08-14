@@ -136,15 +136,16 @@
 
 // :url-api-references-staging: https://ibsoln.github.io/stage/h2/mobile/{version-full}/couchbase-lite-
 :url-api-references-staging: https://ibsoln.github.io/stage/api/mobile/{version-full}/couchbase-lite-
-
-
-//swift local
+:url-api-references-beta: https://ibsoln.github.io/betasites/api/mobile/{version-full}/couchbase-lite-
 
 ifeval::["{api-target}"=="origin"]
 //preparing staging or local site
 :url-api-references-pfx: {url-api-references-staging}
 endif::[]
-
+ifeval::["{api-target}"=="beta"]
+//preparing staging or local site
+:url-api-references-pfx: {url-api-references-beta}
+endif::[]
 //pfx after block {url-api-references-pfx}
 
 
@@ -154,11 +155,11 @@ endif::[]
 :url-issues-objc: https://github.com/couchbase/couchbase-lite-ios/issues
 :url-issues-swift: https://github.com/couchbase/couchbase-lite-ios/issues
 // :url-api-references: http://docs.couchbase.com/mobile/{version}/couchbase-lite-{module}
-:url-api-references-android: {url-api-references-pfx}{lang-name-android}
-:url-api-references-csharp: {url-api-references-pfx}{lang-name-csharp}
-:url-api-references-java: {url-api-references-pfx}{lang-name-java}
-:url-api-references-objc: {url-api-references-pfx}{lang-name-objc}
-:url-api-references-swift: {url-api-references-pfx}{lang-name-swift}
+:url-api-references-android: {url-api-references-pfx}{lang-mod-android}
+:url-api-references-csharp: {url-api-references-pfx}{lang-mod-csharp}
+:url-api-references-java: {url-api-references-pfx}{lang-mod-java}
+:url-api-references-objc: {url-api-references-pfx}{lang-mod-objc}
+:url-api-references-swift: {url-api-references-pfx}{lang-mod-swift}
 
 //swift api {url-api-references-swift}
 //pfx api {url-api-references-pfx}

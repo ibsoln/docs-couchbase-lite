@@ -7,7 +7,8 @@
 :snippet: {snippets-content--android}
 :snippet-p2psync-ws: {snippets-p2psync-ws--android}
 :url-issues: {url-issues-android}
-:sep: #/
+:sep: #
+// :sep: #/
 
 // END::Local page attributes
 
@@ -23,30 +24,34 @@
 :api-pfx:
 :url-api-references: {url-api-references-android}
 //:url-api-references-structs: {url-api-references}/Structs
-:url-api-references-classes: {url-api-references}/Classes
+:url-api-references-classes: {url-api-references}/com/couchbase/lite/
+// :url-api-references-classes: {url-api-references}/Classes
 :url-api-references-structs: {url-api-references-classes}
 :url-api-references-enums: {url-api-references}/Enums
 
-:url-api-references-urlendpointconfiguration: {url-api-references-classes}/{api-pfx}URLEndpointListenerConfiguration.html
+:url-api-references-urlendpointconfiguration: {url-api-references-classes}{api-pfx}URLEndpointListenerConfiguration.html
 
 
-:url-api-references-urlendpointlistener: {url-api-references-classes}/{api-pfx}URLEndpointListener.html
+:url-api-references-urlendpointlistener: {url-api-references-classes}{api-pfx}URLEndpointListener.html
 
 :url-api-class-urlendpointlistener: {url-api-references-urlendpointlistener}[URLEndpointListener]
 
-:url-api-references-tlsidentity: {url-api-references-classes}/{api-pfx}TLSIdentity.html
+:url-api-references-tlsidentity: {url-api-references-classes}{api-pfx}TLSIdentity.html
 
 :url-api-class-tlsidentity: {url-api-references-tlsidentity}[TLSIdentity]
 
-:url-api-method-tls-identity-import: {url-api-references-tlsidentity}{sep}c:android(cs){api-pfx}TLSIdentity(cm)importIdentityWithData:password:label:error:[importIdentity(withData:password:label:error:)]
+:url-api-method-tls-identity-import: {url-api-references-tlsidentity}{sep}importIdentity-java.lang.String-java.io.InputStream-char:A-java.lang.String-char:A-java.lang.String-[importIdentity()]
+:url-api-method-tls-identity-create: {url-api-references-tlsidentity}{sep}createIdentity-boolean-java.util.Map-java.util.Date-java.lang.String-[createIdentity()]
+:url-api-method-tls-identity-get: {url-api-references-tlsidentity}{sep}getIdentity-java.lang.String-[getIdentity()]
 
 :url-api-class-urlendpointconfiguration: {url-api-references-urlendpointconfiguration}[URLEndpointListenerConfiguration]
 
-:url-api-references-urlendpointconfiguration-property: {url-api-references-urlendpointconfiguration}{sep}c:android(cs){api-pfx}URLEndpointListenerConfiguration
+:url-api-references-urlendpointconfiguration-property: {url-api-references-urlendpointconfiguration}{sep}
 
-:url-api-references-urlendpointconfiguration-port: {url-api-references-urlendpointconfiguration-property}(py)port[port]
+// https://ibsoln.github.io/betasites/api/mobile/2.8.0/couchbase-lite-android/com/couchbase/lite/URLEndpointListenerConfiguration.html#setPort-int-
+:url-api-references-urlendpointconfiguration-port: {url-api-references-urlendpointconfiguration-property}setPort-int-[setPort]
 
-:url-api-references-urlendpointconfiguration-netwk-iface: {url-api-references-urlendpointconfiguration-property}(py)networkInterface[networkInterface]
+:url-api-references-urlendpointconfiguration-netwk-iface: {url-api-references-urlendpointconfiguration-property}(py)networkInterface[setNetworkInterface]
 
 :url-api-references-urlendpointconfiguration-database: {url-api-references-urlendpointconfiguration-property}(py)database[database]
 
@@ -65,7 +70,7 @@
 
 
 // Replicator API
-:url-api-references-replicator: {url-api-references-classes}/{api-pfx}Replicator.html
+:url-api-references-replicator: {url-api-references-classes}{api-pfx}Replicator.html
 :url-api-class-replicator: {url-api-references-replicator}[Replicator]
 
 :url-api-properties-replicator: {url-api-references-replicator}{sep}c:android(cs){api-pfx}Replicator
@@ -83,7 +88,7 @@
 :url-api-property-replicator-status: {url-api-properties-replicator}(py)status[replicator.getStatus]
 //:url-api-property-replicator-status-activity: {url-api-references-replicator}{sep}s:18CouchbaseLiteandroid10ReplicatorC13ActivityLevelO
 
-:url-api-references-replicator-status: {url-api-references-classes}/{api-pfx}ReplicatorStatus.html
+:url-api-references-replicator-status: {url-api-references-classes}{api-pfx}ReplicatorStatus.html
 
 :url-api-class-replicator-status: {url-api-references-replicator-status}[{api-pfx}ReplicatorStatus]
 
@@ -96,7 +101,7 @@
 :url-api-enum-replicator-error: {url-api-properties-replicator-status}(py)error[error enum]
 
 // ReplicatorConfiguration API
-:url-api-references-replicator-config: {url-api-references-classes}/{api-pfx}ReplicatorConfiguration.html
+:url-api-references-replicator-config: {url-api-references-classes}{api-pfx}ReplicatorConfiguration.html
 
 :url-api-class-replicator-config: {url-api-references-replicator-config}[ReplicatorConfiguration]
 
