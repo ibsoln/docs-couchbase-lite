@@ -18,9 +18,9 @@ ifeval::["{release-status-cbl}" == "gamma"]
 [.pane__frame--orange]
 .Author's Notes
 --
-Add content covering CBL P2P's new features, plus other changes at this release.
+Add content covering Couchbase Lite P2P's new features, plus other changes at this release.
 
-* DOC-6368-H2: CBL What's New - update page
+* DOC-6368-H2: Couchbase Lite What's New - update page
 https://issues.couchbase.com/browse/DOC-6368
 
 Compile the release highlights page for Sync Gateway 2.8 to include summaries of: 

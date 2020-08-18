@@ -52,9 +52,9 @@ class URLEndpontListenerTest: ReplicatorTest {
     // tag::xctListener-start[]
     // tag::xctListener-config[]
     //  ... fragment preceded by other user code, including
-    //  ... Couchbase Lite Database initialization that returns `_userDB`
+    //  ... Couchbase Lite Database initialization that returns `thisDB`
 
-    guard let db = _userDb else {
+    guard let db = thisDB else {
       throw print("DatabaseNotInitialized")
       // ... take appropriate actions
     }
@@ -502,7 +502,7 @@ _websocketListener = URLEndpointListener(config: listenerConfig)
 // tag::replication-start-func[]
     func startP2PReplicationWithUserDatabaseToRemotePeer(_ peer:PeerHost, handler:@escaping(_ status:PeerConnectionStatus)->Void) throws{
         print("\(#function) with ws://\(peer)/\(kUserDBName)")
-        guard let userDb = _userDb else {
+        guard let userDb = thisDB else {
           throw print("DatabaseNotInitialized")
           // ... take appropriate actions
         }
@@ -614,12 +614,12 @@ class cMyPassListener {
   // tag::listener-initialize[]
   fileprivate  var _allowlistedUsers:[[String:String]] = []
   fileprivate var _websocketListener:URLEndpointListener?
-  fileprivate var _userDb:Database?
+  fileprivate var thisDB:Database?
     // Include websockets listener initializer code
 
     // func fMyPassListener() {
-    // tag::listener-config-endpoint[]
-    let db=_userDb!
+    // tag::listener-config-db[]
+    let db=thisDB!
     let listenerConfig = URLEndpointListenerConfiguration(database: db) // <.>
     // tag::listener-config-port[]
     /* optionally */ let wsPort: UInt16 = 4984
@@ -630,7 +630,7 @@ class cMyPassListener {
     // tag::listener-config-netw-iface[]
     listenerConfig.networkInterface = "10.1.1.10"
     // end::listener-config-netw-iface[]
-    // end::listener-config-endpoint[]
+    // end::listener-config-db[]
 
     // tag::listener-config-tls-full[]
     // This combination will set

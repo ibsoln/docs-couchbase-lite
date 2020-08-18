@@ -9,36 +9,36 @@ import MultipeerConnectivity
 
 class cMyPassListener {
     // tag::listener-initialize[]
-
+    // tag::listener-local-db[]
     // ... preceding application code
 
     CouchbaseLite.init(context);
-    Database passDb = new Database("passivepeerdb");  // <.>
-
-    // tag::listener-config-endpoint[]
+    Database thisDB = new Database("passivepeerdb");
+    // end::listener-local-db[]
+    // tag::listener-config-db[]
     // Initialize the listener config
-    URLEndpointListenerConfiguration listenerConfig = new URLEndpointListenerConfiguration(passDb);
-
+    URLEndpointListenerConfiguration listenerConfig = new URLEndpointListenerConfiguration(thisDB); // <.>
+    // end::listener-config-db[]
     // tag::listener-config-port[]
-    listenerConfig.setPort(55990);
+    listenerConfig.setPort(55990); //<.>
     // end::listener-config-port[]
-
     // tag::listener-config-netw-iface[]
-    listenerConfig.setNetworkInterface("10.1.1.10");
+    listenerConfig.setNetworkInterface("10.1.1.10"); // <.>
     // end::listener-config-netw-iface[]
-    // end::listener-config-endpoint[]
-
+    // end::listener-config-db[]
+    // tag::listener-deltasync[]
+    listenerConfig.setEnableDeltaSync(true); // <.>
+    // end::listener-deltasync[]
     // tag::listener-config-tls-full[]
-    // This combination will set
     // tag::listener-config-tls-enable[]
-    // -- TLS on
-    //    optionally switch it off .disableTLS  = true
     listenerConfig.setDisableTLS(false); // <.>
     // end::listener-config-tls-enable[]
-
     // tag::listener-config-tls-id-full[]
-    // tag::createTlsIdentity[]
-    // OPTIONALLY:: Create a new TLS identity
+    // tag::listener-config-tls-id-SelfSigned[]
+
+    // Use a self-signed certificate
+    //    Create a TLSIdentity for the server using convenience API.
+    //    System generates self-signed cert
     Map<String, String> X509_ATTRIBUTES = mapOf(
       TLSIdentity.CERT_ATTRIBUTE_COMMON_NAME to "Couchbase Demo",
       TLSIdentity.CERT_ATTRIBUTE_ORGANIZATION to "Couchbase",
@@ -46,85 +46,112 @@ class cMyPassListener {
       TLSIdentity.CERT_ATTRIBUTE_EMAIL_ADDRESS to "noreply@couchbase.com"
       );
 
-    TLSIdentity thisIdentity = new TLSIdentity.createIdentity(true, X509_ATTRIBUTES, null, "CBL-Android-Server-Cert");
-    // The TLS identity is stored in secure storage under the label 'CBL-Android-Server-Cert'
-    // end::createTlsIdentity[]
-    // tag::retrieveTlsIdentity[]
-    // OPTIONALLY:: Retrieve a stored TLS identity using its alias/label
+    // Store the TLS identity in secure storage under the label 'CBL-Demo-Server-Cert'
+    TLSIdentity thisIdentity = new TLSIdentity.createIdentity(true, X509_ATTRIBUTES, null, "CBL-Demo-Server-Cert");
 
-    TLSIdentity thisIdentity = new TLSIdentity.getIdentity("CBL-Android-Server-Cert")
-    // end::retrieveTlsIdentity[]
-    // tag::listener-config-tls-id-cert[]
+    // end::listener-config-tls-id-SelfSigned[]
+    // tag::listener-config-tls-id-caCert[]
 
+    // Use CA Cert
+    //    Import a key pair into secure storage
+    //    Create a TLSIdentity from the imported key-pair
+    InputStream thisKeyPair = new FileInputStream();
+
+    thisKeyPair.getClass().getResourceAsStream("serverkeypair.p12");
+
+    TLSIdentity thisIdentity = new TLSIdentity.importIdentity(
+      EXTERNAL_KEY_STORE_TYPE,  // KeyStore type, eg: "PKCS12"
+      thisKeyPair,              // An InputStream from the keystore
+      password,                 // The keystore password
+      EXTERNAL_KEY_ALIAS,       // The alias, in the external keystore, of the entry to be used.
+      null,                     // The key password
+    "test-alias"                // The alias for the imported key
+    );
+
+    // end::listener-config-tls-id-caCert[]
+    // tag::listener-config-tls-id-anon[]
+
+    // Use an Anonymous Self-Signed Cert
+    listenerConfig.setTlsIdentity(null);
+
+    // end::listener-config-tls-id-anon[]
+    // tag::listener-config-tls-id-set[]
+
+    // set the TLS Identity
     listenerConfig.setTlsIdentity(thisIdentity);
-    // end::listener-config-tls-id-cert[]
-    // tag::listener-config-tls-id-nil[]
 
-    listenerConfig.setTlsIdentity(null);     // -- Use anonymous self-cert
-    // end::listener-config-tls-id-nil[]
+    // end::listener-config-tls-id-set[]
     // end::listener-config-tls-id-full[]
-
     // tag::listener-config-auth[]
-    // Configure the client authenticator (if using basic auth)
-    String validUser = new String("User.Name");
-    String validPassword = new String("pass.word");
 
-    // Invoke user written logic to validate credentials
-    // if (validUserCredentials(thisUser, thisPassword)) {
-      ListenerPasswordAuthenticator auth = new ListenerPasswordAuthenticator(
-        username, password -> thisUser == validUser && thisPassword == validPassword ); // <.>
-      listenerConfig.setAuthenticator(auth); // <.>
-    // }
-    // else {
-    //   thisResult = 666;
-    //   Log.i(TAG, "Result code :: " + thisResult + "-- Invalid User Credentials");
-    //   return thisResult
-    // };
+    // Configure the client authenticator (if using Basic Authentication) <.>
+    ListenerPasswordAuthenticator thisAuth = new ListenerPasswordAuthenticator(
+      thisUser, thisPassword -> { thisUser == "validUsername" && thisPassword == "validPasswordValue"; })
+
     // end::listener-config-auth[]
-
-
-    // tag::listener-deltasync[]
-    listenerConfig.enableDeltaSync(true); // <.>
-    // end::listener-deltasync[]
-
     // tag::listener-start[]
-    URLEndpointListener websocketListener = new URLEndpointListener(listenerConfig); // <.>
+    // Initialize the listener
+    URLEndpointListener thisListener = new URLEndpointListener(listenerConfig); // <.>
 
-    // websocketListener = _websocketListener else {
-    //   throw print("WebsocketsListenerNotInitialized")
-    //   // ... take appropriate actions
-    // }
-     websocketListener.start(); // <.> <.>
+    // start the listener
+    thisListener.start(); // <.>
     // end::listener-start[]
-  // end::listener-initialize[]
+    // end::listener-initialize[]
   }
 
+  // tag::listener-config-tls-disable[]
+  listenerConfig.disableTLS(true);
+  // end::listener-config-tls-disable[]
 
-// tag::listener-config-tls-disable[]
-listenerConfig.disableTLS(true);
-// end::listener-config-tls-disable[]
+  // tag::listener-config-tls-id-nil-2[]
 
-// tag::listener-config-tls-id-nil-2[]
-
-// Use “anonymous” cert. These are self signed certs created by the system
-listenerConfig.setTlsIdentity(nil);
-// end::listener-config-tls-id-nil-2[]
-
-
-// tag::listener-config-delta-sync[]
-listenerConfig.enableDeltaSync(true;)
-// end::listener-config-delta-sync[]
+  // Use “anonymous” cert. These are self signed certs created by the system
+  listenerConfig.setTlsIdentity(nil);
+  // end::listener-config-tls-id-nil-2[]
 
 
-// tag::listener-status-check[]
-var totalConnections = websocketListener.status.connectionCount
-var activeConnections = websocketListener.status.activeConnectionCount
-// end::listener-status-check[]
+  // tag::listener-config-delta-sync[]
+  listenerConfig.enableDeltaSync(true;)
+  // end::listener-config-delta-sync[]
 
 
-// tag::listener-stop[]
-websocketListener.stop()
-// end::listener-stop[]
+  // tag::listener-status-check[]
+
+  int connectionCount = thisListener.getStatus().getConnectionCount(); // <.>
+
+  int activeConnectionCount = thisListener.getStatus().getActiveConnectionCount();  // <.>
+  // end::listener-status-check[]
+
+
+  // tag::listener-stop[]
+  thisListener.stop();
+  // end::listener-stop[]
+
+
+// Listener Callouts
+
+// tag::listener-callouts-full[]
+
+  // tag::listener-start-callouts[]
+  <.> Initialize the listener instance using the configuration settings.
+  <.> Start the listener, ready to accept connections and incoming data from active peers.
+  // end::listener-start-callouts[]
+
+
+  // tag::listener-status-check-callouts[]
+
+  <.> `connectionCount` -- the total number of connections served by the listener
+  <.> `activeConnectionCount` -- the number of active (BUSY) connections currently being served by the listener
+  //
+  // end::listener-status-check-callouts[]
+
+// end::listener-callouts-full[]
+
+
+
+
+
+
 
 // tag::listener-config-client-auth-root[]
   // cert is a pre-populated object of type:SecCertificate representing a certificate
@@ -281,7 +308,7 @@ import com.couchbase.lite.Where;
 
 public class Examples {
   private static final String TAG = "EXAMPLE ACTIVE PEER";
-  private static final String ACTDBNAME = "local-database";
+  private static final String thisDBNAME = "local-database";
   private final Context context;
   // private Database database;
   // private Replicator replicator;
@@ -294,87 +321,126 @@ public class Examples {
   String passivePeerEndpoint = "10.1.1.12:8920";
   String passivePeerPort = "8920";
   String passiveDbName = "userdb";
-  Database actDb;
+  Database thisDB;
   Replicator thisReplicator;
   ListenerToken replicatorListener;
 
   //@Test
-  // tag::p2p-act-rep-func[]
   public void testActPeerSync() throws CouchbaseLiteException, URISyntaxException {
+    // tag::p2p-act-rep-func[]
     // tag::getting-started[]
-// tag::p2p-act-rep-initialize[]
-// Initialize the Couchbase Lite system
-CouchbaseLite.init(context);
+    // tag::p2p-act-rep-initialize[]
 
-// Get the database (and create it if it doesn’t exist).
-// DatabaseConfiguration config = new DatabaseConfiguration();
-Database actDB = new Database("activepeerdb");
+    // initialize the replicator
+    ReplicatorConfiguration replConfig = new ReplicatorConfiguration(thisDB, URLEndpoint(URI("wss://listener.com:port"))); // <.>
 
-// Configure Sync Source and Target Endpoints
-URL tgtUrl = new URL("wss://10.1.1.12:8092/passivepeerdb");
-Endpoint targetEndpoint = new URLEndpoint(URI(tgtUrl));
-ReplicatorConfiguration replConfig = new ReplicatorConfiguration(actDB, targetEndpoint); // <.>
-// end::p2p-act-rep-initialize[]
-
-    // Configure Sync Mode
+    // end::p2p-act-rep-initialize[]
     // tag::p2p-act-rep-config-type[]
-    // replConfig.setReplicatorType(ReplicatorConfiguration.ReplicatorType.PUSH_AND_PULL);
-    replConfig.setReplicatorType("pushAndPull");
+
+    // Set replicator type
+    replConfig.setReplicatorType(ReplicatorConfiguration.ReplicatorType.PULL);
+
     // end::p2p-act-rep-config-type[]
     // tag::p2p-act-rep-config-cont[]
+
+    // Configure Sync Mode
     replConfig.setContinuous(true); // default value
+
     // end::p2p-act-rep-config-cont[]
-
-    // tag::p2p-act-rep-config-self-cert[]
-    // Configure Server Security
-    replConfig.setDisableTLS(true);
-    replConfig.setServerCertificateVerificationMode(ReplicatorConfiguration.serverCertificateVerificationMode=selfSignedCert); // <.>
-    // end::p2p-act-rep-config-self-cert[]
-
+    // tag::p2p-act-rep-config-tls-full[]
     // tag::p2p-act-rep-config-cacert[]
-    // ... other bits
-    byte returnedCert = new byte(replConfig.getPinnedCertificate()); // Get listener cert if pinned
-    // end::p2p-act-rep-config-cacert[]
 
+    // Configure Server Security -- only accept CA Certs
+    replConfig.setAcceptOnlySelfSignedServerCertificate(false); <.>
+
+    // end::p2p-act-rep-config-cacert[]
+    // tag::p2p-act-rep-config-self-cert[]
+
+    // Configure Server Security -- only accept self-signed certs
+    replConfig.setAcceptOnlySelfSignedServerCertificate(true); <.>
+
+    // end::p2p-act-rep-config-self-cert[]
+    // tag::p2p-act-rep-config-pinnedcert[]
+
+    // Return the remote pinned cert (the listener's cert)
+    byte returnedCert = new byte(replConfig.getPinnedCertificate()); // Get listener cert if pinned
+    // end::p2p-act-rep-config-pinnedcert[]
     // Configure Client Security // <.>
     // tag::p2p-act-rep-auth[]
-    // OPTIONALLY configure basic auth using user credentials
-    // Data thisPassword = new Data("password")
-    replConfig.setAuthenticator(new BasicAuthenticator("username", thisPassword));
+    // Configure basic auth using user credentials
+
+    BasicAuthenticator thisAuth = new BasicAuthenticator("thisUsername", "thisPasswordValue"));
+
+    replConfig.setAuthenticator(thisAuth)
+
     // end::p2p-act-rep-auth[]
+    // end::p2p-act-rep-config-tls-full[]
     // tag::p2p-tlsid-tlsidentity-with-label[]
-    // Configure TLS Cert //
-    // OPTIONALLY configure CA auth using key-stored cert id alias
-    Data thisKeyPassword = new Data("thisKeyPassword--value")
-    TLSIdentity thisIdentity = new TLSIdentity.getIdentity(alias: "doc-sync-server", keyPassword: thisKeyPassword ); // Get existing TLS ID from sec storage
-    Authenticator thisAuthenticator = new ClientCertificateAuthenticator(thisIdentity);
-    replConfig.setAuthenticator(thisAuthenticator);
+
+    // Configure TLS Cert CA auth using key-stored cert id alias 'doc-sync-server'
+
+    // TLSIdentity thisIdentity = new TLSIdentity.getIdentity("doc-sync-server"); // Get existing TLS ID from sec storage
+
+    // ClientCertificateAuthenticator thisAuth = new ClientCertificateAuthenticator(thisIdentity);
+
+    // replConfig.setAuthenticator(thisAuth);
+
+
+
+    // USE KEYCHAIN IDENTITY IF EXISTS
+    // Check if Id exists in keychain. If so use that Id
+
+    // STILL NEED TO REFACTOR
+
+    do {
+      if let thisIdentity = try TLSIdentity.identity(withLabel: "doco-sync-server") {
+          print("An identity with label : doco-sync-server already exists in keychain")
+          return thisIdentity
+          }
+    } catch
+    {return nil}
+    thisAuthenticator.ClientCertificateAuthenticator(identity: thisIdentity )
+    config.thisAuthenticator
+
     // end::p2p-tlsid-tlsidentity-with-label[]
+    // tag::p2p-act-rep-config-cacert-pinned[]
 
-    /* Optionally set custom conflict resolver call back */ replConfig.setConflictResolver( /* define resolver function */);
+    // Only CA Certs accepted
+    config.setAcceptOnlySelfSignedServerCertificate(false)
 
+    // Set pinned server cert (cert can be bundled with app) to be used for validation
+    config.setPinnedServerCertificate(thisPinnedCert)
+
+    // end::p2p-act-rep-config-cacert-pinned[]
+
+    /* Optionally set custom conflict resolver call back */ replConfig.setConflictResolver( /* define resolver function */); // <.>
     // tag::p2p-act-rep-start-full[]
+
     // Create replicator (be sure to hold a reference somewhere that will prevent the Replicator from being GCed)
     Replicator thisReplicator = new Replicator(replConfig); // <.>
 
     // tag::p2p-act-rep-add-change-listener[]
+
     // Optionally add a change listener
     ListenerToken thisListener = new thisReplicator.addChangeListener(change -> { // <.>
       if (change.getStatus().getError() != null) {
         Log.i(TAG, "Error code ::  " + change.getStatus().getError().getCode());
       }
     });
-    // end::p2p-act-rep-add-change-listener[]
 
+    // end::p2p-act-rep-add-change-listener[]
     // tag::p2p-act-rep-start[]
+
     // Start replication.
     thisReplicator.start(); // <.>
+
     // end::p2p-act-rep-start[]
     // end::p2p-act-rep-start-full[]
-    // end::p2p-act-rep-func[]
-
+    // end::p2p-act-rep-func[]         ***** End p2p-act-rep-func
     // tag::p2p-act-rep-status[]
+
     Log.i(TAG, "The Replicator is currently " + thisReplicator.getStatus().getActivityLevel());
+
     Log.i(TAG, "The Replicator has processed " + t);
 
     if (thisReplicator.getStatus().getActivityLevel() == Replicator.ActivityLevel.BUSY) {
@@ -393,7 +459,7 @@ ReplicatorConfiguration replConfig = new ReplicatorConfiguration(actDB, targetEn
 
 {
   CouchbaseLite.init(context);
-  Database passDb = new Database("passivepeerdb");  // <.>
+  Database thisDB = new Database("passivepeerdb");  // <.>
   // Initialize the listener config
   URLEndpointListenerConfiguration listenerConfig = new URLEndpointListenerConfiguration(database);
   listenerConfig.setPort(55990)             // <.> Default- port is selected
@@ -424,3 +490,28 @@ Map<String, String> X509_ATTRIBUTES = mapOf(
 TLSIdentity thisIdentity = new TLSIdentity.createIdentity(true, X509_ATTRIBUTES, null, "test-alias");
 
 // end::createTlsIdentity[]
+
+
+
+
+// tag::retrieveTlsIdentity[]
+// OPTIONALLY:: Retrieve a stored TLS identity using its alias/label
+
+TLSIdentity thisIdentity = new TLSIdentity.getIdentity("CBL-Demo-Server-Cert")
+// end::retrieveTlsIdentity[]
+
+
+    // Configure the client authenticator (if using Basic Authentication)
+    // String thisUser = new String("validUsername"); // an example username
+    // String thisPassword = new String("validPasswordValue"); // an example password
+
+    // ListenerPasswordAuthenticator thisAuth = new ListenerPasswordAuthenticator( // <.>
+    //   thisUser, thisPassword -> thisUser == "validUsername" && thisPassword == "validPasswordValue" );
+
+    // if (thisAuth) {
+    //   listenerConfig.setAuthenticator(auth);
+    // }
+    // else {
+    //   // . . . authentication failed take appropriate exception action
+    //   return
+    // };

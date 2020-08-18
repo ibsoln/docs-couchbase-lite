@@ -73,12 +73,12 @@ Use to start listening for changes on a specific database.
 
 // image::ROOT:connection.png[,800]
 
-Client can instantiate any number of “WebsocketEndpointListener” lnstances, each serving a different database.
+Client can instantiate any number of “URLEndpointListener” lnstances, each serving a different database.
 There are no hard limits on number of instances other than practical limitations.
 
 Having a listener on a database must not preclude the client from opening up replications to the other clients.
 
-A passive client that is listening for connections via WebsocketEndpointListener must be capable of actively opening up replications to other passive WebsocketMessageEndpointListener clients .
+A passive client that is listening for connections via URLEndpointListener must be capable of actively opening up replications to other passive WebsocketMessageEndpointListener clients .
 The active and passive connections initiated by a peer can be for the same database.
 
 

@@ -18,4 +18,4 @@ include::partial$_std-cbl-hdr-objc.adoc[]
 
 include::{root-partials}commons/common-p2psync-websocket.adoc[subs="macros,attributes"]
 
-include::{root-partials}block-related-content-p2p.adoc[]
+include::{root-partials}block-related-content-p2psync.adoc[]

@@ -37,7 +37,7 @@ ifeval::["{release-status-cbl}" == "gamma"]
 [.pane__frame--orange]
 .Author's Notes
 --
-Add content covering CBL database API concept and use.
+Add content covering Couchbase Lite database API concept and use.
 --
 endif::[]
 

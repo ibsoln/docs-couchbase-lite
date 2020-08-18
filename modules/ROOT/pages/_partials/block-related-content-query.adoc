@@ -2,7 +2,7 @@
 == Related Content
 
 .How-to ...
-* Deploying CBL for {param-platform}
+* Deploying Couchbase Lite for {param-platform}
 ** {xref-cbl-pg-prereqs}
 ** {xref-cbl-pg-install}
 ** {xref-cbl-pg-build}

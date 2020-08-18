@@ -279,14 +279,16 @@ a|
 // tag::config-disable-tls[]
 TLS is enabled by default.
 
-Use the `{url-api-references-urlendpointconfiguration-disable-tls}`  parameter to `{url-api-class-urlendpointconfiguration}` to disable TLS communication if necessary
+Use {url-api-class-urlendpointconfiguration}'s {url-api-references-urlendpointconfiguration-disable-tls} method to disable TLS communication if necessary
 
-`{url-api-references-urlendpointconfiguration-disable-tls}` works in conjunction with `TLSIdentity`, to enable developers to define the key and-or certificate to be used.
+{url-api-references-urlendpointconfiguration-disable-tls} works in conjunction with `TLSIdentity`, to enable developers to define the key and-or certificate to be used.
 
-* If `disableTLS` is true -- TLS communication is disabled and `{url-api-references-urlendpointconfiguration-tls-id}` is ignored.
+* If `disableTLS` is true -- TLS communication is disabled and TLS identity is ignored.
+Active peers will the `ws://` URL scheme used to connect to the listener.
 * If `disableTLS` is false or not specified -- TLS communication is enabled.
 +
-Set the required `{url-api-references-urlendpointconfiguration-tls-id}` and use the `wss://` URL scheme used to connect to the listener.
+Active peers will the `wss://` URL scheme used to connect to the listener.
+
 // end::config-disable-tls[]
 
 See also:: `TLSIdentity`
@@ -306,10 +308,8 @@ a|
 
 // tag::config-tls-id-full[]
 // tag::config-tls-id[]
-
-Use the
-{url-api-references-urlendpointconfiguration-tls-id} parameter of
-{url-api-class-urlendpointconfiguration} to configure the TLS Identity used in TLS communication.
+Use {url-api-class-urlendpointconfiguration}'s
+{url-api-references-urlendpointconfiguration-tls-id} method to configure the TLS Identity used in TLS communication.
 
 If `TLSIdentity` is not set when TLS is enabled (default), the listener uses an auto-generated anonymous self-signed identity.
 This doesn't authenticate or verify trust (on the client side) but it does encrypt communication, giving a more secure option than Non-TLS communication.
@@ -387,7 +387,7 @@ include::{root-partials}p2p-api-tlsid-{param-platform}.adoc[]
 // * tls status and identity
 // * delta_sync status
 //
-// Use `URLEndpointListener` to instantiate the // _WebsocketEndpointListener_ using the // _URLEndpointListenerConfiguration_ configuration values in the // constructor.
+// Use `URLEndpointListener` to instantiate the // _URLEndpointListener_ using the // _URLEndpointListenerConfiguration_ configuration values in the // constructor.
 //
 
 
@@ -406,10 +406,8 @@ This opaque authenticator interface is implemented by the authenticator classes.
 
 == ListenerPasswordAuthenticator
 // tag::ListenerPasswordAuthenticator[]
-Use the `ListenerPasswordAuthenticator` class to provide password type authentication such as the Basic Authentication.
-
-The actual authentication logic is provided through a `ListenerPasswordAuthenticatorDelegate` object provided by the application code.
-Often in the form of a closure where the platform permits.
+Use the {url-api-class-ListenerPasswordAuthenticator} class to provide password type authentication such as the Basic Authentication.
+The actual authentication is provided by the application code. Often in the form of a closure where the platform permits.
 // end::ListenerPasswordAuthenticator[]
 
 .Class Definition
@@ -449,10 +447,9 @@ init(delegate: ListenerPasswordAuthenticatorDelegate)
 Use the `ListenerPasswordAuthenticatorDelegate` type to provide the application logic to be used to authenticate user credentials such as name and password.
 
 Your `ListenerPasswordAuthenticatorDelegate` should be a function or block (such as a closure expression) if the platform allows.
+The parameters presented to the code block are:
 
-The parameters are:
-
-* User Name -- type String
+* Username -- type String
 * Password -- type will depend on the platform, for example SecureString for .NET or byte[] for Java.
 // end::ListenerPasswordAuthenticatorDelegate[]
 
@@ -465,11 +462,11 @@ public protocol ListenerPasswordAuthenticatorDelegate {
 
 == ListenerCertificateAuthenticator
 // tag::ListenerCertificateAuthenticator[]
-Use the `ListenerCertificateAuthenticator` class to authenticate  clients certificates.
+Use the {url-api-class-ListenerCertificateAuthenticator} class to authenticate  clients certificates.
 This requires you have TLS enabled.
 You can verify the certificate using either:
 
-* Root CA certificate chains -- any client cert signed by the given root CA cert chains is authenticated
+* Root CA certificate chains -- any client certificate signed by the given root CA certificate chains is authenticated
 
 * Application logic -- an option used mainly for authenticating self-signed certificates
 
@@ -479,7 +476,7 @@ You can verify the certificate using either:
 // ----
 // public class ListenerCertificateAuthenticator : _ListenerAuthenticator
 // public init(rootCerts: [SecCertificate])
-// public init(authenticator: @escaping (_ certs: [SecCertificate]) -> Bool)
+// public init(authenticator: @escaping (_ certificates: [SecCertificate]) -> Bool)
 // }
 // ----
 
@@ -515,7 +512,7 @@ include::{snippet-p2psync-ws}[tags=" ", indent=0]
 
 |Explanation
 |Creates a ListenerCertificateAuthenticator object with the given root CA certificate chains.
-Any client cert that's been signed by the given root CA cert chains will be authenticated.
+Any client certificate that's been signed by the given root CA certificate chains will be authenticated.
 
 |Preconditions
 |N/A
@@ -533,10 +530,8 @@ init(delegate: ListenerCertificateAuthenticatorDelegate)
 Usage
 
 tag::ListenerCertificateAuthenticatorDelegate[]
-Initialize the `ListenerCertificateAuthenticator` using the `ListenerCertificateAuthenticatorDelegate` interface.
-This identifies the application logic to be used to verify a certificate chain received from the client.
-
-The logic should take the form of function or block (such as, a closure expression) if the platform allows.
+Use the `ListenerCertificateAuthenticator` to provide the application logic to verify a certificate chain received from the client.
+The logic should take the form of function or block (such as, a closure expression) where the platform allows.
 // end::ListenerCertificateAuthenticatorDelegate[]
 
 [source, {source-language}]

@@ -48,7 +48,7 @@ With Couchbase you have the option of using either of the following approaches:
 +
 Using this approach Couchbase Lite enabled clients in an IP-based network can sync database changes.
 +
-For two instances of Couchbase Lite to sync, at least one of them must use a _WebsocketEndpointListener_, which enables any Couchbase Lite database to become the remote in a replication by listening and exposing standard replication endpoints on a selected port.
+For two instances of Couchbase Lite to sync, at least one of them must use a _URLEndpointListener_, which enables any Couchbase Lite database to become the remote in a replication by listening and exposing standard replication endpoints on a selected port.
 * A custom built _MessageEndpointListener_
 +
 Using this approach developers can use the platform APIs and-or a third party Communication Framework such as

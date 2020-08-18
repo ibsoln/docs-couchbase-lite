@@ -1,20 +1,23 @@
 
-= Set-up the Passive Peer -- Working with Peer-to-Peer Syncs
+= Passive Peer
 :page-layout: article
 :page-status: {release-status-cbl} -- {release-comments-cbl}
 :page-edition: Enterprise
 :page-role:
-:description: Couchbase Lite - this content covers how to set up a passive peer ready to replicate CBL database changes using peer-to-peer sync over websockets
+:description: Couchbase Lite's peer-to-peer sync enables edge devices to synchronize securely without consuming centralized cloud-server resources
 
 include::partial$_std-cbl-hdr-android.adoc[]
+
+// Define page abstract
+// Done in commons
 // :param-name: {lang-name-android}
 // :param-title: {lang-title-android}
 // :param-module: {lang-mod-android}
 
-include::{root-partials}block-related-concepts-p2psync-ws.adoc[]
+// include::{root-partials}block-related-concepts-p2psync-ws.adoc[]
 
 include::{root-partials}commons/common-p2psync-websocket-using-passive.adoc[subs="macros,attributes"]
 
-include::{root-partials}block-related-content-p2p.adoc[]
+// include::{root-partials}block-related-content-p2psync.adoc[]
 
 include::{root-partials}block-enterprise-only.adoc[]
