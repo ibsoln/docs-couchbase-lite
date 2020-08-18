@@ -21,3 +21,4 @@ Couchbase Lite is an embedded, NoSQL JSON Document Style database for your mobil
 
 * A xref:swift.adoc#replication[replication protocol] built over WebSockets to synchronize data with Sync Gateway.
 * A xref:swift.adoc#peer-to-peer-sync[Peer-to-Peer sync] implementation to  synchronize data between Couchbase Lite clients.
+* A xref:swift.adoc#peer-to-peer-sync[Peer-to-Peer sync] implementation to  synchronize data between Couchbase Lite clients.

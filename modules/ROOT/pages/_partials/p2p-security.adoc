@@ -13,15 +13,15 @@ Peer-to-peer sync using WebsocketEndpointListener supports certificate based aut
 * For server side certificates can be: self signed, from trusted CA or anonymous (system generated).
 * For listeners certificates may be: self signed or trusted CA signed.
 +
-Where a TLS cert is not explicitly specified for the listener, the Listener implementation will generate anonymous cert to use for encryption
+Where a TLS certificate is not explicitly specified for the listener, the Listener implementation will generate anonymous certificate to use for encryption
 
-The difficulties of managing certificates in disconnected edge environments means that self-signed certs are the more likely use case in such  environments.
+The difficulties of managing certificates in disconnected edge environments means that self-signed certificates are the more likely use case in such  environments.
 
 NOTE: Cert Management (distribution/ revocation) is outside the scope of implementation.
 
 Peer-to-peer sync using WebsocketEndpointListener supports the ability to opt out of TLS encryption communication.
-Active clients replicating with a WebsocketEndpointListener have the option to skip validation of server certs when the listener is configured with self-signed certs.
-This option is ignored when dealing with CA certs.
+Active clients replicating with a WebsocketEndpointListener have the option to skip validation of server certificates when the listener is configured with self-signed certificates.
+This option is ignored when dealing with CA certificates.
 
 
 ifndef::release-status-cbl[:release-status-cbl!:]

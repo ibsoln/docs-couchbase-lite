@@ -1155,7 +1155,7 @@ xref::index.adoc[{more}]
 // - https://issues.couchbase.com/browse/CBL-218[*CBL-218*] FTS indexing an array-valued property is unreliable
 // - https://issues.couchbase.com/browse/CBL-207[*CBL-207*] Replicator change event has idle with timeout error
 // - https://issues.couchbase.com/browse/CBL-175[*CBL-175*] Can't query the records has the % character with LIKE operator.
-// - https://issues.couchbase.com/browse/CBL-171[*CBL-171*] CBL replication never finishes for replication filtering when doc count is 1000
+// - https://issues.couchbase.com/browse/CBL-171[*CBL-171*] Couchbase Lite replication never finishes for replication filtering when doc count is 1000
 // - https://issues.couchbase.com/browse/CBL-126[*CBL-126*] Litecore does not retry subChanges request that fails with temporary 503 error
 // - https://issues.couchbase.com/browse/CBL-52[*CBL-52*] “LIKE”, "CONTAINS", "REGEX_LIKE" operators ignore collations
 
@@ -1180,7 +1180,7 @@ Support will be removed within two (non-maintenance) releases following the depr
 
 *{fixed}*
 
-* https://issues.couchbase.com/browse/CBL-171[*CBL-171*] CBL replication never finishes for replication filtering when doc count is 1000
+* https://issues.couchbase.com/browse/CBL-171[*CBL-171*] Couchbase Lite replication never finishes for replication filtering when doc count is 1000
 * https://issues.couchbase.com/browse/CBL-136[*CBL-136*] Replication is not replicating all updates with delta-sync enabled
 * https://issues.couchbase.com/browse/CBL-110[*CBL-110*] delta sync on top of a deletion caused data discrepancy between SG and CBL
 * https://issues.couchbase.com/browse/CBL-106[*CBL-106*] Replicator C++ exception: "properties excessively large"
@@ -1189,7 +1189,7 @@ Support will be removed within two (non-maintenance) releases following the depr
 * https://issues.couchbase.com/browse/CBL-47[*CBL-47*] Intermittent SQLITE_MISUSE error during normal testing
 * https://issues.couchbase.com/browse/CBL-45[*CBL-45*] LiteCore time out issues stray busy callback
 * https://issues.couchbase.com/browse/CBL-38[*CBL-38*] null pointer dereference
-* https://issues.couchbase.com/browse/CBL-2[*CBL-2*] [sg-ssl enabled] cbl replicator does not resume after SG restart
+* https://issues.couchbase.com/browse/CBL-2[*CBL-2*] [sg-ssl enabled] Couchbase Lite replicator does not resume after SG restart
 
 *{ke}*
 
@@ -1250,7 +1250,7 @@ Revisions are missing on sync-gateway with large number of docs
 *{ke}*
 
 * {url-issues-net}/1140[*#1140*]
-[xamarin-ios][sg-ssl enabled] cbl replicator does not resume after SG
+[xamarin-ios][sg-ssl enabled] Couchbase Lite replicator does not resume after SG
 restart
 
 === 2.1.2

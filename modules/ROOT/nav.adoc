@@ -5,10 +5,10 @@
 // These are attributes shared across CBL, CBM and SGW e.g version major.minor numbers
 include::shared-mobile::partial$_attributes-shared.adoc[]
 
-// Attributes specific to CBL -- eg patch number
+// Attributes specific to Couchbase Lite -- eg patch number
 include::ROOT:partial$_attributes-local.adoc[]
 
-// Attributes defining all CBL pages and associated prebuilt xrefs (as used below)
+// Attributes defining all Couchbase Lite pages and associated prebuilt xrefs (as used below)
 include::ROOT:partial$_page-index.adoc[]
 
 // BEGIN::Local Attributes (to this page)

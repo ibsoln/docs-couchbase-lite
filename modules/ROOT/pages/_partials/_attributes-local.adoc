@@ -138,7 +138,11 @@
 :url-api-references-staging: https://ibsoln.github.io/stage/api/mobile/{version-full}/couchbase-lite-
 :url-api-references-beta: https://ibsoln.github.io/betasites/api/mobile/{version-full}/couchbase-lite-
 
-ifeval::["{api-target}"=="origin"]
+ifeval::["{api-target}"=="local"]
+//preparing staging or local site
+:url-api-references-pfx: {url-api-references-beta}
+endif::[]
+ifeval::["{api-target}"=="stage"]
 //preparing staging or local site
 :url-api-references-pfx: {url-api-references-staging}
 endif::[]
@@ -211,7 +215,7 @@ endif::[]
 :xref-pg-sgw-gs-install: {xref-pfx-sgw}:{pg-sgw-gs-install}[Install Sync Gateway]
 
 
-// CBL Pages
+// Couchbase Lite Pages
 
 :component-mob-status: {_page-status-gamma}
 :component-cbl-status: {_page-status-gamma}
@@ -222,3 +226,17 @@ endif::[]
 
 // diag: Env+Local(ROOT)
 
+
+:securestorage: secure storage
+:securestorage-api: secure storage API
+
+
+ifeval::[{param-platform} == "android"]
+:securestorage: Keystore
+:securestorage-api: KeyStore API
+endif::[]
+
+ifeval::[{param-platform} == "ios"]
+:securestorage: Keychain
+:securestorage-api: Keychain API
+endif::[]

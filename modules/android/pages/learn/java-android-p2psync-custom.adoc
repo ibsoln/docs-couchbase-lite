@@ -16,4 +16,4 @@ include::partial$_std-cbl-hdr-android.adoc[]
 
 include::{root-partials}commons/common-p2psync-custom.adoc[subs="macros,attributes"]
 
-include::{root-partials}block-related-content-p2p.adoc[]
+include::{root-partials}block-related-content-p2psync.adoc[]

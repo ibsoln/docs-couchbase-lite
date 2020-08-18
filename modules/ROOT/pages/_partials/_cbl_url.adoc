@@ -1,4 +1,4 @@
-// BEGIN:: Common CBL URL Declarations
+// BEGIN:: Common Couchbase Lite URL Declarations
 
 :url-github-cbl: https://github.com/couchbase/couchbase-lite-w
 
@@ -23,6 +23,6 @@
 
 
 
-// END:: Common CBL URL Declarations
+// END:: Common Couchbase Lite URL Declarations
 
 

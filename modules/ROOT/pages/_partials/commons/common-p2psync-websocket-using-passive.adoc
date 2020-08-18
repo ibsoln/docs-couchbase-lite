@@ -1,6 +1,10 @@
 //= Using Peer-to-Peer Sync (websockets)
 
-include::{root-partials}block-abstract.adoc[]
+:param-abstract: How to set up a Listener to accept a Replicator connection and sync using peer-to-peer
+// DO NOT EDIT
+include::{root-partials}block-related-howto-p2psync-ws.adoc[]
+include::{root-partials}_block-abstract.adoc[]
+// DO NOT EDIT
 
 ifndef::release-status-cbl[:release-status-cbl!:]
 ifeval::["{release-status-cbl}" == "gamma"]
@@ -15,12 +19,12 @@ This is the how-to for P2P snc using websockets
 --
 endif::[]
 
-== Overview
+== Introduction
 
 This content provides sample code covering the implementation of {glos-term-peer-to-peer-sync} over websockets.
 Specifically it covers the implementation of a {glos-term-passive-peer} listener, that will accept and apply database changes replicated by a connected {glos-term-active-peer}. In this context the term _client_ refers to the _active peer_ and the term _server_ to the _passive peer_
 
-You will need to initialize and configure a listener for each Couchbase Lite database instance that you want to sync with other peers.
+You will need to initialize and configure a Listener for each Couchbase Lite database instance that you want to sync with other peers.
 
 <<simple-listener-initialization>> shows a simple initialization and configuration process.
 
@@ -32,15 +36,17 @@ You do not need to provide configuration values for all properties, only those n
 ====
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-initialize";!listener-config-tls-id-cert, indent=0]
+include::{snippet-p2psync-ws}[tags="listener-initialize;!listener-config-tls-id-caCert;!listener-config-tls-id-SelfSigned;!listener-config-tls-id-set", indent=0]
 ----
-<.> <<configure-listener-endpoint>>
-<.> <<configure-tls-security>>
-<.> <<configure-client-authentication>>
-<.> <<configure-delta-sync>>
+<.> <<initialize-the-listener-configuration>>
+<.> By default the system will assign a port -- to over-ride this see: <<set-network-and-port>>
+<.> By default the system will listen on all network interfaces -- to over-ride this see: <<set-network-and-port>>
+<.> <<delta-sync>>
+<.> <<tls-security>>
+// <.> TLS is enabled and on by default. It is inadvisable to switch it off in production
+<.> <<client-authentication>>
 <.> Initialize the listener using the configuration settings
-<.> <<start-listening>>
-<.> On-going listener <<monitor-the-listener, monitoring>>, including <<conflict-resolution>>
+<.> <<start-listener>>
 ====
 
 == API References
@@ -51,65 +57,85 @@ You can find {url-api-references}[{param-title} API References] here.
 
 Prior to initiating the listener you may execute a peer discovery phase.
 
-For the passive peer, this involves advertising the service using, for example _Bonjour_, and waiting for an invite from the active peer.
+// For the passive peer, this involves advertising the service using, for example _Bonjour_, and waiting for an invite from the active peer.
+For the passive peer, this involves advertising the service using, for example _Network Service Discovery_ (see: https://developer.android.com/training/connect-devices-wirelessly/nsd) and waiting for an invite from the active peer.
+
 The connection is established once the passive peer has authenticated and accepted an active peer's invitation.
 
-== Configure Listener Endpoint
+// = Configure Listener
 
-Set the listener endpoint.
-As a minimum this must include the local database name.
-You can also over-ride the auto-seleted default port number and-or configure a specific network-interface.
-
+== Initialize the Listener Configuration
+Initialize the Listener config with the local database.
 All other configuration values will take their default setting.
+
+Each Listener instance serves one Couchbase Lite database.
+There is no limit on the number of instances except a practical limit
 
 Database name::
 +
 --
-The database name is set using the mandatory, read-only {url-api-references-urlendpointconfiguration-database} parameter to the `{url-api-class-urlendpointconfiguration}` constructor
-//`public init(database: Database)`.
-{url-api-references-urlendpointconfiguration-initdb}.
+
+.Specify Local Database
+====
+In this example `thisDB` has previously been declared as an object of type Database.
+[source, {source-language}]
+----
+
+include::{snippet-p2psync-ws}[tags=listener-config-db, indent=0]
+
+----
+
+<.> Set the local database name using the {url-api-class-urlendpointconfiguration}'s constructor {url-api-references-urlendpointconfiguration-initdb}.
+//`public init(database: Database)` {url-api-references-urlendpointconfiguration-database} .
+
+====
 --
+
+== Set Network and Port
+
+If required you can define the port number and-or network-interface to be used by the listener.
 
 Port number::
 +
 --
-The listener will auto-select an available port.
-
-Alternatively, use the {url-api-references-urlendpointconfiguration-port} parameter to specify a known port.
+The Listener will auto-select an available port.
 
 // Example::
 // +
-// [source, {source-language}]
-// ----
-// include::{snippet-p2psync-ws}[tags="listener-config-port", indent=0]
-// ----
+.Specify a Port to Use
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags=listener-config-port, indent=0]
+----
+
+<.> Alternatively, use the {url-api-references-urlendpointconfiguration-port} method to specify a known port.
+
 --
 
 Network Interface::
 +
 --
-The listener will listen on all network interfaces.
+The Listener will listen on all network interfaces by default.
 
-Alternatively, use
+<.> Alternatively, use
 {url-api-references-urlendpointconfiguration-netwk-iface} parameter
 to specify the network interface.
 This must be either an IP Address or network interface name such as `en0`.
---
 
-.Configure Endpoint
+.Specify a Network Interface to Use
 ====
-In this example `_userDb` has previously been declared as an object of type Database.
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-config-endpoint", indent=0]
+include::{snippet-p2psync-ws}[tags=listener-config-netw-iface, indent=0]
 ----
 ====
+--
 
 // Example::
 // +
 // [source, {source-language}]
 // ----
-// include::{snippet-p2psync-ws}[tags="listener-config-netw-iface", indent=0]
+// include::{snippet-p2psync-ws}[tags=listener-config-netw-iface, indent=0]
 // ----
 
 
@@ -119,13 +145,36 @@ include::{snippet-p2psync-ws}[tags="listener-config-endpoint", indent=0]
 // | <<configure-client-authentication>>
 // | <<configure-delta-sync>>
 // | <<conflict-resolution>>
+== Delta Sync
 
-== Configure TLS Security
+Delta Sync allows clients to sync only those parts of a document that have changed. This can result in significant savings in bandwidth consumption as well as throughput improvements.
+Both valuable benefits, especially when network bandwidth is constrained.
+
+.Enable delta sync
+====
+[source, {source-language}]
+----
+
+include::{snippet-p2psync-ws}[tags=listener-deltasync, indent=0]
+
+----
+
+<.> Delta sync replication is not enabled by default.
+Use {url-api-class-urlendpointconfiguration}'s {url-api-references-urlendpointconfiguration-delta-sync} method  to activate or deactivate it.
+
+====
+
+
+== TLS Security
 // DONE: TODO: Move under top level security section
 // _In this section_:
 // <<enable-or-disable-tls,Use TLS>>
 // | <<configure-tls-server-identity, Set the TLS Identity>>
 // | back to: <<simple-listener-initialization>>
+TLS based encryption is enabled by default.
+Although it _can_ be disabled, this is not recommended on production environments.
+
+When TLS is enabled, Couchbase Lite provides several options on how the Listener may be configured with an appropriate TLS Identity (<<configure-tls-identity-for-listener>>).
 
 Enable or Disable TLS::
 +
@@ -133,123 +182,182 @@ Enable or Disable TLS::
 include::{root-partials}p2p-api.adoc[tag=config-disable-tls]
 --
 
-Set TLS Server Id::
+[#configure-tls-identity-for-listener]
+Configure TLS Identity for Listener::
 +
 --
+
 include::{root-partials}p2p-api.adoc[tag=config-tls-id]
 
-Typically, you will configure the TLS Server identity once during initial launch.
-Subsequent starts of the listener will then reuse the identity from the keychain, or (re)create it if it doesn't exist -- see: {xref-cbl-pg-p2p-manage-tls-id}
+NOTE: Typically, you will configure the Listener's TLS Identity once during initial launch.
+Subsequent starts of the Listener will then reuse the identity from secure storage, or (re)create it if it doesn't exist
+//-- see: {xref-cbl-pg-p2p-manage-tls-id}
+.
 
 --
-// include::{snippet-p2psync-ws}[tags="listener-config-tls-id-cert", indent=0]
-// include::{snippet-p2psync-ws}[tags="listener-config-tls-id-cert", indent=0]
-// include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full,!createTlsIdentity,!retrieveTlsIdentity,!listener-config-tls-id-cert", indent=0]
+// include::{snippet-p2psync-ws}[tags=listener-config-tls-id-cert, indent=0]
+// include::{snippet-p2psync-ws}[tags=listener-config-tls-id-cert, indent=0]
+// include::{snippet-p2psync-ws}[tags=listener-config-tls-id-full;!listener-config-tls-id-SelfSigned;!listener-config-tls-id-caCert;!listener-config-tls-id-cert, indent=0]
 
-[#1]
-.Set TLS server identity
+.Set Listener's TLS identity
+=====
 [{tabs}]
 ====
 
-Use Anonymous Certificate::
+Import from key-pair::
 +
 --
-Use “anonymous” certificate.
-These are self signed certificates created by the system.
+
+Import a key pair into secure storage and create an TLSIdentity from the imported key-pair.
 
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-config-tls-id-nil,!listener-config-tls-id-cert", indent=0]
+
+include::{snippet-p2psync-ws}[tags=listener-config-tls-enable, indent=0]
+include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full;!listener-config-tls-id-SelfSigned;!listener-config-tls-id-anon", indent=0]
+
 ----
 --
 
-Retrieve TLS Identity to Use::
+Create Self-Signed Cert::
 +
 --
-This examples retrieves a TLS identity previously stored in the {securestorage} using its alias.
+Create a TLSIdentity for the server using convenience API. System generates self-signed cert.
 
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full,!listener-config-tls-id-nil,!createTlsIdentity", indent=0]
+
+include::{snippet-p2psync-ws}[tags=listener-config-tls-enable, indent=0]
+include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full;!listener-config-tls-id-caCert;!listener-config-tls-id-anon", indent=0]
+
 ----
 --
 
-Create TLS Identity to Use::
+Use Anonymous Self-Signed Certificate::
 +
 --
-This example creates a new identity using a set of credentials. It stores the identity in the {securestorage} and then adds the identity to the listener's configuration.
+This examples uses an “anonymous” certificate.
+These are self signed certificates generated by Couchbase Lite. The generated certificates are securely stored in keystore.
 
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full,!listener-config-tls-id-nil,!retrieveTlsIdentity", indent=0]
+
+include::{snippet-p2psync-ws}[tags=listener-config-tls-enable, indent=0]
+include::{snippet-p2psync-ws}[tags=listener-config-tls-id-anon, indent=0]
+
 ----
 --
-
 ====
 
-== Configure Client Authentication
-// DONE: TODO: Move to top level security section.
+<.> Ensure TLS is enabled.
+=====
+
+== Client Authentication
+In this section: <<authenticate-using-the-client-username-and-password>>  |  <<authenticate-using-the-client-certificate>>  |  <<delete-tls-identity>>  |  <<the-impact-of-tls-settings>>
 
 Use the
-{url-api-class-urlendpointconfiguration} class's {url-api-references-urlendpointconfiguration-auth} parameter to specify how client credentials are to be authenticated.
+{url-api-class-urlendpointconfiguration} class's {url-api-references-urlendpointconfiguration-auth} method to specify how client credentials are to be authenticated.
 
 Valid options are:
 
-* ListenerPasswordAuthenticator -- which authenticates using a client's username and password
-* ListenerCertificateAuthenticator -- which authenticates using  a clients certificate.
+* {url-api-class-ListenerPasswordAuthenticator} -- which authenticates using a client's username and password
+* {url-api-class-ListenerCertificateAuthenticator} -- which authenticates using  a clients certificate.
 
 // include::{root-partials}p2p-api.adoc[tag=config-auth]
 
 === Authenticate Using the Client Username and Password
 
 This section shows how to authenticate client username and password using basic authentication.
-For how to authenticate using client certs see: <<authenticating-with-certificate>>
+For how to authenticate using client certificates see: <<authenticate-using-the-client-certificate>>
 
 include::{root-partials}p2p-api.adoc[tag=ListenerPasswordAuthenticator]
 
-include::{root-partials}p2p-api.adoc[tag=ListenerPasswordAuthenticatorDelegate]
+// include::{root-partials}p2p-api.adoc[tag=ListenerPasswordAuthenticatorDelegate]
 
 .Password authentication
 ====
-In this example, `allowlistedUsers` is a dictionary comprising the usernames and passwords of valid users. Credentials not in `allowlistedUsers` are denied access.
+// In this example, `allowlistedUsers` is a dictionary comprising the usernames and passwords of valid users. Credentials not in `allowlistedUsers` are denied access.
+
 
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags=listener-config-auth, indent=0]
-----
-====
 
+include::{snippet-p2psync-ws}[tags=listener-config-auth, indent=0]
+
+----
+<.> Where 'thusUser' and 'thisPassword' are the previously populated values to be authenticated.
+====
 
 === Authenticate using the Client Certificate
 
+// include::{root-partials}p2p-api.adoc[tag=ListenerCertificateAuthenticator]
+
+* Root CA certificate chains +
++
 --
-include::{root-partials}p2p-api.adoc[tag=ListenerCertificateAuthenticator]
---
+
+Any client certificate signed by the given root CA certificate chains is authenticated.
 
 include::{root-partials}p2p-api.adoc[tag=ListenerCertificateAuthenticator-root]
 
+--
+
+* Application logic
++
+--
+This option is used for authenticating self-signed certificates.
+
 include::{root-partials}p2p-api.adoc[tag=ListenerCertificateAuthenticatorDelegate]
 
-.Set Cert Auth
+--
+
+.Set Certificate Authorization
+=====
 [{tabs}]
 ====
-Using Root CA Certificate Chains::
+Root CA::
 +
 --
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-config-client-auth-root", indent=0]
+
+Work-in-progress. Code snippet coming soon.
+
 ----
+// include::{snippet-p2psync-ws}[tags=listener-config-client-auth-root, indent=0]
 --
 +
-Using Application Logic::
+Application Logic::
 +
 --
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-config-client-auth-self-signed", indent=0]
+
+Work-in-progress. Code snippet coming soon.
+
 ----
+// include::{snippet-p2psync-ws}[tags=listener-config-client-auth-self-signed, indent=0]
 --
+====
+=====
+
+=== Delete TLS Identity
+
+You can remove unwanted TLS identities from {securestorage} using the KeyStore API (see -- https://developer.android.com/reference/java/security/KeyStore#deleteEntry(java.lang.String)).
+
+.Deleting TLS Identities
+====
+[source, {source-language}]
+----
+String thisAlias = "alias-to-delete";
+
+KeyStore thisKeystore = KeyStore.getInstance("PKCS12"); // <.>
+if (thisAlias != null) {
+   thisKeystore.deleteEntry(thisAlias);  // <.>
+}
+----
+<.> Specify the cryptography standard type corresponding to your secure storage
+<.> Specify the alias (label) of the identity to be deleted.
 ====
 
 === The Impact of TLS Settings
@@ -259,7 +367,7 @@ The table in this section shows the expected system behavior (in regards to secu
 .Expected system behavior
 [cols="12,44,44"]
 |===
-|`disableTLS` |`tlsIdentity` (corresponding to server) |Expected system behavior
+|disableTLS |tlsIdentity (corresponding to server) |Expected system behavior
 
 |true
 |Ignored
@@ -276,19 +384,19 @@ a|. The system will auto generate an _anonymous_ self signed cert.
 a|Set to server identity generated from a self- or CA-signed certificate
 
 // On first use::
-* On first use -- Bring your own cert and private key (use `importIdentity`).
-* Each time -- Use the server identity from the cert stored in the keychain; for example, use `TSLIdentity.identity(withIdentity:)`.
+* On first use -- Bring your own certificate and private key; for example, using the {url-api-class-tlsidentity} class's {url-api-method-tls-identity-import} method to add it to the {securestorage}.
+* Each time -- Use the server identity from the certificate stored in the {securestorage}; for example, using the {url-api-class-tlsidentity} class's {url-api-method-tls-identity-get} method with the alias you want to retrieve..
 
-See: {xref-cbl-pg-p2p-manage-tls-id} for more on how to store and use identities.
+// See: {xref-cbl-pg-p2p-manage-tls-id} for more on how to store and use identities.
 
 a|* System will use the configured identity.
-* Active peers will validate the server cert corresponding to the TLSIdenity (as long as they are configured to not skip validation -- see <<configure-tls-security>>.
+* Active peers will validate the server certificate corresponding to the TLSIdentity (as long as they are configured to not skip validation -- see <<tls-security>>).
 
 // |false
 // a|
-// // Use the convenience `createIdentity` API to generate the cert and identity
-// * On first use -- Bring your own CA cert and private key (use `importIdentity`).
-// * Each time -- Use the server identity from the CA cert stored in the keychain; for example, use `TSLIdentity.identity(withIdentity:)`.
+// // Use the convenience `createIdentity` API to generate the certificate and identity
+// * On first use -- Bring your own CA certificate and private key (use `importIdentity`).
+// * Each time -- Use the server identity from the CA certificate stored in the keychain; for example, use `TSLIdentity.identity(withIdentity:)`.
 
 // See: {xref-cbl-pg-p2p-manage-tls-id} for more on how to store and use identities.
 // a|. The system will use the provided CA cert.
@@ -297,69 +405,62 @@ a|* System will use the configured identity.
 
 |===
 
-== Configure Delta Sync
+== Start Listener
 
-Delta sync replication is not enabled by default.
+Once you have completed the Listener's configuration settings you can initialize the Listener instance and start it running -- see: <<initialize-and-start-listener>>
 
-Use the `{url-api-references-urlendpointconfiguration-delta-sync}` parameter of `{url-api-class-urlendpointconfiguration}` to activate or deactivate delta sync mode when replicating.
-
-.Enable delta sync
-====
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="listener-config-delta-sync", indent=0]
-----
-====
-
-== Start Listening
-
-Once you have completed the listener's configuration settings you can initialize the listener instance and start listening -- see: <<initialize-and-start-listener>>
-
-
-[#initialize-and-start-listener]
+[[initialize-and-start-listener]]
 .Initialize and start listener
 ====
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-start", indent=0]
+include::{snippet-p2psync-ws}[tags=listener-start, indent=0]
+
 ----
-<.> Initialize the listener instance using the configuration settings.
-<.> Start the listener, ready to accept connections and incoming data from active peers.
-<.> Start and required on-going listener <<monitor-the-listener, Monitoring>>, including <<conflict-resolution>>
+include::{snippet-p2psync-ws}[tags=listener-start-callouts, indent=0]
+
 ====
 
-== Monitor the Listener
+== Monitor Listener
 
-You can use the `status` parameter of the listener to check on the number of total and active connections.
-The object returned is of type `ConnectionStatus` and comprises:
+Use the Listener's `getStatus` method to get counts of total and active connections -- see: <<get-connection-counts>>.
 
-* ConnectionCount -- the total number of connections served by the listener
-* activeConnectionCount -- the number of active (BUSY) connections currently being served by the listener
-
-.Using status to monitor listener
+[[get-connection-counts]]
+.Get connection counts
 ====
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-status-check", indent=0]
+include::{snippet-p2psync-ws}[tags=listener-status-check, indent=0]
 ----
+
+include::{snippet-p2psync-ws}[tags=listener-status-check-callouts, indent=0]
+
 ====
 
-== Conflict Resolution
+// == Conflict Resolution
 
-All conflicts are resolved on the active peer, which supports both automatic and custom conflict resolution.
-The listener returns a 409 response on detecting a conflict.
+// All conflicts are resolved on the active peer, which supports both automatic and custom conflict resolution.
+// The listener returns a 409 response on detecting a conflict.
 
 // [source, {source-language}]
 // ----
-// include::{snippet-p2psync-ws}[tags="listener-pv-cfg-conflict", indent=0]
+// include::{snippet-p2psync-ws}[tags=listener-pv-cfg-conflict, indent=0]
 // ----
 
-== Stop the Listener
+== Stop Listener
 ====
-// include::{snippet-p2psync-ws}[tags="stopWebsocketsListener"]config
-.Stop listening using `stop` method
+// include::{snippet-p2psync-ws}[tags=stopWebsocketsListener"]config
+.Stop listener using `stop` method
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-stop", indent=0]
+include::{snippet-p2psync-ws}[tags=listener-stop, indent=0]
 ----
+
+NOTE: Closing the database will also close the listener.
+
 ====
+
+
+// DO NOT EDIT -- Footer Related Content Block
+include::{root-partials}block-related-content-p2psync.adoc[]
+// DO NOT EDIT

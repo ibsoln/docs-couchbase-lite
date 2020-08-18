@@ -1033,16 +1033,30 @@ public class Examples {
 
         database.save(
             mutableDocument,
-            (newDoc, curDoc) -> {
-                if (curDoc == null) { return false; }
+            (newDoc, curDoc) -> { // <.>
+                if (curDoc == null) { return false; } // <.>
                 Map<String, Object> dataMap = curDoc.toMap();
-                dataMap.putAll(newDoc.toMap());
+                dataMap.putAll(newDoc.toMap()); // <.>
                 newDoc.setData(dataMap);
-                return true;
-            });
+                return true; // <.>
+            }); // <.>
         // end::update-document-with-conflict-handler[]
+      }
     }
-}
+
+// tag::update-document-with-conflict-handler-callouts[]
+
+<.> The conflict handler code is provided as a block
+
+<.> If the handler cannot resolve a conflict, it can return false.
+In this case, the save method will cancel the save operation and return false the same way as using the save() method with the failOnConflict concurrency control.
+
+<.> Within the conflict handler, you can modify the document parameter which is the same instance of Document that is passed to the save() method. So in effect, you will be directly modifying the document that is being saved.
+
+<.> When handling is done, the method must return true.
+
+<.> If there is an exception thrown in the handle() method, the exception will be caught and re-thrown in the save() method
+// end::update-document-with-conflict-handler-callouts[]
 
 // tag::local-win-conflict-resolver[]
 class LocalWinConflictResolver implements ConflictResolver {

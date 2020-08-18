@@ -1,0 +1,3 @@
+= Introduction
+
+include::couchbase-lite:android:learn/java-android-p2psync.adoc[]

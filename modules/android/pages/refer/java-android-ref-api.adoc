@@ -1,4 +1,4 @@
-= CBL API for Java (Android)
+= Couchbase Lite API for Java (Android)
 include::ROOT:partial$_attributes-local.adoc[]
 :snippet: ROOT:example$/java-android/app/src/main/java/com/couchbase/code_snippets/Examples.java
 :ziputils: ROOT:example$/java-android/app/src/main/java/com/couchbase/code_snippets/ZipUtils.java

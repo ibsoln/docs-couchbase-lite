@@ -1,3 +1,5 @@
 
-:param-abstract: Related How-to: {url-api-references}[API Reference] | {xref-cbl-pg-dbo-p2psync-websocket-using-passive} | {xref-cbl-pg-dbo-p2psync-websocket-using-active} | {xref-cbl-pg-p2p-manage-tls-id}
-:topic-group: Topic Group: Working with Peer-to-Peer Sync (web sockets)
+
+:topic-group: Peer-to-Peer Synchronization
+:param-related: {url-api-references}[API Reference]  |  {xref-cbl-pg-dbo-p2psync-websocket-using-passive}  |  {xref-cbl-pg-dbo-p2psync-websocket-using-active}
+//  | {xref-cbl-pg-p2p-manage-tls-id}

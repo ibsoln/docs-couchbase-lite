@@ -1,7 +1,7 @@
 name: couchbase-lite
-title: h2BetaAndroid-81320
+title: P2pBeta/81620-3
 version: '2.8'
-start_page: index.adoc
+start_page: couchbase-lite:android:learn/java-android-p2psync.adoc
 nav:
 #- modules/ROOT/nav.adoc
 - modules/android/nav-android.adoc

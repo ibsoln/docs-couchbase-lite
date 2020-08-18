@@ -236,4 +236,4 @@ include::{snippet}[tag=replication-reset-checkpoint,indent=0]
 include::{root-partials}replication-filters.adoc[]
 
 
-include::{root-partials}block-related-content-p2p.adoc[]
+include::{root-partials}block-related-content-p2psync.adoc[]

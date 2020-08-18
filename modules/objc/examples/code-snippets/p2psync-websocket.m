@@ -11,11 +11,11 @@ class cMyPassListener {
   // tag::listener-initialize[]
   fileprivate  var _allowlistedUsers:[[String:String]] = []
   fileprivate var _websocketListener:URLEndpointListener?
-  fileprivate var _userDb:Database?
+  fileprivate var thisDB:Database?
     // Include websockets listener initializer code
 
     // func fMyPassListener() {
-    // tag::listener-config-endpoint[]
+    // tag::listener-config-db[]
     CBLDatabase *db = self.db;
 
     CBLURLEndpointListenerConfiguration* listenerConfig; // <.>
@@ -31,7 +31,7 @@ class cMyPassListener {
     NSURL *thisURL = [NSURL URLWithString:@"10.1.1.10"];
     listenerConfig.networkInterface = thisURL;
     // end::listener-config-netw-iface[]
-    // end::listener-config-endpoint[]
+    // end::listener-config-db[]
 
     // tag::listener-config-tls-full[]
     // This combination will set

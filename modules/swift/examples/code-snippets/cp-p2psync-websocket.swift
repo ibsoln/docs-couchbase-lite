@@ -109,7 +109,7 @@ public class URLEndpointListenerConfiguration {
 extension DatabaseManager {
 // tag::initWebsocketsListener[]
     func initWebsocketsListenerForUserDb()throws {
-        guard let db = _userDb else {
+        guard let db = thisDB else {
             throw ListDocError.DatabaseNotInitialized
         }
 
@@ -185,7 +185,7 @@ extension DatabaseManager {
 
     func startP2PReplicationWithUserDatabaseToRemotePeer(_ peer:PeerHost, handler:@escaping(_ status:PeerConnectionStatus)->Void) throws{
         print("\(#function) with ws://\(peer)/\(kUserDBName)")
-        guard let userDb = _userDb else {
+        guard let userDb = thisDB else {
              throw ListDocError.DatabaseNotInitialized
 
         }
@@ -263,7 +263,7 @@ extension DatabaseManager {
 // tag::start-replication[]
     func startP2PReplicationWithUserDatabaseToRemotePeer(_ peer:PeerHost, handler:@escaping(_ status:PeerConnectionStatus)->Void) throws{
         print("\(#function) with ws://\(peer)/\(kUserDBName)")
-        guard let userDb = _userDb else {
+        guard let userDb = thisDB else {
              throw ListDocError.DatabaseNotInitialized
 
         }

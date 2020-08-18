@@ -24,7 +24,7 @@ ifeval::["{release-status-cbl}" == "gamma"]
 [.pane__frame--orange]
 .Author's Notes
 --
-This is the existing (2.7) content covering CBL P2P
+This is the existing (2.7) content covering Couchbase Lite P2P
 
 --
 endif::[]
