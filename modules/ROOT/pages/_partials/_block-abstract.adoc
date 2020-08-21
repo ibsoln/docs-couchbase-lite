@@ -29,5 +29,3 @@ endif::description[]
 // ++++
 // </div>
 // ++++
-
-include::{root-partials}block-code-disclaimer.adoc[]

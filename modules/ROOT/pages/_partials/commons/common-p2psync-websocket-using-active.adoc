@@ -15,6 +15,8 @@
 :param-abstract: How to set up a Replicator to connect with a Listener and replicate changes using peer-to-peer sync
 include::{root-partials}block-related-howto-p2psync-ws.adoc[]
 include::{root-partials}_block-abstract.adoc[]
+include::{root-partials}_block-caveats.adoc[tags=android-constraints]
+include::{root-partials}_block-caveats.adoc[tags=code-disclaimer]
 // DO NOT EDIT
 
 ifndef::release-status-cbl[:release-status-cbl!:]
@@ -30,6 +32,7 @@ This is the how-to for P2P snc using websockets
 --
 endif::[]
 
+[#introduction]
 == Introduction
 
 ifeval::["{page-edition}"=="{enterprise}"]
@@ -42,10 +45,12 @@ This content provides sample code covering the implementation of peer-to-peer sy
 
 The code snippet in <<simple-replication-to-listener>> covers the configuration, initialization and replication is expanded upon in subsequent sections in this content.
 
+To compare the peer-to-peer context with the typical client-server communication model, the:
+* Active peer is analogous to a client,
+* Passive peer is analogous to a server.
 
-
-.Simple Replication to Listener
 [#simple-replication-to-listener]
+.Simple Replication to Listener
 // [%collapsible]
 ====
 
@@ -53,15 +58,19 @@ The code snippet in <<simple-replication-to-listener>> covers the configuration,
 ----
 include::{snippet-p2psync-ws}[tags="p2p-act-rep-func;!p2p-act-rep-config-self-cert;!p2p-act-rep-config-pinnedcert;!p2p-tlsid-tlsidentity-with-label;!p2p-act-rep-config-cacert-pinned", indent=0]
 ----
-<.> Use the `ReplicationConfiguration` class's `init(database:target:)` constructor to initialize the replicator configuration with the local database and remote listener endpoint -- see <<configure-target>>
+<.> {empty}
+include::{root-partials}_block-caveats.adoc[tags=android-threads]
 
-<.> By default only CA Certificates are accepted Self-signed Certificates are disallowed.
+
+<.> Use the {url-api-class-replicator-config} class's {url-api-constructor-replicator-config-db-tgt} constructor to initialize the replicator configuration with the local database -- see <<configure-target>>
+
+<.> By default only CA Certificates are accepted; self-signed Certificates are disallowed.
 The provided certificate must be from a trusted root.
 +
-use {url-api-prop-replicator-config-AcceptOnlySelfSignedServerCertificate}(true) to ONLY accept self-signed certificates.
+use {url-api-prop-replicator-config-AcceptOnlySelfSignedServerCertificate}(true) to accept ONLY self-signed certificates.
 Validation of the certificate is bypassed -- see: <<listener-authentication>>
 
-<.> The `authenticator` mode is configured to use basic authentication.
+<.> The `authenticator` is configured to use basic authentication.
 Other supported options are `ClientCertificateAuthenticator` if you want to use client certificate based authentication -- see: <<client-authentication>>
 
 <.> Handle <<conflict-resolution>>
@@ -100,7 +109,13 @@ The required parameters are:
 
 * The local database to be synced.
 * The database URL including the port the listener is listening on.
++
+--
 The URL scheme for web socket URLs uses `ws:` (non-TLS) or `wss:` (SSL/TLS) prefixes.
+ifeval::[{param-platform}=={android=platform}]
+include::{root-partials}_block-caveats.adoc[tags=android-manifest-cleartext]
+endif::[]
+--
 
 You will also need any security credentials provided (for example, user name and password or Cert) for use in the authentication phase of configuration.
 
@@ -110,12 +125,10 @@ You will also need any security credentials provided (for example, user name and
 ----
 include::{snippet-p2psync-ws}[tags="p2p-act-rep-initialize", indent=0]
 ----
-
-<.> Requires `wss://` prefix to URI
+<.> Note use of TLS (`wss://`) prefix to URI to ensure TLS encrypted communication(recommended).
 ====
 
 === Sync Mode
-
 Use `{url-api-class-replicator-config}` class's {url-api-prop-replicator-config-rep-type} and
 `{url-api-prop-replicator-config-cont}` parameters, to tell the replicator:
 
@@ -208,10 +221,12 @@ Set the server's SSL certificate (perhaps bundled with the app) to be used for v
 [source, {source-language}]
 ----
 
-Work-in-progress. Code snippet coming soon.
+include::{snippet-p2psync-ws}[tag=p2p-act-rep-config-cacert-pinned, indent=0]
 
 ----
-// include::{snippet-p2psync-ws}[tag=p2p-act-rep-config-cacert-pinned, indent=0]
+
+include::{snippet-p2psync-ws}[tag=p2p-act-rep-config-cacert-pinned-callouts, indent=0]
+
 --
 
 ====
@@ -220,13 +235,32 @@ Work-in-progress. Code snippet coming soon.
 
 Use {url-api-class-replicator-config}'s {url-api-prop-replicator-config-auth} method to define the authentication method to the replicator - see <<configuring-client-authentication>>.
 
-Valid authenticators include:
+==== Basic Authentication
+Use the `{url-api-class-replicator-config-basic-auth}` to provide basic authentication using username and password credentials.
 
-* The `{url-api-class-replicator-config-basic-auth}` to use basic authentication with the username and password credentials.
+For basic authentication the `disableTLS` configuration setting is ignored.
 
-* The `{url-api-class-replicator-config-cert-auth}` parameter to configure the client TLS certificates to be presented to the server, on connection. This applies only to the {url-api-class-urlendpointlistener}.
+[[basic-authentication]]
+.Basic Authentication
+====
 
-If you are using certificates, you have the option to either:
+This example shows basic authentication using user name and password:
+
+[source, {source-language}]
+----
+include::{snippet-p2psync-ws}[tags="p2p-act-rep-auth", indent=0]
+
+----
+====
+
+==== Certificate Authentication
+Use the `{url-api-class-replicator-config-cert-auth}` to configure the client TLS certificates to be presented to the server, on connection. This applies only to the {url-api-class-urlendpointlistener}.
+
+The server will verify the certificate -- checking the chain of trust -- *before* offering the certificate to the listener’s authenticator.
+
+For certificate authentication the `disableTLS` configuration setting must be `false`.
+
+With certificates you also have the option to either:
 
 * Use Couchbase Lite's convenience API to create self-signed certificates.
 The `{url-api-class-tlsidentity}` class provides methods to manage identities.
@@ -235,44 +269,24 @@ Our convenience API also gives you the flexibility to bring your own TLS identit
 +
 This makes it easy to bundle PKCS12 certificates with your application.
 
+
 // See {xref-cbl-pg-p2p-manage-tls-id} for more on how to do this.
 
-
 [[configuring-client-authentication]]
-.Configuring client authentication
-=====
-
-[{tabs}]
+.Client Cert Authentication::
 ====
-Basic Authentication::
-+
---
-This example shows basic authentication using user name and password:
-
-[source, {source-language}]
-----
-include::{snippet-p2psync-ws}[tags="p2p-act-rep-auth", indent=0]
-
-----
---
-
-Client Cert Authentication::
-+
---
-
 This example shows client certificate authentication using an identity from secure storage.
 
 [source, {source-language}]
 ----
 
-Work-in-progress. Code snippet coming soon.
+include::{snippet-p2psync-ws}[tags=p2p-tlsid-tlsidentity-with-label, indent=0]
 
 ----
 // include::{snippet-p2psync-ws}[tags=p2p-tlsid-tlsidentity-with-label, indent=0]
---
 
 ====
-=====
+
 
 == Initialize Replicator
 

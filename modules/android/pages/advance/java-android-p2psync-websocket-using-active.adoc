@@ -1,5 +1,7 @@
 = Active Peer
 :sectanchors:
+:idprefix:
+:sectids:
 :page-layout: article
 :page-status: {release-status-cbl} -- {release-comments-cbl}
 :page-edition: Enterprise
