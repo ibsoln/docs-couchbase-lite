@@ -164,12 +164,12 @@ class URLEndpontListenerTest: ReplicatorTest {
 // tag::xctListener-auth-basic-pwd-full[]
         // Listener:
 // tag::xctListener-auth-basic-pwd[]
-        let listenerAuth = ListenerPasswordAuthenticator.init {
-            (username, password) -> Bool in
+        let thisAuth = ListenerPasswordAuthenticator.init {
+            (thisUser, thisPassword) -> Bool in
             return (username as NSString).isEqual(to: "daniel") &&
                    (password as NSString).isEqual(to: "123")
         }
-        let listener = try listen(tls: false, auth: listenerAuth)
+        let listener = try listen(tls: false, auth: thisAuth)
 
         auth = BasicAuthenticator.init(username: "daniel", password: "123")
         self.run(target: listener.localURLEndpoint, type: .pushAndPull,    continuous: false,
@@ -279,13 +279,13 @@ class URLEndpontListenerTest: ReplicatorTest {
         // Replicator - Success:
         self.ignoreException {
             self.run(target: listener.localURLEndpoint, type: .pushAndPull, continuous: false,
-                     serverCertVerifyMode: .selfSignedCert, serverCert: nil)
+                     serverCertVerifyMode: true, serverCert: nil)
         }
 // end::xctListener-auth-tls-self-signed[]
         // Replicator - TLS Error:
         self.ignoreException {
             self.run(target: listener.localURLEndpoint, type: .pushAndPull, continuous: false,
-                     serverCertVerifyMode: .caCert, serverCert: nil, expectedError: CBLErrorTLSCertUnknownRoot)
+                     serverCertVerifyMode: false, serverCert: nil, expectedError: CBLErrorTLSCertUnknownRoot)
         }
 
         // Cleanup
@@ -309,14 +309,14 @@ class URLEndpontListenerTest: ReplicatorTest {
         self.ignoreException {
             let serverCert = listener.tlsIdentity!.certs[0]
             self.run(target: listener.localURLEndpoint, type: .pushAndPull, continuous: false,
-                     serverCertVerifyMode: .caCert, serverCert: serverCert)
+                     serverCertVerifyMode: false, serverCert: serverCert)
         }
 // end::xctListener-auth-tls-ca-cert[]
 
         // Replicator - TLS Error:
         self.ignoreException {
             self.run(target: listener.localURLEndpoint, type: .pushAndPull, continuous: false,
-                     serverCertVerifyMode: .caCert, serverCert: nil, expectedError: CBLErrorTLSCertUnknownRoot)
+                     serverCertVerifyMode: false, serverCert: nil, expectedError: CBLErrorTLSCertUnknownRoot)
         }
 
         // Cleanup
@@ -413,7 +413,7 @@ class URLEndpontListenerTest: ReplicatorTest {
         try generateDocument(withID: "doc-1")
         let rConfig = self.config(target: self.listener!.localURLEndpoint,
                                  type: .pushAndPull, continuous: false, auth: nil,
-                                 serverCertVerifyMode: .caCert, serverCert: nil)
+                                 serverCertVerifyMode: false, serverCert: nil)
         var maxConnectionCount: UInt64 = 0, maxActiveCount:UInt64 = 0
         run(config: rConfig, reset: false, expectedError: nil) { (replicator) in
             replicator.addChangeListener { (change) in
@@ -485,8 +485,8 @@ listenerConfig.enableDeltaSync = true
 listenerConfig.tlsIdentity = nil
 
 listenerConfig.authenticator = ListenerPasswordAuthenticator.init {
-            (username, password) -> Bool in
-    if (self._whitelistedUsers.contains(["password" : password, "name":username])) {
+            (thisUser, thisPassword) -> Bool in
+    if (self._whitelistedUsers.contains(["password" : thisPassword, "name":thisUser])) {
         return true
     }
     return false
@@ -534,8 +534,8 @@ _websocketListener = URLEndpointListener(config: listenerConfig)
 
 // tag::replicator-start-func-config-auth[]
 
-            config.serverCertificateVerificationMode = .selfSignedCert
-            let authenticator = BasicAuthenticator(username: user, password: password)
+            config.acceptOnlySelfSignedServerCertificate = true
+            let authenticator = BasicAuthenticator(username: thisUser, password: thisPassword)
             config.authenticator = authenticator
 // end::replicator-start-func-config-auth[]
 
@@ -612,7 +612,7 @@ import MultipeerConnectivity
 
 class cMyPassListener {
   // tag::listener-initialize[]
-  fileprivate  var _allowlistedUsers:[[String:String]] = []
+  fileprivate var _allowlistedUsers:[[String:String]] = []
   fileprivate var _websocketListener:URLEndpointListener?
   fileprivate var thisDB:Database?
     // Include websockets listener initializer code
@@ -621,98 +621,121 @@ class cMyPassListener {
     // tag::listener-config-db[]
     let db=thisDB!
     let listenerConfig = URLEndpointListenerConfiguration(database: db) // <.>
+
+    // end::listener-config-db[]
     // tag::listener-config-port[]
     /* optionally */ let wsPort: UInt16 = 4984
     /* optionally */ let wssPort: UInt16 = 4985
-    listenerConfig.port =  wssPort
+    listenerConfig.port =  wssPort // <.>
+
     // end::listener-config-port[]
-
     // tag::listener-config-netw-iface[]
-    listenerConfig.networkInterface = "10.1.1.10"
+    listenerConfig.networkInterface = "10.1.1.10"  // <.>
+
     // end::listener-config-netw-iface[]
-    // end::listener-config-db[]
+    // tag::listener-deltasync[]
+    listenerConfig.enableDeltaSync = true // <.>
 
+    // end::listener-deltasync[]
     // tag::listener-config-tls-full[]
-    // This combination will set
     // tag::listener-config-tls-enable[]
-    // -- TLS on
-    //    optionally switch it off .disableTLS  = true
     listenerConfig.disableTLS  = false // <.>
-    // end::listener-config-tls-enable[]
-    // tag::listener-config-tls-id-full[]
-    // tag::listener-config-tls-id-nil[]
-    // -- Use anonymous self-cert
-    listenerConfig.tlsIdentity = nil
-    // end::listener-config-tls-id-nil[]
-    // tag::listener-config-tls-id-cert[]
-    // -- Use id and certs from keychain
-    listenerConfig.tlsIdentity = TLSIdentity(withLabel:"CBL-Swift-Server-Cert")
-    // optionally  listenerConfig.tlsIdentity = TLSIdentity(withIdentity:serverSelfCert-id)
-    // end::listener-config-tls-id-cert[]
-    // end::listener-config-tls-id-full[]
 
-    // tag::listener-config-auth[]
-    listenerConfig.authenticator = ListenerPasswordAuthenticator.init { // <.>
-        (username, password) -> Bool in
+    // end::listener-config-tls-enable[]
+    // tag::listener-config-tls-disable[]
+    listenerConfig.disableTLS  = true // <.>
+
+    // end::listener-config-tls-disable[]
+    // tag::listener-config-tls-id-full[]
+    // tag::listener-config-tls-id-anon[]
+    // Use an anonymous self-signed cert
+    listenerConfig.tlsIdentity = nil
+
+    // end::listener-config-tls-id-anon[]
+    // tag::listener-config-tls-id-set[]
+    // set the TLS Identity
+    listenerConfig.tlsIdentity =
+      TLSIdentity(withLabel:thisIdentity)
+
+    // end::listener-config-tls-id-set[]
+    // end::listener-config-tls-id-full[]
+    // tag::listener-config-client-auth-pwd[]
+    // Configure the client authenticator for Basic Authentication) <.>
+    listenerConfig.authenticator = ListenerPasswordAuthenticator.init {
+        (thisUser, thisPassword) -> Bool in
             if (self._allowlistedUsers.contains(
-              ["password" : password, "name":username])) {
+              ["password" : thisPassword, "name":thisUser])) {
                 return true
             }
         return false
     }
-    // end::listener-config-auth[]
 
-    listenerConfig.enableDeltaSync = true // <.>
+    // end::listener-config-client-auth-pwd[]
+    // tag::listener-config-client-auth-root[]
+    // Authenticate using Cert Authority
+    // cert is a pre-populated object of type:SecCertificate representing a certificate
+    let rootCertData = SecCertificateCopyData(cert) as Data
+    let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
+    // Listener:
+    listenerConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
 
-    // tag::listener-start[]
+    // end::listener-config-client-auth-root[]
+    // tag::listener-config-client-auth-self-signed[]
+    // Authenticate self-signed cert using application logic
+    listenerConfig.authenticator = ListenerCertificateAuthenticator.init {
+      (cert) -> Bool in
+        var cert:SecCertificate
+        var certCommonName:CFString?
+        let status=SecCertificateCopyCommonName(cert, &certCommonName)
+        if (self._allowlistedUsers.contains(["name": certCommonName! as String])) {
+            return true
+        }
+        return false
+    }
+
+    // end::listener-config-client-auth-self-signed[]
+ // tag::listener-start[]
+    // Initialize the listener
     _websocketListener = URLEndpointListener(config: listenerConfig) // <.>
-
     guard let websocketListener = _websocketListener else {
       throw print("WebsocketsListenerNotInitialized")
       // ... take appropriate actions
     }
-    try websocketListener.start() // <.> <.>
+    // Start the listener
+    try websocketListener.start() // <.>
+
     // end::listener-start[]
 // end::listener-initialize[]
-
   }
 }
 
 
-// tag::listener-config-tls-disable[]
-listenerConfig.disableTLS  = true
-// end::listener-config-tls-disable[]
-
-// tag::listener-config-tls-id-nil[]
+// tag::old-listener-config-tls-id-nil[]
 listenerConfig.tlsIdentity = nil
-// end::listener-config-tls-id-nil[]
 
-
+// end::old-listener-config-tls-id-nil[]
 // tag::listener-config-delta-sync[]
 listenerConfig.enableDeltaSync = true
+
 // end::listener-config-delta-sync[]
-
-
 // tag::listener-status-check[]
 let totalConnections = websocketListener.status.connectionCount
 let activeConnections = websocketListener.status.activeConnectionCount
+
 // end::listener-status-check[]
-
-
 // tag::listener-stop[]
         listener.stop()
-// end::listener-stop[]
 
-// tag::listener-config-client-auth-root[]
+// end::listener-stop[]
+// tag::old-listener-config-client-auth-root[]
   // cert is a pre-populated object of type:SecCertificate representing a certificate
   let rootCertData = SecCertificateCopyData(cert) as Data
   let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
   // Listener:
   listenerConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
-// end::listener-config-client-auth-root[]
 
-
-// tag::listener-config-client-auth-self-signed[]
+// end::old-listener-config-client-auth-root[]
+// tag::old-listener-config-client-auth-self-signed[]
 listenerConfig.authenticator = ListenerCertificateAuthenticator.init {
   (cert) -> Bool in
     var cert:SecCertificate
@@ -723,7 +746,7 @@ listenerConfig.authenticator = ListenerCertificateAuthenticator.init {
     }
     return false
 }
-// end::listener-config-client-auth-self-signed[]
+// end::old-listener-config-client-auth-self-signed[]
 
 // tag::p2p-ws-api-urlendpointlistener[]
 public class URLEndpointListener {
@@ -784,34 +807,70 @@ class myActPeerClass {
     let tgtUrl = URL(string: "wss://10.1.1.12:8092/actDb")!
     let targetEndpoint = URLEndpoint(url: tgtUrl)
     var config = ReplicatorConfiguration(database: actDb!, target: targetEndpoint) // <.>
-    // end::p2p-act-rep-initialize[]
 
+    // end::p2p-act-rep-initialize[]
     // tag::p2p-act-rep-config[]
     // tag::p2p-act-rep-config-type[]
     config.replicatorType = .pushAndPull
+
     // end::p2p-act-rep-config-type[]
     // tag::p2p-act-rep-config-cont[]
+    // Configure Sync Mode
     config.continuous = true
-    // end::p2p-act-rep-config-cont[]
-    // tag::p2p-act-rep-config-cert-verify[]
-    // serverCertificateVerificationMode=.selfSignedCert effectively disables cert validation
-    config.serverCertificateVerificationMode = .selfSignedCert // <.>
-    // end::p2p-act-rep-config-cert-verify[]
-    // end::p2p-act-rep-config[]
 
+    // end::p2p-act-rep-config-cont[]
+    // tag::p2p-act-rep-config-tls-full[]
+    // tag::p2p-act-rep-config-cacert[]
+    // Configure Server Security -- only accept CA Certs
+    config.acceptOnlySelfSignedServerCertificate = false // <.>
+
+    // end::p2p-act-rep-config-cacert[]
+    // tag::p2p-act-rep-config-self-cert[]
+    // Configure Server Security -- only accept self-signed certs
+    config.acceptOnlySelfSignedServerCertificate = true; <.>
+
+    // end::p2p-act-rep-config-self-cert[]
+    // tag::p2p-act-rep-config-pinnedcert[]
+    // Return the remote pinned cert (the listener's cert)
+    config.pinnedServerCertificate = thisCert; // Get listener cert if pinned
+
+    // end::p2p-act-rep-config-pinnedcert[]
+    // Configure Client Security // <.>
     // tag::p2p-act-rep-auth[]
     //  Set Authentication Mode
-    let authenticator = BasicAuthenticator(username: user, password: password) // <.>
-    config.authenticator = authenticator
-    // end::p2p-act-rep-auth[]
+    let thisAuthenticator = BasicAuthenticator(username: thisUser, password: thisPassword)
+    config.authenticator = thisAuthenticator
 
+    // end::p2p-act-rep-auth[]
+    // end::p2p-act-rep-config-tls-full[]
+    // tag::p2p-tlsid-tlsidentity-with-label[]
+        // USE KEYCHAIN IDENTITY IF EXISTS
+        // Check if Id exists in keychain. If so use that Id
+        do {
+            if let thisIdentity = try TLSIdentity.identity(withLabel: "doco-sync-server") {
+                print("An identity with label : doco-sync-server already exists in keychain")
+                return thisIdentity
+                }
+        } catch
+          {return nil}
+        // end::p2p-tlsid-check-keychain[]
+        thisAuthenticator.ClientCertificateAuthenticator(identity: thisIdentity )
+        config.authenticator = thisAuthenticator
+
+    // end::p2p-tlsid-tlsidentity-with-label[]
+    // tag::p2p-act-rep-config-conflict[]
+    /* Optionally set custom conflict resolver call back */
+    config.conflictResolver = ( /* define resolver function */); // <.>
+
+    // end::p2p-act-rep-config-conflict[]
+    // end::p2p-act-rep-config[]
     // tag::p2p-act-rep-start-full[]
     // Apply configuration settings to the replicator
     thisReplicator = Replicator.init( config: config) // <.>
 
-    // Optionally add a change listener
     // tag::p2p-act-rep-add-change-listener[]
-    // add change listener and retain token for use in deletion
+    // Optionally add a change listener
+    // Retain token for use in deletion
     let pushPullReplListener:ListenerToken? = thisReplicator?.addChangeListener({ (change) in // <.>
       if change.status.activity == .stopped {
           print("Replication stopped")
@@ -821,17 +880,19 @@ class myActPeerClass {
           print("Replicator is currently ", thisReplicator?.status.activity)
       }
     })
+
     // end::p2p-act-rep-status[]
-// end::p2p-act-rep-add-change-listener[]
+    // end::p2p-act-rep-add-change-listener[]
 
-// tag::p2p-act-rep-start[]
-    // Run the replicator using the config settings
-    thisReplicator?.start()  // <.>
-// end::p2p-act-rep-start[]
-// end::p2p-act-rep-start-full[]
+    // tag::p2p-act-rep-start[]
+        // Run the replicator using the config settings
+        thisReplicator?.start()  // <.>
+
+    // end::p2p-act-rep-start[]
+    // end::p2p-act-rep-start-full[]
 
 
-// end::p2p-act-rep-func[]
+    // end::p2p-act-rep-func[]
     }
 
     func mystopfunc() {
@@ -881,8 +942,8 @@ class cMyGetCert1{
         let thisLabel : String? = "doco-sync-server"
 
         //var thisData : CFData?
-        // tag::p2p-tlsid-check-keychain[]
-        // tag::p2p-tlsid-tlsidentity-with-label[]
+    // tag::old-p2p-tlsid-tlsidentity-with-label[]
+    // tag::p2p-tlsid-check-keychain[]
         // USE KEYCHAIN IDENTITY IF EXISTS
         // Check if Id exists in keychain. If so use that Id
         do {
@@ -892,10 +953,10 @@ class cMyGetCert1{
                 }
         } catch
           {return nil}
-// end::p2p-tlsid-check-keychain[]
+        // end::p2p-tlsid-check-keychain[]
         thisAuthenticator.ClientCertificateAuthenticator(identity: thisIdentity )
         config.thisAuthenticator
-// end::p2p-tlsid-tlsidentity-with-label[]
+    // end::old-p2p-tlsid-tlsidentity-with-label[]
 
 
 // tag::p2p-tlsid-check-bundled[]
@@ -987,20 +1048,20 @@ do {
     } // fMyGetCert
 } // cMyGetCert
 
+// tag::p2p-tlsid-delete-id-from-keychain[]
+
+try TLSIdentity.deleteIdentity(withLabel: serverCertLabel);
+
+// end::p2p-tlsid-delete-id-from-keychain[]
+
+
 // end::p2p-tlsid-manage-func[]
-
-
-
-
-
-
-
-// tag::p2p-act-rep-config-self-cert[]
-// Use serverCertificateVerificationMode set to `.selfSignedCert` to disable cert validation
+// tag::old-p2p-act-rep-config-self-cert[]
+// acceptOnlySelfSignedServerCertificate = true -- accept Slf-Signed Certs
 config.disableTLS = false
-config.serverCertificateVerificationMode = .selfSignedCert
-// end::p2p-act-rep-config-self-cert[]
+config.acceptOnlySelfSignedServerCertificate = true
 
+// end::old-p2p-act-rep-config-self-cert[]
 
 // tag::p2p-act-rep-config-cacert-pinned-func[]
 func fMyCaCertPinned() {
@@ -1022,9 +1083,17 @@ func fMyCaCertPinned() {
   guard let pinnedCert = SecCertificateCreateWithData(nil, localCertificate)
     else { /* process error */ }
 
-  // Add `pinnedCert` and `.cacert` to `ReplicatorConfiguration`
-  config.serverCertificateVerificationMode = .caCert
+  // Add `pinnedCert` and `acceptOnlySelfSignedServerCertificate=false` to `ReplicatorConfiguration`
+  config.acceptOnlySelfSignedServerCertificate = false
   config.pinnedServerCertificate = pinnedCert
   // end::p2p-act-rep-config-cacert-pinned[]
   // end::p2p-act-rep-config-cacert-pinned-func[]
 }
+
+    // optionally  listenerConfig.tlsIdentity = TLSIdentity(withIdentity:serverSelfCert-id)
+
+
+        // tag::old-listener-config-client-root-ca[]
+    // Configure the client authenticator to validate using ROOT CA <.>
+
+    // end::old-listener-config-client-root-ca[]

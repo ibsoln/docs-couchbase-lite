@@ -207,6 +207,7 @@ endif::[]
 :snippets-p2psync-ws--android: {lang-mod-android}:{snippets-pfx--android}/code_snippets/p2psync-websocket.java
 :snippets-p2psync-ws--objc: {lang-mod-objc}:{snippets-pfx}p2psync-websocket.m
 :snippets-p2psync-ws--swift: {lang-mod-swift}:{snippets-pfx}p2psync-websocket.swift
+:snippets-p2psync-ws--csharp: {lang-mod-csharp}:{snippets-pfx}p2psync-websocket.cs
 
 // SGW Pages
 :pg-sgw-gs-install: gs-sgw-install.adoc
@@ -231,12 +232,12 @@ endif::[]
 :securestorage-api: secure storage API
 
 
-ifeval::[{param-platform} == "android"]
+ifeval::["{param-platform}"=="{platform-android}"]
 :securestorage: Keystore
 :securestorage-api: KeyStore API
 endif::[]
 
-ifeval::[{param-platform} == "ios"]
+ifeval::["{param-platform}"=="{platform-ios}"]
 :securestorage: Keychain
 :securestorage-api: Keychain API
 endif::[]

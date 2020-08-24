@@ -1,35 +1,16 @@
 //= Using Peer-to-Peer Sync (websockets)
-
-
 // DO NOT EDIT
 :param-abstract: How to set up a Listener to accept a Replicator connection and sync using peer-to-peer
+
 include::{root-partials}block-related-howto-p2psync-ws.adoc[]
 include::{root-partials}_block-abstract.adoc[]
+
+ifeval::["{param-platform}"=="{platform-android}"]
 include::{root-partials}_block-caveats.adoc[tags=android-constraints]
+endif::[]
+
 include::{root-partials}_block-caveats.adoc[tag=code-disclaimer]
 // DO NOT EDIT
-
-
-:fn-cleartext: footnote:[ {empty}
-+
---
-include::{root-partials}_block-caveats.adoc[tags=android-manifest-cleartext]
---
-]
-
-
-ifndef::release-status-cbl[:release-status-cbl!:]
-ifeval::["{release-status-cbl}" == "gamma"]
-[.pane__frame--orange]
-.Author's Notes
---
-
-DOC-6340-H2-P2P: New topic - Implementing P2P Sync
-https://issues.couchbase.com/browse/DOC-6340
-
-This is the how-to for P2P snc using websockets
---
-endif::[]
 
 == Introduction
 
@@ -48,10 +29,11 @@ You do not need to provide configuration values for all properties, only those n
 ====
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-initialize;!listener-config-tls-id-caCert;!listener-config-tls-id-SelfSigned;!listener-config-tls-id-set;!listener-config-auth-cert", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-initialize;!listener-config-tls-enable;!listener-config-tls-id-anon;!listener-config-tls-id-caCert;!listener-config-tls-id-SelfSigned;!listener-config-client-auth-root;!listener-config-tls-id-set;!listener-config-client-root-ca;!listener-config-client-auth-self-signed", indent=0]
+
 ----
 
-ifeval::[{param-platform}=={platform-android}]
+ifeval::["{param-platform}"=="{platform-android}"]
 <.> You will need to include this database initializer in the application's `onCreate()` method.
 endif::[]
 
@@ -60,9 +42,10 @@ endif::[]
 <.> By default the system will assign a port -- to over-ride this see: <<set-network-and-port>>
 <.> By default the system will listen on all network interfaces -- to over-ride this see: <<set-network-and-port>>
 <.> <<delta-sync>>
-<.> <<tls-security>>
-// <.> TLS is enabled and on by default. It is inadvisable to switch it off in production
-<.> Validate the user credentials (`thisUser` and `thisPassword`), where `username` and `password` are the valid credentials and `thisUser` and `thisPassword` are the presented credentials-- see <<client-authentication>> for more
+<.> TLS is enabled by default.
+It is *not* advisable to switch it off in production.
+This setting is ignored when _Basic Authentication_ is required; but must be 'false' when _Client Cert Authentication_ is required -- see also:  <<tls-security>>
+<.> Apply basic authentication to validate the user credentials (`thisUser` and `thisPassword`), where `username` and `password` are the valid credentials and `thisUser` and `thisPassword` are the presented credentials-- see <<client-authentication>> for more
 <.> Initialize the listener using the configuration settings
 <.> <<start-listener>>
 ====
@@ -76,7 +59,14 @@ You can find {url-api-references}[{param-title} API References] here.
 Prior to initiating the listener you may execute a peer discovery phase.
 
 // For the passive peer, this involves advertising the service using, for example _Bonjour_, and waiting for an invite from the active peer.
-For the passive peer, this involves advertising the service using, for example _Network Service Discovery_ (see: https://developer.android.com/training/connect-devices-wirelessly/nsd) and waiting for an invite from the active peer.
+For the passive peer, this involves advertising the service using, for example
+ifeval::["{param-platform}"=="{platform-android}"]
+_Network Service Discovery_ (see: https://developer.android.com/training/connect-devices-wirelessly/nsd)
+endif::[]
+ifeval::["{param-platform}"=="{platform-ios}"]
+_Bonjour_ (see: https://developer.apple.com/bonjour/)
+endif::[]
+ and waiting for an invite from the active peer.
 
 The connection is established once the passive peer has authenticated and accepted an active peer's invitation.
 
@@ -174,7 +164,7 @@ include::{snippet-p2psync-ws}[tags=listener-deltasync, indent=0]
 ----
 
 <.> Delta sync replication is not enabled by default.
-Use {url-api-class-urlendpointconfiguration}'s {url-api-references-urlendpointconfiguration-delta-sync} method  to activate or deactivate it.
+Use {url-api-class-urlendpointconfiguration}'s {url-api-references-urlendpointconfiguration-delta-sync} method to activate or deactivate it.
 
 ====
 
@@ -188,8 +178,9 @@ Use {url-api-class-urlendpointconfiguration}'s {url-api-references-urlendpointco
 TLS based encryption is enabled by default.
 Although it _can_ be disabled, this is not recommended on production environments.
 
+ifeval::["{param-platform}"=="{platform-android}"]
 include::{root-partials}_block-caveats.adoc[tags=android-manifest-cleartext]
-
+endif::[]
 When TLS is enabled, Couchbase Lite provides several options on how the Listener may be configured with an appropriate TLS Identity (<<configure-tls-identity-for-listener>>).
 
 Enable or Disable TLS::
@@ -306,12 +297,12 @@ include::{root-partials}p2p-api.adoc[tag=ListenerPasswordAuthenticator]
 [source, {source-language}]
 ----
 
-include::{snippet-p2psync-ws}[tags=listener-config-auth-pwd, indent=0]
+include::{snippet-p2psync-ws}[tags=listener-config-client-auth-pwd, indent=0]
 
 ----
 <.> Where 'thisUser' and 'thisPassword' are the previously populated values to be authenticated.
 ====
-// include::{snippet}[tags=listener-config-auth-pwd-full, indent=0]
+// include::{snippet}[tags=listener-config-client-auth-pwd-full, indent=0]
 
 === Authenticate using the Client Certificate
 
@@ -346,11 +337,10 @@ Root CA::
 [source, {source-language}]
 ----
 
-Work-in-progress. Code snippet coming soon.
+include::{snippet-p2psync-ws}[tag=listener-config-client-auth-root, indent=0]
 
 ----
-// include::{snippet-p2psync-ws}[tags=listener-config-client-auth-root, indent=0]
-include::{snippet}[tags=listener-config-auth-cert-root, indent=0]
+
 --
 +
 Application Logic::
@@ -359,29 +349,31 @@ Application Logic::
 [source, {source-language}]
 ----
 
-Work-in-progress. Code snippet coming soon.
+include::{snippet-p2psync-ws}[tags=listener-config-client-auth-self-signed, indent=0]
 
 ----
-// include::{snippet-p2psync-ws}[tags=listener-config-client-auth-self-signed, indent=0]
 --
 ====
 =====
 
 === Delete TLS Identity
 
+ifeval::["{param-platform}"=="{platform-android}"]
 You can remove unwanted TLS identities from {securestorage} using the KeyStore API (see -- https://developer.android.com/reference/java/security/KeyStore#deleteEntry(java.lang.String)).
+endif::[]
+ifeval::["{param-platform}"=="{platform-ios}"]
+You can remove unwanted TLS identities from {securestorage} using the convenience API.
+endif::[]
 
 .Deleting TLS Identities
 ====
 [source, {source-language}]
 ----
 
-include::{snippet-p2psync-ws}[tags=deleteTlsIdentity, indent=0]
+include::{snippet-p2psync-ws}[tag=p2p-tlsid-delete-id-from-keychain]
 
 ----
 // include::{snippet}[tags=listener-config-delete-cert-full, indent=0]
-<.> Specify the cryptography standard type corresponding to your secure storage
-<.> Specify the alias (label) of the identity to be deleted.
 
 ====
 
@@ -396,9 +388,11 @@ The table in this section shows the expected system behavior (in regards to secu
 
 |true
 |Ignored
-a|. TLS is disabled; all communication is plain text.
+a|TLS is disabled; all communication is plain text.
 +
+ifeval::["{param-platform}"=="{platform-android}"]
 include::{root-partials}_block-caveats.adoc[tags=android-manifest-cleartext]
+endif::[]
 
 |false
 | set to `nil`

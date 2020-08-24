@@ -98,8 +98,14 @@ include::{snippet-p2psync-ws}[tag=p2p-tlsid-return-id-from-keychain, indent=0]
 
 == Delete TLS Identity
 
-include::{root-partials}p2p-api-tlsid-{param-platform}.adoc[tag=method-delete]
+// include::{root-partials}p2p-api-tlsid-{param-platform}.adoc[tag=method-delete]
 
+[source, {source-language}]
+----
+
+include::{snippet-p2psync-ws}[tag=p2p-tlsid-delete-id-from-keychain,indent=0]
+
+----
 
 
 // DO NOT EDIT OR REMOVE

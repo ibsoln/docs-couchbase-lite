@@ -208,7 +208,7 @@ extension DatabaseManager {
 
             config.replicatorType = .pushAndPull // <2>
             config.continuous =  true // <3>
-            config.serverCertificateVerificationMode = .selfSignedCert
+            config.acceptOnlySelfSignedServerCertificate=true
 
 
             let authenticator = BasicAuthenticator(username: user, password: password)
@@ -286,7 +286,7 @@ extension DatabaseManager {
 
             config.replicatorType = .pushAndPull // <2>
             config.continuous =  true // <3>
-            config.serverCertificateVerificationMode = .selfSignedCert
+            config.acceptOnlySelfSignedServerCertificate=true
 
 
             let authenticator = BasicAuthenticator(username: user, password: password)

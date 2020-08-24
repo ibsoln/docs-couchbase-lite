@@ -40,25 +40,22 @@ endif::[]
 
 === ReplicatorConfiguration
 
-The `replicatorConfiguration` class provides two additional properties supporting TLS.
+The `replicatorConfiguration` class provides two additional methods supporting TLS.
 
-==== `serverCertificateVerficationMode` property.
+==== `acceptOnlySelfSignedServerCertificate`
 
-Use this to specify how the replicator should verify the server identity.
+Use this to specify whether the replicator ought to accept (only) self-signed certificates, rejecting all others.
 Two modes are supported:
 
-* CA-CERT -- The replicator verifies the server identity by using the trusted CA or using the pinned server certificate.
-* SELF-SIGNED-CERT -- The replicator will accept all and only self-signed certificates.
+* False -- The replicator verifies the server identity by using the trusted CA or using the pinned server certificate.
+* True -- The replicator will accept all and only self-signed certificates.
 The replicator will reject non-self-signed certificates.
+
 
 [source, {source-language}]
 ----
-public enum ServerCertificateVerificationMode {
-    CA-CERT, SELF-SIGNED-CERT
-}
-
 public class ReplicatorConfiguration {
-    public var serverCertificateVerificationMode: ServerCertificateVerificationMode = .CA-CERT
+    public var acceptOnlySelfSignedServerCertificate: Bool { get set }
 }
 ----
 
