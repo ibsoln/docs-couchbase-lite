@@ -34,13 +34,16 @@ class cMyPassListener {
     // tag::listener-config-tls-enable[]
     listenerConfig.setDisableTLS(false); // <.>
     // end::listener-config-tls-enable[]
+    // tag::listener-config-tls-disable[]
+    listenerConfig.setDisableTLS(true); // <.>
+    // end::listener-config-tls-disable[]
     // tag::listener-config-tls-id-full[]
     // tag::listener-config-tls-id-SelfSigned[]
 
     // Use a self-signed certificate
     //    Create a TLSIdentity for the server using convenience API.
     //    System generates self-signed cert
-
+    // Work-in-progress. Code snippet coming soon.
     private static final Map<String, String> CERT_ATTRIBUTES; //<.>
     static {
         final Map<String, String> thisMap = new HashMap<>();
@@ -87,21 +90,24 @@ class cMyPassListener {
 
     // end::listener-config-tls-id-set[]
     // end::listener-config-tls-id-full[]
-    // tag::listener-config-auth-pwd[]
+    // tag::listener-config-client-auth-pwd[]
 
     // Configure the client authenticator (if using Basic Authentication) <.>
     config.setAuthenticator(new ListenerPasswordAuthenticator(
       (thisUser, thisPassword) ->
         username.equals(thisUser) && Arrays.equals(password, thisPassword)));
 
-    // end::listener-config-auth-pwd[]
-    // tag::listener-config-auth-cert[]
+    // end::listener-config-client-auth-pwd[]
+    // tag::listener-config-client-root-ca[]
 
     // Configure the client authenticator to validate using ROOT CA <.>
 
     config.setAuthenticator(new ListenerCertificateAuthenticator(certs));
 
-    // end::listener-config-auth-cert[]
+    // end::listener-config-client-root-ca[]
+    // tag::listener-config-client-auth-self-signed[]
+    // Work in progress. Code snippet to be provided.
+    // end::listener-config-client-auth-self-signed[]
     // tag::listener-start[]
     // Initialize the listener
     final URLEndpointListener thisListener
@@ -169,19 +175,8 @@ class cMyPassListener {
 
 // tag::listener-config-client-auth-root[]
   // cert is a pre-populated object of type:SecCertificate representing a certificate
-  let rootCertData = SecCertificateCopyData(cert) as Data
-  let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
-  // Listener:
-  listenerConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
 
-  SecCertificate thisCert = new SecCertificate(); // populated as nec.
-
-  Data rootCertData = new Data(SecCertificateCopyData(thisCert));
-
-  let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
-  // Listener:
-  listenerConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
-
+  // Work in progress. Code snippet to be provided.
 
   // end::listener-config-client-auth-root[]
 
@@ -356,20 +351,17 @@ public class Examples {
 
     // end::p2p-act-rep-config-type[]
     // tag::p2p-act-rep-config-cont[]
-
     // Configure Sync Mode
     replConfig.setContinuous(true); // default value
 
     // end::p2p-act-rep-config-cont[]
     // tag::p2p-act-rep-config-tls-full[]
     // tag::p2p-act-rep-config-cacert[]
-
     // Configure Server Security -- only accept CA Certs
     replConfig.setAcceptOnlySelfSignedServerCertificate(false); <.>
 
     // end::p2p-act-rep-config-cacert[]
     // tag::p2p-act-rep-config-self-cert[]
-
     // Configure Server Security -- only accept self-signed certs
     replConfig.setAcceptOnlySelfSignedServerCertificate(true); <.>
 
@@ -394,17 +386,17 @@ public class Examples {
 
     // end::p2p-tlsid-tlsidentity-with-label[]
     // tag::p2p-act-rep-config-cacert-pinned[]
-
     // Only CA Certs accepted
     config.setAcceptOnlySelfSignedServerCertificate(false); // <.>
-
-    // Configure the pinned certificate from the byte array (cert)
+    // Use the pinned certificate from the byte array (cert)
     config.setPinnedServerCertificate(cert.getEncoded()); // <.>
 
     // end::p2p-act-rep-config-cacert-pinned[]
-
+    // tag::p2p-act-rep-config-conflict[]
     /* Optionally set custom conflict resolver call back */
     replConfig.setConflictResolver( /* define resolver function */); // <.>
+
+    // end::p2p-act-rep-config-conflict[]
     // tag::p2p-act-rep-start-full[]
 
     // Create replicator (be sure to hold a reference somewhere that will prevent the Replicator from being GCed)
@@ -490,13 +482,13 @@ TLSIdentity thisIdentity = new TLSIdentity.createIdentity(true, X509_ATTRIBUTES,
 
 
 // tag::deleteTlsIdentity[]
+// tag::p2p-tlsid-delete-id-from-keychain[]
+String thisAlias = "alias-to-delete";
+final KeyStore thisKeyStore =  KeyStore.getInstance("PKCS12");
+thisKeyStore.load(null);
+thisKeyStore.deleteEntry(thisAlias);
 
-  String thisAlias = "alias-to-delete";
-  final KeyStore thisKeyStore =  KeyStore.getInstance("PKCS12");
-  thisKeyStore.load(null);
-  thisKeyStore.deleteEntry(thisAlias);
-
-
+// end::p2p-tlsid-delete-id-from-keychain[]
 // end::deleteTlsIdentity[]
 
 // tag::retrieveTlsIdentity[]
@@ -577,6 +569,22 @@ if (thisAlias != null) {
 }
 
 // end::old-deleteTlsIdentity[]
+
+
+// cert auth
+let rootCertData = SecCertificateCopyData(cert) as Data
+let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
+// Listener:
+listenerConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
+
+SecCertificate thisCert = new SecCertificate(); // populated as nec.
+
+Data rootCertData = new Data(SecCertificateCopyData(thisCert));
+
+let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
+// Listener:
+listenerConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
+// cert auth
 
 
 // C A L L O U T S

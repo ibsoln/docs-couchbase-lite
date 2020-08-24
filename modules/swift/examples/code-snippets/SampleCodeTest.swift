@@ -920,7 +920,7 @@ class SampleCodeTest {
 
     func dontTestReplicatorConflictResolver() throws {
         // tag::replication-conflict-resolver[]
-        let url = URL(string: "ws://localhost:4984/mydatabase")!
+        let url = URL(string: "wss://localhost:4984/mydatabase")!
         let target = URLEndpoint(url: url)
 
         let config = ReplicatorConfiguration(database: database, target: target)

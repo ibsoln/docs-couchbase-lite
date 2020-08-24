@@ -58,10 +58,10 @@ To compare the peer-to-peer context with the typical client-server communication
 ----
 include::{snippet-p2psync-ws}[tags="p2p-act-rep-func;!p2p-act-rep-config-self-cert;!p2p-act-rep-config-pinnedcert;!p2p-tlsid-tlsidentity-with-label;!p2p-act-rep-config-cacert-pinned", indent=0]
 ----
+ifeval::["{param-platform}"=="{platform-android}"]
 <.> {empty}
 include::{root-partials}_block-caveats.adoc[tags=android-threads]
-
-
+endif::[]
 <.> Use the {url-api-class-replicator-config} class's {url-api-constructor-replicator-config-db-tgt} constructor to initialize the replicator configuration with the local database -- see <<configure-target>>
 
 <.> By default only CA Certificates are accepted; self-signed Certificates are disallowed.
@@ -91,8 +91,12 @@ You can find {url-api-references}[{param-title} API References] here.
 
 Prior to connecting with a listener you may execute a peer discovery phase to dynamically discover peers.
 
-// For the active peer this involves browsing-for and selecting the appropriate service using a zero-config protocol such as _Bonjour_.
+ifeval::["{param-platform}"=="{platform-ios}"]
+For the active peer this involves browsing-for and selecting the appropriate service using a zero-config protocol such as _Bonjour_-- see: https://developer.apple.com/bonjour/.
+endif::[]
+ifeval::["{param-platform}"=="{platform-android}"]
 For the active peer this involves browsing-for and selecting the appropriate service using a zero-config protocol such as _Network Service Discovery_ -- see: https://developer.android.com/training/connect-devices-wirelessly/nsd.
+endif::[]
 
 // image::ROOT:replication.svg[,800]
 
@@ -112,7 +116,7 @@ The required parameters are:
 +
 --
 The URL scheme for web socket URLs uses `ws:` (non-TLS) or `wss:` (SSL/TLS) prefixes.
-ifeval::[{param-platform}=={android=platform}]
+ifeval::[{param-platform}=={android-platform}]
 include::{root-partials}_block-caveats.adoc[tags=android-manifest-cleartext]
 endif::[]
 --
@@ -125,7 +129,7 @@ You will also need any security credentials provided (for example, user name and
 ----
 include::{snippet-p2psync-ws}[tags="p2p-act-rep-initialize", indent=0]
 ----
-<.> Note use of TLS (`wss://`) prefix to URI to ensure TLS encrypted communication(recommended).
+<.> Note use of the `wss://` prefix, to ensures use of TLS encryption (strongly recommended in production).
 ====
 
 === Sync Mode
@@ -151,24 +155,12 @@ include::{snippet-p2psync-ws}[tags=p2p-act-rep-config-cont, indent=0]
 
 === Listener Authentication
 
-:this-prop: setAcceptOnlySelfSignedServerCertificate
+:this-prop: {url-api-prop-replicator-config-AcceptOnlySelfSignedServerCertificate}
 Use `{url-api-class-replicator-config}`, with its {url-api-prop-replicator-config-AcceptOnlySelfSignedServerCertificate} parameter, to tell the replicator how to verify TLS server certificates.
 
 If {this-prop} is `false` (default) then only CA Certificates are accepted.
 
-If {this-prop} is `true` then only Self-Signed  Certificates are accepted.
-
-// :this-prop: ServerCertificateVerificationMode
-
-// Use `{url-api-class-replicator-config}`, with its {url-api-prop-replicator-config-ServerCertificateVerificationMode} parameter, to tell the replicator how to verify TLS server certificates.
-
-// The valid options at this stage are:
-
-// * `selfSignedCert` -- Verify by accepting any (and only) self-signed certificates; non-self-signed certificates will be rejected
-// * `caCert` -- Verify by using trusted anchor CA certificates or by using the configured pinned server certificates.
-// This is the default mode
-
-// See: {url-api-enum-replicator-config-ServerCertificateVerificationMode}
+If {this-prop} is `true` then only Self-Signed Certificates are accepted.
 
 .Example
 [{tabs}]

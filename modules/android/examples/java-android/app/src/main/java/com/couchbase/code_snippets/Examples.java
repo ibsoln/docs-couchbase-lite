@@ -1605,7 +1605,7 @@ public class PasswordAuthListener {
         repl.start(false);
         completionLatch.await();
     }
-    // tag::listener-config-auth-pwd-full[]
+    // tag::listener-config-client-auth-pwd-full[]
     /**
      *
      * Start a listener for db that accepts connections using exactly the passed username and password
@@ -1634,7 +1634,7 @@ public class PasswordAuthListener {
         if (urls.isEmpty()) { return null; }
         return urls.get(0);
       }
-      // end::listener-config-auth-pwd-full[]
+      // end::listener-config-client-auth-pwd-full[]
     }
 
 
