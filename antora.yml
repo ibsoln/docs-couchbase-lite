@@ -1,12 +1,12 @@
 name: couchbase-lite
-title: P2PAndroid/82620
+title: P2PUWP/82420-1
 version: '2.8'
-start_page: couchbase-lite:android:learn/java-android-p2psync.adoc
+start_page: csharp:learn/csharp-p2psync-websocket.adoc
 nav:
 #- modules/ROOT/nav.adoc
-- modules/android/nav-android.adoc
-#- modules/objc/nav-objc.adoc
-#- modules/swift/nav-swift.adoc
-#- modules/csharp/nav-csharp.adoc
+- modules/csharp/nav-csharp.adoc
+# - modules/android/nav-android.adoc
+# - modules/objc/nav-objc.adoc
+# - modules/swift/nav-swift.adoc
 #- modules/java-platform/nav-java-platform.adoc
 #- modules/ROOT/nav-prod-notes.adoc

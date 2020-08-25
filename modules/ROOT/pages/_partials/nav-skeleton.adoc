@@ -1,7 +1,5 @@
-.xref:android:learn/java-android-p2psync.adoc[Introduction to P2P Sync]
+.xref:csharp:learn/csharp-p2psync-websocket.adoc[c# - Introduction to P2P Sync]
 * {xref-cbl-pg-dbo-p2psync-websocket-using-passive}
 * {xref-cbl-pg-dbo-p2psync-websocket-using-active}
-// * {xref-cbl-pg-p2psync-websocket}
+* {xref-cbl-pg-p2psync-websocket}
 * {url-api-references}[API References]
-// * {xref-cbl-pg-p2psync-custom}
-// * {xref-cbl-pg-p2p-manage-tls-id}
