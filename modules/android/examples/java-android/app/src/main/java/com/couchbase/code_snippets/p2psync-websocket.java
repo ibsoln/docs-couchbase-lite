@@ -173,26 +173,29 @@ class cMyPassListener {
 
 
 
+
 // tag::listener-config-client-auth-root[]
   // cert is a pre-populated object of type:SecCertificate representing a certificate
-
   // Work in progress. Code snippet to be provided.
 
   // end::listener-config-client-auth-root[]
 
 
-// tag::listener-config-client-auth-self-signed[]
-listenerConfig.authenticator = ListenerCertificateAuthenticator.init {
-  (cert) -> Bool in
+  // prev content of listener-config-client-auth-self-signed (for ios)
+  listenerConfig.authenticator = ListenerCertificateAuthenticator.init {
+    (cert) -> Bool in
     var cert:SecCertificate
     var certCommonName:CFString?
     let status=SecCertificateCopyCommonName(cert, &certCommonName)
     if (self._allowlistedUsers.contains(["name": certCommonName! as String])) {
-        return true
+      return true
     }
     return false
-}
-// end::listener-config-client-auth-self-signed[]
+  }
+  // tag::listener-config-client-auth-self-signed[]
+  // Work in progress. Code snippet to be provided.
+
+  // end::listener-config-client-auth-self-signed[]
 
 // tag::p2p-ws-api-urlendpointlistener[]
 public class URLEndpointListener {

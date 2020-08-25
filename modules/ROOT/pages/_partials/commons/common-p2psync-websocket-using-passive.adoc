@@ -215,7 +215,7 @@ Import from key-pair::
 +
 --
 
-Import a key pair into secure storage and create an TLSIdentity from the imported key-pair.
+Import a key pair into secure storage and create a TLSIdentity from the imported key-pair.
 
 [source, {source-language}]
 ----
@@ -226,6 +226,7 @@ include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full;!listener-config
 ----
 
 <.> Ensure TLS is enabled.
+<.> Use the imported identity.
 --
 
 Create Self-Signed Cert::
