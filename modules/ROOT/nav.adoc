@@ -11,19 +11,40 @@ include::ROOT:partial$_attributes-local.adoc[]
 // Attributes defining all Couchbase Lite pages and associated prebuilt xrefs (as used below)
 include::ROOT:partial$_page-index.adoc[]
 
+include::partial$_std-cbl-hdr-csharp.adoc[]
+:param-name: {lang-name-csharp}
+:param-title: {lang-title-csharp}
+:param-module: {lang-mod-csharp}
+include::ROOT:partial$nav-skeleton.adoc[]
+
+include::partial$_std-cbl-hdr-swift.adoc[]
+:param-name: {lang-name-swift}
+:param-title: {lang-title-swift}
+:param-module: {lang-mod-swift}
+include::ROOT:partial$nav-skeleton.adoc[]
+
+include::partial$_std-cbl-hdr-csharp.adoc[]
+:param-name: {lang-name-csharp}
+:param-title: {lang-title-csharp}
+:param-module: {lang-mod-csharp}
+include::ROOT:partial$nav-skeleton.adoc[]
+
+
+
+
 // BEGIN::Local Attributes (to this page)
 //
 // END::Local Attributes
 
 // Bring in Couchbase Mobile's shared menu
-include::shared-mobile::partial$nav-shared.adoc[]
+// include::shared-mobile::partial$nav-shared.adoc[]
 
 // END::ATTRIBUTES AND INCLUSIONS
 
 // BEGIN::MENU STRUCTURE
 
-.{component-title-cbl}
-* {xref-cbl-pg-introduction}
-* {xref-cbl-pg-whatsnew}
+// .{component-title-cbl}
+// * {xref-cbl-pg-introduction}
+// * {xref-cbl-pg-whatsnew}
 
 // END::MENU STRUCTURE
