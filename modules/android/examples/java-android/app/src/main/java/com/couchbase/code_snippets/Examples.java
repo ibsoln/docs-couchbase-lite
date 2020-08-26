@@ -1059,6 +1059,7 @@ In this case, the save method will cancel the save operation and return false th
 // end::update-document-with-conflict-handler-callouts[]
 
 // tag::local-win-conflict-resolver[]
+// Using replConfig.setConflictResolver(new LocalWinConflictResolver());
 class LocalWinConflictResolver implements ConflictResolver {
     public Document resolve(Conflict conflict) {
         return conflict.getLocalDocument();
@@ -1067,6 +1068,7 @@ class LocalWinConflictResolver implements ConflictResolver {
 // end::local-win-conflict-resolver[]
 
 // tag::remote-win-conflict-resolver[]
+// Using replConfig.setConflictResolver(new RemoteWinConflictResolver());
 class RemoteWinConflictResolver implements ConflictResolver {
     public Document resolve(Conflict conflict) {
         return conflict.getRemoteDocument();
@@ -1075,6 +1077,7 @@ class RemoteWinConflictResolver implements ConflictResolver {
 // end::remote-win-conflict-resolver[]
 
 // tag::merge-conflict-resolver[]
+// Using replConfig.setConflictResolver(new MergeConflictResolver());
 class MergeConflictResolver implements ConflictResolver {
     public Document resolve(Conflict conflict) {
         Map<String, Object> merge = conflict.getLocalDocument().toMap();

@@ -17,6 +17,7 @@ include::{root-partials}block-related-howto-p2psync-ws.adoc[]
 include::{root-partials}_block-abstract.adoc[]
 include::{root-partials}_block-caveats.adoc[tags=android-constraints]
 include::{root-partials}_block-caveats.adoc[tags=code-disclaimer]
+include::{root-partials}_block-caveats.adoc[tag=enterprise-only]
 // DO NOT EDIT
 
 ifndef::release-status-cbl[:release-status-cbl!:]
@@ -34,44 +35,41 @@ endif::[]
 
 [#introduction]
 == Introduction
+This content provides sample code and configuration examples covering the implementation of {glos-term-peer-to-peer-sync} over websockets.
 
-ifeval::["{page-edition}"=="{enterprise}"]
-.Enterprise Edition only
-IMPORTANT: Peer-to-peer sync is an {url-enterprise} feature.
-You must purchase the Enterprise License which includes official {url-support-policy} to use it in production (also see the {url-license-and-supp-faq}).
-endif::[]
+Specifically it covers the implementation of an {glos-term-active-peer}.
+This _replicator_ will initiate connection with a {glos-term-passive-peer} and participate in the replication of database changes to bring both databases into sync.
 
-This content provides sample code covering the implementation of peer-to-peer sync over websockets. Specifically it covers the implementation of an {glos-term-active-peer}, that will initiate replication with a {glos-term-passive-peer}.
+In this context the _active peer_ (replicator) acts as the _client_, whilst the _passive peer_ (listener) acts as the _server_.
 
-The code snippet in <<simple-replication-to-listener>> covers the configuration, initialization and replication is expanded upon in subsequent sections in this content.
-
-To compare the peer-to-peer context with the typical client-server communication model, the:
-* Active peer is analogous to a client,
-* Passive peer is analogous to a server.
+You will need to initialize and configure a replicator for each Couchbase Lite database instance you want to sync.
+<<simple-replication-to-listener>> shows the initialization and configuration process.
+Subsequent sections provide additional details and examples for the main configuration options.
 
 [#simple-replication-to-listener]
-.Simple Replication to Listener
+.Replication configuration and initialization
 // [%collapsible]
 ====
 
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="p2p-act-rep-func;!p2p-act-rep-config-self-cert;!p2p-act-rep-config-pinnedcert;!p2p-tlsid-tlsidentity-with-label;!p2p-act-rep-config-cacert-pinned", indent=0]
+include::{snippet-p2psync-ws}[tags="p2p-act-rep-func;!p2p-act-rep-config-cacert;!p2p-act-rep-config-pinnedcert;!p2p-tlsid-tlsidentity-with-label;!p2p-act-rep-config-cacert-pinned", indent=0]
 ----
 ifeval::["{param-platform}"=="{platform-android}"]
-<.> {empty}
+[NOTE]
+--
 include::{root-partials}_block-caveats.adoc[tags=android-threads]
+--
 endif::[]
-<.> Use the {url-api-class-replicator-config} class's {url-api-constructor-replicator-config-db-tgt} constructor to initialize the replicator configuration with the local database -- see <<configure-target>>
 
-<.> By default only CA Certificates are accepted; self-signed Certificates are disallowed.
-The provided certificate must be from a trusted root.
-+
-use {url-api-prop-replicator-config-AcceptOnlySelfSignedServerCertificate}(true) to accept ONLY self-signed certificates.
-Validation of the certificate is bypassed -- see: <<listener-authentication>>
+<.> Use the {url-api-class-replicator-config} class's constructor -- {url-api-constructor-replicator-config-db-tgt} -- to initialize the replicator configuration with the local database -- see also: <<configure-target>>
 
-<.> The `authenticator` is configured to use basic authentication.
-Other supported options are `ClientCertificateAuthenticator` if you want to use client certificate based authentication -- see: <<client-authentication>>
+<.> Here we have configured server security to use only self-signed certificates.
+By default only CA Certificates are accepted -- see: <<listener-authentication>>.
+
+<.> Here the we have configured client security to use _Basic Authentication_.
+Other options are available, for example to authenticate using certificates.
+To use client certificate based authentication -- see: <<client-authentication>>
 
 <.> Handle <<conflict-resolution>>
 
@@ -129,7 +127,7 @@ You will also need any security credentials provided (for example, user name and
 ----
 include::{snippet-p2psync-ws}[tags="p2p-act-rep-initialize", indent=0]
 ----
-<.> Note use of the `wss://` prefix, to ensures use of TLS encryption (strongly recommended in production).
+<.> Note use of the `wss://` prefix to ensure TLS encryption (strongly recommended in production).
 ====
 
 === Sync Mode
@@ -246,9 +244,14 @@ include::{snippet-p2psync-ws}[tags="p2p-act-rep-auth", indent=0]
 ====
 
 ==== Certificate Authentication
-Use the `{url-api-class-replicator-config-cert-auth}` to configure the client TLS certificates to be presented to the server, on connection. This applies only to the {url-api-class-urlendpointlistener}.
+Use the `{url-api-class-replicator-config-cert-auth}` to configure the client TLS certificates to be presented to the server, on connection.
+This applies only to the {url-api-class-urlendpointlistener}.
 
-The server will verify the certificate -- checking the chain of trust -- *before* offering the certificate to the listener’s authenticator.
+Note that TLS validates a certificate before passing it over for authentication.
+If an invalid certificate is detected then control is never passed over, and the connection is denied.
+The decision to be made by the authenticator is simply: "do I trust this certificate, or not"?
+
+The decision is usually based on the certificate being signed by a source we trust.
 
 For certificate authentication the `disableTLS` configuration setting must be `false`.
 
@@ -301,10 +304,10 @@ You will then be asynchronously notified of state changes.
 Use this to monitor changes and to inform on sync progress, as shown below; this is an optional step.
 
 === Replicator Status
-You can also use {url-api-property-replicator-status} to monitor replicator status.
-That is, when it is actively transferring data and when it has stopped.
+You can use the {url-api-class-replicator} class's {url-api-property-replicator-status} property to check the replicator status.
+That is, whether it is actively transferring data or if it has stopped.
 
-The {url-api-class-replicator-status} structure comprises the following elements:
+Alternatively, use the {url-api-class-replicator-status} class to get status information. The returned _ReplicationStatus_ structure comprises:
 
 * {url-api-enum-replicator-activity} -- stopped, offline, connecting, idle or busy
 * {url-api-enum-replicator-progress}
