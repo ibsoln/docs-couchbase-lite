@@ -89,7 +89,6 @@ Local Wins::
 
 [source, {source-language}]
 ----
-Using `replConfig.setConflictResolver(new LocalWinConflictResolver());`
 
 include::{snippet}[tag=local-win-conflict-resolver,indent=0]
 
@@ -103,8 +102,6 @@ Remote Wins::
 [source, {source-language}]
 ----
 
-Using `replConfig.setConflictResolver(new RemoteWinConflictResolver());`
-
 include::{snippet}[tag=remote-win-conflict-resolver,indent=0]
 
 ----
@@ -117,8 +114,6 @@ Merge::
 
 [source, {source-language}]
 ----
-
-Using `replConfig.setConflictResolver(new MergeConflictResolver());`
 
 include::{snippet}[tag=merge-conflict-resolver,indent=0]
 

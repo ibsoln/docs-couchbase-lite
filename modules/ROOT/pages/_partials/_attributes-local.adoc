@@ -200,7 +200,7 @@ endif::[]
 :snippets-pfx--android: example$java-android/app/src/main/java/com/couchbase
 :snippets-pfx: example$code-snippets/
 :snippets-content--android: {lang-mod-android}:{snippets-pfx--android}/code_snippets/Examples.java
-:snippets-content--csharp: {lang-mod-csharp}:example$Program.cs
+:snippets-content--csharp: {lang-mod-csharp}:{snippets-pfx}Program.cs
 :snippets-content--java: {lang-mod-java}:{snippets-pfx}Examples.java
 :snippets-content--objc: {lang-mod-objc}:{snippets-pfx}SampleCodeTest.m
 :snippets-content--swift: {lang-mod-swift}:{snippets-pfx}SampleCodeTest.swift

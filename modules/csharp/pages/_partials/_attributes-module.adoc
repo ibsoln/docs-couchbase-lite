@@ -69,11 +69,10 @@
 
 :url-api-method-tls-identity-getcoln: {url-api-references-tlsidentity-method}GetIdentity_System_Security_Cryptography_X509Certificates_X509Certificate2Collection_[GetIdentity(X509Certificate2Collection)]
 
-:url-api-method-tls-identity-import: {url-api-references-tlsidentity-method}ImportIdentity_System_Security_Cryptography_X509Certificates_X509Store_System_Byte___System_String_System_String_System_String_
+:url-api-method-tls-identity-import: {url-api-references-tlsidentity-method}ImportIdentity_System_Security_Cryptography_X509Certificates_X509Store_System_Byte___System_String_System_String_System_String_[ImportIdentity()]
 
 
 :url-api-references-urlendpointconfiguration-property: {url-api-references-urlendpointconfiguration}{sep}Couchbase_Lite_P2P_URLEndpointListenerConfiguration_
-
 // https://ibsoln.github.io/betasites/api/mobile/2.8.0/couchbase-lite-csharp/com/couchbase/lite/URLEndpointListenerConfiguration.html#setPort-int-
 :url-api-references-urlendpointconfiguration-auth: {url-api-references-urlendpointconfiguration-property}Authenticator[Authenticator]
 
@@ -84,7 +83,6 @@
 :url-api-references-urlendpointconfiguration-database: {url-api-references-urlendpointconfiguration-property}Database[Database]
 
 :url-api-references-urlendpointconfiguration-initdb: {url-api-references-urlendpointconfiguration-property}_ctor_Couchbase_Lite_Database_[(Database database)]
-
 // :url-api-references-urlendpointconfiguration-initcfg: {url-api-references-urlendpointconfiguration-property}initWithConfig::[-initWithConfig:]
 // :url-api-references-urlendpointconfiguration-init: {url-api-references-urlendpointconfiguration-property}init:[-init:]
 
@@ -113,31 +111,31 @@
 // Replicator API
 :url-api-references-replicator: {url-api-references-classes-sync}{api-pfx}Replicator.html
 :url-api-class-replicator: {url-api-references-replicator}[Replicator]
-:url-api-properties-replicator: {url-api-references-replicator}{sep}{api-pfx}
+:url-api-properties-replicator: {url-api-references-replicator}{sep}Couchbase_Lite_Sync_Replicator_
 
-:url-api-references-replicator-abs: {url-api-references-classes-sync}{api-pfx}AbstractReplicator.html
-:url-api-class-replicator-abs: {url-api-references-replicator-abs}[AbstractReplicator]
-:url-api-properties-replicator-abs: {url-api-references-replicator-abs}{sep}{api-pfx}
+// :url-api-references-replicator-abs: {url-api-references-classes-sync}{api-pfx}AbstractReplicator.html
+// :url-api-class-replicator-abs: {url-api-references-replicator-abs}[AbstractReplicator]
+// :url-api-properties-replicator-abs: {url-api-references-replicator-abs}{sep}{api-pfx}
 
-:url-api-constructor-replicator-init-config: {url-api-properties-replicator}Replicator-com.couchbase.lite.ReplicatorConfiguration-[(ReplicatorConfiguration config)]
+:url-api-constructor-replicator-init-config: {url-api-properties-replicator}_ctor_Couchbase_Lite_Sync_ReplicatorConfiguration_[(ReplicatorConfiguration config)]
 
-:url-api-method-replicator-add-change-listener: {url-api-properties-replicator-abs}addChangeListener-java.util.concurrent.Executor-com.couchbase.lite.ReplicatorChangeListener-[addChangeListener()]
+:url-api-method-replicator-add-change-listener: {url-api-properties-replicator}AddChangeListener_System_EventHandler_Couchbase_Lite_Sync_ReplicatorStatusChangedEventArgs__[addChangeListener()]
 
-:url-api-method-replicator-rmv-change-listener: {url-api-properties-replicator-abs}removeChangeListener-com.couchbase.lite.ListenerToken-[removeChangeListener(ListenerToken token)]
+:url-api-method-replicator-rmv-change-listener: {url-api-properties-replicator}RemoveChangeListener_Couchbase_Lite_ListenerToken_[RemoveChangeListener(ListenerToken)]
 
-:url-api-method-replicator-start: {url-api-properties-replicator-abs}start-boolean-[start()]
+:url-api-method-replicator-start: {url-api-properties-replicator}Start[Start()]
 
-:url-api-method-replicator-stop: {url-api-properties-replicator-abs}stop--[stop()]
+:url-api-method-replicator-stop: {url-api-properties-replicator}Stop[Stop()]
 
-:url-api-property-replicator-status: {url-api-properties-replicator-abs}getStatus--[replicator.getStatus]
+:url-api-property-replicator-status: {url-api-properties-replicator}Status[Replicator.Status]
 
 //:url-api-property-replicator-status-activity: {url-api-references-replicator}{sep}s:18CouchbaseLitecsharp10ReplicatorC13ActivityLevelO
 
 
 // ReplicatorStatus
 
-:url-api-references-replicator-status: {url-api-references-classes-sync}{api-pfx}Replicator.Status.html
-:url-api-class-replicator-status: {url-api-references-replicator-status}{api-pfx}[ReplicatorStatus]
+:url-api-references-replicator-status: {url-api-references-classes-sync}{api-pfx}ReplicatorStatus.html
+:url-api-class-replicator-status: {url-api-references-replicator-status}[ReplicatorStatus]
 :url-api-properties-replicator-status: {url-api-references-replicator-status}{sep}Couchbase_Lite_Sync_ReplicatorStatus_
 
 :url-api-enum-replicator-activity: {url-api-properties-replicator-status}Activity[Activity()]
@@ -149,13 +147,14 @@
 
 :url-api-class-replicator-config: {url-api-references-replicator-config}[ReplicatorConfiguration]
 
-:url-api-references-replicator-config-prop: {url-api-references-replicator-config}{sep}{api-pfx}Couchbase_Lite_Sync_ReplicatorConfiguration_
+:url-api-references-replicator-config-prop: {url-api-references-replicator-config}{sep}Couchbase_Lite_Sync_ReplicatorConfiguration_
 
-:url-api-constructor-replicator-config-db-tgt: {url-api-references-replicator-config-prop}ReplicatorConfiguration-com.couchbase.lite.Database-com.couchbase.lite.Endpoint-[ReplicatorConfiguration database, endpoint]
+:url-api-constructor-replicator-config-db-tgt: {url-api-references-replicator-config-prop}_ctor_Couchbase_Lite_Database_Couchbase_Lite_Sync_IEndpoint[ReplicatorConfiguration(Database database, IEndpoint target)]
 
 :url-api-constructor-replicator-config-cfg: {url-api-references-replicator-config-prop}ReplicatorConfiguration-com.couchbase.lite.ReplicatorConfiguration-[ReplicatorConfiguration config]
 
 // :url-api-prop-replicator-config-auth-get: {url-api-references-replicator-config-prop}getAuthenticator--[getAuthenticator]
+
 
 :url-api-prop-replicator-config-AcceptOnlySelfSignedServerCertificate: {url-api-references-replicator-config-prop}AcceptOnlySelfSignedServerCertificate[AcceptOnlySelfSignedServerCertificate]
 :url-api-prop-replicator-config-auth: {url-api-references-replicator-config-prop}Authenticator[Authenticator]
