@@ -20,4 +20,4 @@ include::{root-partials}commons/common-p2psync-websocket-using-passive.adoc[subs
 
 // include::{root-partials}block-related-content-p2psync.adoc[]
 
-include::{root-partials}block-enterprise-only.adoc[]
+// include::{root-partials}block-enterprise-only.adoc[]

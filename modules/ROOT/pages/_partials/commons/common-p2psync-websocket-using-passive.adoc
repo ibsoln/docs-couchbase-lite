@@ -13,40 +13,45 @@ include::{root-partials}_block-caveats.adoc[tag=code-disclaimer]
 // DO NOT EDIT
 
 == Introduction
+This content provides code and configuration examples covering the implementation of {glos-term-peer-to-peer-sync} over websockets.
 
-This content provides sample code covering the implementation of {glos-term-peer-to-peer-sync} over websockets.
-Specifically it covers the implementation of a {glos-term-passive-peer} listener, that will accept and apply database changes replicated by a connected {glos-term-active-peer}. In this context the term _client_ refers to the _active peer_ and the term _server_ to the _passive peer_
+Specifically it covers the implementation of a {glos-term-passive-peer}.
+This _listener_ will accept a connection from an {glos-term-active-peer} and participate in the replication of database changes to bring both databases into sync.
 
-You will need to initialize and configure a Listener for each Couchbase Lite database instance that you want to sync with other peers.
+In this context the _passive peer_ (listener) acts as the _server_ and the
+ _active peer_ (replicator) acts as the _client_.
 
+You should initialize and configure a Listener for each Couchbase Lite database instance you want to to sync.
 <<simple-listener-initialization>> shows a simple initialization and configuration process.
-
-The subsequent sections show additional details on the configuration options with examples.
-You do not need to provide configuration values for all properties, only those necessary to meet the requirements of your sync process.
+Subsequent sections provide additional details and examples for the main configuration options.
 
 [#simple-listener-initialization]
-.Simple Listener Initialization
+.Listener configuration and initialization
 ====
 [source, {source-language}]
 ----
-include::{snippet-p2psync-ws}[tags="listener-initialize;!listener-config-tls-enable;!listener-config-tls-id-anon;!listener-config-tls-id-caCert;!listener-config-tls-id-SelfSigned;!listener-config-client-auth-root;!listener-config-tls-id-set;!listener-config-client-root-ca;!listener-config-client-auth-self-signed", indent=0]
+
+include::{snippet-p2psync-ws}[tags="listener-initialize;!listener-local-db;!listener-config-tls-disable;!listener-config-tls-id-caCert;!listener-config-tls-id-SelfSigned;!listener-config-client-auth-root;!listener-config-tls-id-set;!listener-config-client-root-ca;!listener-config-client-auth-self-signed", indent=0]
 
 ----
 
 ifeval::["{param-platform}"=="{platform-android}"]
-<.> You will need to include this database initializer in the application's `onCreate()` method.
+TIP: You must include the initializer `CouchbaseLite.init(context)` such that it is executed once and once only prior to initializing the replicator; for example in your app's `onCreate()` method.
 endif::[]
 
-
-<.> <<initialize-the-listener-configuration>>
-<.> By default the system will assign a port -- to over-ride this see: <<set-network-and-port>>
-<.> By default the system will listen on all network interfaces -- to over-ride this see: <<set-network-and-port>>
-<.> <<delta-sync>>
-<.> TLS is enabled by default.
-It is *not* advisable to switch it off in production.
-This setting is ignored when _Basic Authentication_ is required; but must be 'false' when _Client Cert Authentication_ is required -- see also:  <<tls-security>>
-<.> Apply basic authentication to validate the user credentials (`thisUser` and `thisPassword`), where `username` and `password` are the valid credentials and `thisUser` and `thisPassword` are the presented credentials-- see <<client-authentication>> for more
-<.> Initialize the listener using the configuration settings
+<.> Identify the local database to be used -- see: <<initialize-the-listener-configuration>>
+<.> Optionally, choose a port to use.
+By default the system will automatically assign a port -- to over-ride this see: <<set-network-and-port>>
+<.> Optionally, choose a network-interface to use. By default the system will listen on all network interfaces -- to over-ride this see: <<set-network-and-port>>
+<.> Optionally, choose to sync only changes, the default is not to enabld edelta-sync -- see: <<delta-sync>>.
+<.> Set server security.
+TLS is always enabled out-of-the-box, so you can usually omit this line.
+But you _can_, optionally, disable TLS (*not* advisable in production) -- see: <<tls-security>>
+<.> Optionally, apply the default TLS authentication, which is by anonymous self-signed certificate.
+<.> Set client security.
+Optionally, apply basic authentication to validate the user's presented credentials (`thisUser` and `thisPassword`), where `username` and `password` are the valid credentials -- see <<client-authentication>> for more options.
+<.> Initialize the listener using the configuration settings.
+// Once initialized you cannot change the settings.
 <.> <<start-listener>>
 ====
 
@@ -77,11 +82,7 @@ Initialize the Listener config with the local database.
 All other configuration values will take their default setting.
 
 Each Listener instance serves one Couchbase Lite database.
-There is no limit on the number of instances except a practical limit
-
-Database name::
-+
---
+Couchbase sets no hard limit on the number of instances you can initialize.
 
 .Specify Local Database
 ====
@@ -97,7 +98,7 @@ include::{snippet-p2psync-ws}[tags=listener-config-db, indent=0]
 //`public init(database: Database)` {url-api-references-urlendpointconfiguration-database} .
 
 ====
---
+
 
 == Set Network and Port
 
@@ -151,7 +152,8 @@ This must be either an IP Address or network interface name such as `en0`.
 // | <<conflict-resolution>>
 == Delta Sync
 
-Delta Sync allows clients to sync only those parts of a document that have changed. This can result in significant savings in bandwidth consumption as well as throughput improvements.
+Delta Sync allows clients to sync only those parts of a document that have changed.
+This can result in significant savings in bandwidth consumption as well as throughput improvements.
 Both valuable benefits, especially when network bandwidth is constrained.
 
 .Enable delta sync
@@ -168,19 +170,23 @@ Use {url-api-class-urlendpointconfiguration}'s {url-api-references-urlendpointco
 
 ====
 
-
 == TLS Security
 // DONE: TODO: Move under top level security section
 // _In this section_:
 // <<enable-or-disable-tls,Use TLS>>
 // | <<configure-tls-server-identity, Set the TLS Identity>>
 // | back to: <<simple-listener-initialization>>
-TLS based encryption is enabled by default.
-Although it _can_ be disabled, this is not recommended on production environments.
+TLS based encryption is enabled by default and this setting ought to be used in any production environment. However, it _can_ be disabled, for example for development and-or test environments.
 
 ifeval::["{param-platform}"=="{platform-android}"]
+[NOTE]
+--
 include::{root-partials}_block-caveats.adoc[tags=android-manifest-cleartext]
+--
 endif::[]
+
+The `disableTLS` setting is ignored when using _Basic Authentication_, but is must be 'false' when _Client Cert Authentication_ is required.
+
 When TLS is enabled, Couchbase Lite provides several options on how the Listener may be configured with an appropriate TLS Identity (<<configure-tls-identity-for-listener>>).
 
 Enable or Disable TLS::
@@ -189,7 +195,7 @@ Enable or Disable TLS::
 include::{root-partials}p2p-api.adoc[tag=config-disable-tls]
 --
 
-[[configure-tls-identity-for-listener]]
+[#configure-tls-identity-for-listener]
 Configure TLS Identity for Listener::
 +
 --
@@ -244,7 +250,7 @@ include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full;!listener-config
 
 <.> Ensure TLS is enabled.
 <.> Map the required certificate attributes.
-<.> Store the generated identity as alias `couchbase-demo-cert`.
+<.> Store the generated identity as alias `couchbase-docs-cert`.
 <.> Use the TLSIdentity `thisIdentity.`
 
 --
@@ -390,16 +396,12 @@ The table in this section shows the expected system behavior (in regards to secu
 |true
 |Ignored
 a|TLS is disabled; all communication is plain text.
-+
-ifeval::["{param-platform}"=="{platform-android}"]
-include::{root-partials}_block-caveats.adoc[tags=android-manifest-cleartext]
-endif::[]
 
 |false
 | set to `nil`
-a|. The system will auto generate an _anonymous_ self signed cert.
-.  Active peers will skip validation of the server cert.
-. Communication is encrypted
+a|* The system will auto generate an _anonymous_ self signed cert.
+*  Active peers will skip validation of the server cert.
+* Communication is encrypted
 
 |false
 a|Set to server identity generated from a self- or CA-signed certificate
