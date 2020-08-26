@@ -11,23 +11,36 @@ include::ROOT:partial$_attributes-local.adoc[]
 // Attributes defining all Couchbase Lite pages and associated prebuilt xrefs (as used below)
 include::ROOT:partial$_page-index.adoc[]
 
-include::partial$_std-cbl-hdr-csharp.adoc[]
-:param-name: {lang-name-csharp}
-:param-title: {lang-title-csharp}
-:param-module: {lang-mod-csharp}
-include::ROOT:partial$nav-skeleton.adoc[]
+.xref:ROOT:introduction.adoc[Introduction]
+* xref:android:learn/p2psync.adoc[about p2p]
 
-include::partial$_std-cbl-hdr-swift.adoc[]
-:param-name: {lang-name-swift}
-:param-title: {lang-title-swift}
-:param-module: {lang-mod-swift}
-include::ROOT:partial$nav-skeleton.adoc[]
+// .Android
+// include::partial$_std-cbl-hdr-android.adoc[]
+// :param-name: {lang-name-android}
+// :param-title: {lang-title-android}
+// :param-module: {lang-mod-android}
+// include::ROOT:partial$nav-skeleton.adoc[]
 
-include::partial$_std-cbl-hdr-csharp.adoc[]
-:param-name: {lang-name-csharp}
-:param-title: {lang-title-csharp}
-:param-module: {lang-mod-csharp}
-include::ROOT:partial$nav-skeleton.adoc[]
+// .Swift
+// include::partial$_std-cbl-hdr-swift.adoc[]
+// :param-name: {lang-name-swift}
+// :param-title: {lang-title-swift}
+// :param-module: {lang-mod-swift}
+// include::ROOT:partial$nav-skeleton.adoc[]
+
+// .Objc
+// include::partial$_std-cbl-hdr-objc.adoc[]
+// :param-name: {lang-name-objc}
+// :param-title: {lang-title-objc}
+// :param-module: {lang-mod-objc}
+// include::ROOT:partial$nav-skeleton.adoc[]
+
+// .Net
+// include::partial$_std-cbl-hdr-csharp.adoc[]
+// :param-name: {lang-name-csharp}
+// :param-title: {lang-title-csharp}
+// :param-module: {lang-mod-csharp}
+// include::ROOT:partial$nav-skeleton.adoc[]
 
 
 
