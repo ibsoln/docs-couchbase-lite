@@ -70,11 +70,23 @@ class cMyPassListener {
         "couchbase-docs-cert"); <.>
 
     // end::listener-config-tls-id-SelfSigned[]
+
     // tag::listener-config-tls-id-caCert[]
     // Use CA Cert
-    // Create a TLSIdentity from a key-pair and
-    // certificate in Android's canonical keystore
-    TLSIdentity thisIdentity = new TLSIdentity.getIdentity("server"); // <.>
+    // Import a key pair into secure storage
+    // Create a TLSIdentity from the imported key-pair
+    InputStream thisKeyPair = new FileInputStream();
+
+    thisKeyPair.getClass().getResourceAsStream("serverkeypair.p12");
+
+    TLSIdentity thisIdentity = new TLSIdentity.importIdentity(
+      EXTERNAL_KEY_STORE_TYPE,  // KeyStore type, eg: "PKCS12"
+      thisKeyPair,              // An InputStream from the keystore
+      password,                 // The keystore password
+      EXTERNAL_KEY_ALIAS,       // The alias to be used (in external keystore)
+      null,                     // The key password
+      "test-alias"              // The alias for the imported key
+    );
 
     // end::listener-config-tls-id-caCert[]
     // tag::listener-config-tls-id-anon[]
@@ -675,3 +687,12 @@ thisConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [th
 
     // thisConfig.setAuthenticator(
     // new ListenerCertificateAuthenticator(certs));
+
+
+        // tag::beta-listener-config-tls-id-caCert[]
+    // Use CA Cert
+    // Create a TLSIdentity from a key-pair and
+    // certificate in Android's canonical keystore
+    TLSIdentity thisIdentity = new TLSIdentity.getIdentity("server"); // <.>
+
+    // end::beta-listener-config-tls-id-caCert[]
