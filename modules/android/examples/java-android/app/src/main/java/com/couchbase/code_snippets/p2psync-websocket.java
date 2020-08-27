@@ -46,7 +46,6 @@ class cMyPassListener {
     // end::listener-config-tls-disable[]
     // tag::listener-config-tls-id-full[]
     // tag::listener-config-tls-id-SelfSigned[]
-
     // Use a self-signed certificate
     // Create a TLSIdentity for the server using convenience API.
     // System generates self-signed cert
@@ -72,22 +71,10 @@ class cMyPassListener {
 
     // end::listener-config-tls-id-SelfSigned[]
     // tag::listener-config-tls-id-caCert[]
-
     // Use CA Cert
-    // Import a key pair into secure storage
-    // Create a TLSIdentity from the imported key-pair
-    InputStream thisKeyPair = new FileInputStream();
-
-    thisKeyPair.getClass().getResourceAsStream("serverkeypair.p12");
-
-    TLSIdentity thisIdentity = new TLSIdentity.importIdentity(
-      EXTERNAL_KEY_STORE_TYPE,  // KeyStore type, eg: "PKCS12"
-      thisKeyPair,              // An InputStream from the keystore
-      password,                 // The keystore password
-      EXTERNAL_KEY_ALIAS,       // The alias to be used (in external keystore)
-      null,                     // The key password
-      "test-alias"              // The alias for the imported key
-    );
+    // Create a TLSIdentity from a key-pair and
+    // certificate in Android's canonical keystore
+    TLSIdentity thisIdentity = new TLSIdentity.getIdentity("server"); // <.>
 
     // end::listener-config-tls-id-caCert[]
     // tag::listener-config-tls-id-anon[]
@@ -112,11 +99,19 @@ class cMyPassListener {
 
     // end::listener-config-client-auth-pwd[]
     // tag::listener-config-client-root-ca[]
-
     // Configure the client authenticator
     // to validate using ROOT CA <.>
+    // thisClientID.certs is a list containing a client cert to accept
+    // and any other certs needed to complete a chain between the client cert
+    // and a CA
+    TLSIdentity thisServerID = getIdentity(“server”)
+    TLSIdentity thisClientID = getIdentity(“authorizedClient”)
+
+    thisConfig.setTlsIdentity = thisServerID;
     thisConfig.setAuthenticator(
-      new ListenerCertificateAuthenticator(certs));
+      new ListenerCertificateAuthenticator(thisClientID.getCerts()));
+
+    URLEndpointListener thisListener = new URLEndpointListener(thisConfig)
 
     // end::listener-config-client-root-ca[]
     // tag::listener-config-client-auth-self-signed[]
@@ -165,6 +160,27 @@ class cMyPassListener {
 
   // end::listener-config-tls-id-nil-2[]
 
+  // tag::old-listener-config-tls-id-caCert[]
+  // Use CA Cert
+  // Import a key pair into secure storage
+  // Create a TLSIdentity from the imported key-pair
+  InputStream thisKeyPair = new FileInputStream();
+
+  thisKeyPair.getClass().getResourceAsStream("serverkeypair.p12");
+
+  TLSIdentity thisIdentity = new TLSIdentity.importIdentity(
+    EXTERNAL_KEY_STORE_TYPE,  // KeyStore type, eg: "PKCS12"
+    thisKeyPair,              // An InputStream from the keystore
+    password,                 // The keystore password
+    EXTERNAL_KEY_ALIAS,       // The alias to be used (in external keystore)
+    null,                     // The key password
+    "test-alias"              // The alias for the imported key
+  );
+
+  // end::old-listener-config-tls-id-caCert[]
+
+
+
 
   // tag::listener-config-delta-sync[]
   thisConfig.enableDeltaSync(true;)
@@ -208,17 +224,20 @@ class cMyPassListener {
 // end::listener-callouts-full[]
 
 
+  // tag::old-listener-config-client-root-ca[]
+  // thisClientID.certs is a list containing a client cert to accept
+  // and any other certs needed to complete a chain between the client cert
+  // and a CA
+  TlsIdentity thisServerID = getIdentity(“server”)
+  TlsIdentity thisClientID = getIdentity(“authorizedClient”)
 
+  thisConfig.setTlsIdentity = thisServerID;
+  thisConfig.setAuthenticator(
+    new ListenerCertificateAuthenticator(thisClientID.getCerts()));
 
+  URLEndpointListener thisListener = new URLEndpointListener(thisConfig)
 
-
-
-
-// tag::listener-config-client-auth-root[]
-  // cert is a pre-populated object of type:SecCertificate representing a certificate
-  // Work in progress. Code snippet to be provided.
-
-  // end::listener-config-client-auth-root[]
+  // end::old-listener-config-client-root-ca[]
 
 
   // prev content of listener-config-client-auth-self-signed (for ios)
@@ -652,3 +671,7 @@ thisConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [th
 <.> Configure to accept only CA certs
 <.> Configure the pinned certificate using data from the byte array `cert`
 // end::p2p-act-rep-config-cacert-pinned-callouts[]
+
+
+    // thisConfig.setAuthenticator(
+    // new ListenerCertificateAuthenticator(certs));
