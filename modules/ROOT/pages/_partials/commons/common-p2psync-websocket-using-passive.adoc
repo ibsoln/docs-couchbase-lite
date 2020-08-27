@@ -31,7 +31,7 @@ Subsequent sections provide additional details and examples for the main configu
 [source, {source-language}]
 ----
 
-include::{snippet-p2psync-ws}[tags="listener-initialize;!listener-local-db;!listener-config-tls-disable;!listener-config-tls-id-caCert;!listener-config-tls-id-SelfSigned;!listener-config-client-auth-root;!listener-config-tls-id-set;!listener-config-client-root-ca;!listener-config-client-auth-self-signed", indent=0]
+include::{snippet-p2psync-ws}[tags="listener-initialize;!listener-local-db;!listener-config-tls-disable;!listener-config-tls-id-caCert;!listener-config-tls-id-SelfSigned;!listener-config-client-root-ca;!listener-config-tls-id-set;!listener-config-client-root-ca;!listener-config-client-auth-self-signed", indent=0]
 
 ----
 
@@ -220,8 +220,15 @@ Subsequent starts of the Listener will then reuse the identity from secure stora
 Import from key-pair::
 +
 --
+ifeval::["{param-platform}"=="{platform-android}"]
+Importing an existing keystore entry is difficult to do securely -- see: https://developer.android.com/training/articles/keystore. A better approach is to create the entry using `TLSIdentity.createIdentity`.
 
-Import a key pair into secure storage and create a TLSIdentity from the imported key-pair.
+.For development and testing purposes only:
+[CAUTION]
+You can use the utility `com.couchbase.lite.KeyStoreUtils.importEntry` to copy an external keystore entry  into the Android keystore. +
+*This method is not secure. Do not use in production code.*
+
+endif::[]
 
 [source, {source-language}]
 ----
@@ -232,7 +239,12 @@ include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full;!listener-config
 ----
 
 <.> Ensure TLS is enabled.
-<.> Use the imported identity.
+
+ifeval::["{param-platform}"=="{platform-android}"]
+<.> The alias ("server" in this case) must refer to an entry in Android's canonical keystore, which has a private key and at least one certificate.
+endif::[]
+
+<.> Use the new TLS identity.
 --
 
 Create Self-Signed Cert::
@@ -344,7 +356,7 @@ Root CA::
 [source, {source-language}]
 ----
 
-include::{snippet-p2psync-ws}[tag=listener-config-client-auth-root, indent=0]
+include::{snippet-p2psync-ws}[tag=listener-config-client-root-ca, indent=0]
 
 ----
 
@@ -407,7 +419,7 @@ a|* The system will auto generate an _anonymous_ self signed cert.
 a|Set to server identity generated from a self- or CA-signed certificate
 
 // On first use::
-* On first use -- Bring your own certificate and private key; for example, using the {url-api-class-tlsidentity} class's {url-api-method-tls-identity-import} method to add it to the {securestorage}.
+* On first use -- Bring your own certificate and private key; for example, using the {url-api-class-tlsidentity} class's {url-api-method-tls-identity-create} method to add it to the {securestorage}.
 * Each time -- Use the server identity from the certificate stored in the {securestorage}; for example, using the {url-api-class-tlsidentity} class's {url-api-method-tls-identity-get} method with the alias you want to retrieve..
 
 // See: {xref-cbl-pg-p2p-manage-tls-id} for more on how to store and use identities.

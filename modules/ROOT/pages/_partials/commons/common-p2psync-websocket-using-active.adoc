@@ -160,7 +160,8 @@ If {this-prop} is `false` (default) then only CA Certificates are accepted.
 
 If {this-prop} is `true` then only Self-Signed Certificates are accepted.
 
-.Example
+.Set Server TLS security
+=====
 [{tabs}]
 ====
 
@@ -218,8 +219,8 @@ include::{snippet-p2psync-ws}[tag=p2p-act-rep-config-cacert-pinned, indent=0]
 include::{snippet-p2psync-ws}[tag=p2p-act-rep-config-cacert-pinned-callouts, indent=0]
 
 --
-
 ====
+=====
 
 === Client Authentication
 
