@@ -220,15 +220,16 @@ Subsequent starts of the Listener will then reuse the identity from secure stora
 Import from key-pair::
 +
 --
-ifeval::["{param-platform}"=="{platform-android}"]
-Importing an existing keystore entry is difficult to do securely -- see: https://developer.android.com/training/articles/keystore. A better approach is to create the entry using `TLSIdentity.createIdentity`.
+// ifeval::["{param-platform}"=="{platform-android}"]
+// Importing an existing keystore entry is difficult to do securely -- see: https://developer.android.com/training/articles/keystore. A better approach is to create the entry using `TLSIdentity.createIdentity`.
 
-.For development and testing purposes only:
-[CAUTION]
-You can use the utility `com.couchbase.lite.KeyStoreUtils.importEntry` to copy an external keystore entry  into the Android keystore. +
-*This method is not secure. Do not use in production code.*
+// .For development and testing purposes only:
+// [CAUTION]
+// You can use the utility `com.couchbase.lite.KeyStoreUtils.importEntry` to copy an external keystore entry  into the Android keystore. +
+// *This method is not secure. Do not use in production code.*
 
-endif::[]
+// endif::[]
+Import a key pair into secure storage and create a TLSIdentity from the imported key-pair.
 
 [source, {source-language}]
 ----
@@ -240,9 +241,9 @@ include::{snippet-p2psync-ws}[tags="listener-config-tls-id-full;!listener-config
 
 <.> Ensure TLS is enabled.
 
-ifeval::["{param-platform}"=="{platform-android}"]
-<.> The alias ("server" in this case) must refer to an entry in Android's canonical keystore, which has a private key and at least one certificate.
-endif::[]
+// ifeval::["{param-platform}"=="{platform-android}"]
+// <.> The alias ("server" in this case) must refer to an entry in Android's canonical keystore, which has a private key and at least one certificate.
+// endif::[]
 
 <.> Use the new TLS identity.
 --
