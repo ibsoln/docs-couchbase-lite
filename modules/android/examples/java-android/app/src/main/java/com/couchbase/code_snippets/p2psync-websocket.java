@@ -29,11 +29,10 @@ class cMyPassListener {
     thisConfig.setNetworkInterface("10.1.1.10"); // <.>
 
     // end::listener-config-netw-iface[]
-    // end::listener-config-db[]
-    // tag::listener-deltasync[]
+    // tag::listener-config-delta-sync[]
     thisConfig.setEnableDeltaSync(false); // <.>
 
-    // end::listener-deltasync[]
+    // end::listener-config-delta-sync[]
     // tag::listener-config-tls-full[]
     // Configure server security
     // tag::listener-config-tls-enable[]
@@ -95,8 +94,7 @@ class cMyPassListener {
 
     // end::listener-config-tls-id-anon[]
     // tag::listener-config-tls-id-set[]
-
-    // set the TLS Identity
+    // Set the TLS Identity
     thisConfig.setTlsIdentity(thisIdentity); // <.>
 
     // end::listener-config-tls-id-set[]
@@ -134,7 +132,7 @@ class cMyPassListener {
     final URLEndpointListener thisListener
       = new URLEndpointListener(thisConfig); // <.>
 
-    // start the listener
+    // Start the listener
     thisListener.start(); // <.>
 
     // end::listener-start[]
@@ -194,10 +192,10 @@ class cMyPassListener {
 
 
 
-  // tag::listener-config-delta-sync[]
+  // tag::old-listener-config-delta-sync[]
   thisConfig.enableDeltaSync(true;)
 
-  // end::listener-config-delta-sync[]
+  // end::old-listener-config-delta-sync[]
 
 
   // tag::listener-status-check[]

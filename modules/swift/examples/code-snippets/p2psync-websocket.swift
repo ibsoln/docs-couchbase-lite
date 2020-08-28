@@ -633,10 +633,10 @@ class cMyPassListener {
     listenerConfig.networkInterface = "10.1.1.10"  // <.>
 
     // end::listener-config-netw-iface[]
-    // tag::listener-deltasync[]
+    // tag::listener-config-delta-sync[]
     listenerConfig.enableDeltaSync = true // <.>
 
-    // end::listener-deltasync[]
+    // end::listener-config-delta-sync[]
     // tag::listener-config-tls-full[]
     // tag::listener-config-tls-enable[]
     listenerConfig.disableTLS  = false // <.>
@@ -714,10 +714,10 @@ class cMyPassListener {
 listenerConfig.tlsIdentity = nil
 
 // end::old-listener-config-tls-id-nil[]
-// tag::listener-config-delta-sync[]
+// tag::old-listener-config-delta-sync[]
 listenerConfig.enableDeltaSync = true
 
-// end::listener-config-delta-sync[]
+// end::old-listener-config-delta-sync[]
 // tag::listener-status-check[]
 let totalConnections = websocketListener.status.connectionCount
 let activeConnections = websocketListener.status.activeConnectionCount

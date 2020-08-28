@@ -1,108 +1,153 @@
 // PASSIVE PEER STUFF
 // Stuff I adapted
 //
+//
+// p2pSync-websockets.cs
+//
+// Copyright (c) 2017 Couchbase, Inc All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using System.Threading.Tasks;
 
+using Couchbase.Lite;
+using Couchbase.Lite.Enterprise.Query;
+using Couchbase.Lite.Logging;
+using Couchbase.Lite.P2P;
+using Couchbase.Lite.Query;
+using Couchbase.Lite.Sync;
+using Newtonsoft.Json;
 
-import Foundation
-import CouchbaseLiteSwift
-import MultipeerConnectivity
+using SkiaSharp;
+namespace api_walkthrough
+{
+  class Program
+  {
+  private static Database _Database;
+  private static Replicator _Replicator;
+  private static ListenerToken _ThisListenerToken;
+  private static bool _NeedsExtraDocs;
 
-class cMyPassListener {
+  #region Private Methods
+  private static void GettingStarted()
+  {
     // tag::listener-initialize[]
     // tag::listener-local-db[]
     // . . . preceding application logic . . .
-    CouchbaseLite.init(context); <.>
-    Database thisDB = new Database("passivepeerdb");
+    // Get the database (and create it if it doesn't exist)
+    var thisDB = new Database("mydb");
 
     // end::listener-local-db[]
     // tag::listener-config-db[]
     // Initialize the listener config
-    final URLEndpointListenerConfiguration listenerConfig
-       = new URLEndpointListenerConfiguration(thisDB); // <.>
+    var thisConfig = new URLEndpointListenerConfiguration(thisDB); // <.>
+
     // end::listener-config-db[]
     // tag::listener-config-port[]
-    listenerConfig.setPort(55990); //<.>
+    thisConfig.Port = 55990; //<.>
+
     // end::listener-config-port[]
     // tag::listener-config-netw-iface[]
-    listenerConfig.setNetworkInterface("10.1.1.10"); // <.>
+    thisConfig.NetworkInterface = "10.1.1.10"; // <.>
+
     // end::listener-config-netw-iface[]
-    // end::listener-config-db[]
-    // tag::listener-deltasync[]
-    listenerConfig.setEnableDeltaSync(true); // <.>
-    // end::listener-deltasync[]
+    // tag::listener-config-delta-sync[]
+    thisConfig.EnableDeltaSync = true; // <.>
+
+    // end::listener-config-delta-sync[]
     // tag::listener-config-tls-full[]
     // tag::listener-config-tls-enable[]
-    listenerConfig.setDisableTLS(false); // <.>
+    thisConfig.DisableTLS = false; // <.>
+
     // end::listener-config-tls-enable[]
     // tag::listener-config-tls-disable[]
-    listenerConfig.setDisableTLS(true); // <.>
+    thisConfig.DisableTLS = true; // <.>
+
     // end::listener-config-tls-disable[]
     // tag::listener-config-tls-id-full[]
     // tag::listener-config-tls-id-SelfSigned[]
-
     // Use a self-signed certificate
-    //    Create a TLSIdentity for the server using convenience API.
-    //    System generates self-signed cert
+    // Create a TLSIdentity for the server using convenience API.
+    // System generates self-signed cert
     // Work-in-progress. Code snippet coming soon.
-    private static final Map<String, String> CERT_ATTRIBUTES; //<.>
-    static {
-        final Map<String, String> thisMap = new HashMap<>();
-        m.put(TLSIdentity.CERT_ATTRIBUTE_COMMON_NAME, "Couchbase Demo");
-        m.put(TLSIdentity.CERT_ATTRIBUTE_ORGANIZATION, "Couchbase");
-        m.put(TLSIdentity.CERT_ATTRIBUTE_ORGANIZATION_UNIT, "Mobile");
-        m.put(TLSIdentity.CERT_ATTRIBUTE_EMAIL_ADDRESS, "noreply@couchbase.com");
-        CERT_ATTRIBUTES = Collections.unmodifiableMap(thisMap);
-    }
-
-    // Store the TLS identity in secure storage under the label 'couchbase-demo-cert'
-    TLSIdentity thisIdentity = new TLSIdentity.createIdentity(true, CERT_ATTRIBUTES, null, "couchbase-demo-cert"); <.>
+    // Store the TLS identity in secure storage
+    // under the label 'couchbase-demo-cert'
+    var thisTlsID = new TLSIdentity.createIdentity(
+          true,
+          new Dictionary<string,string>() {
+            {Certificate.CommonNameAttribute, "CBL-Server"};
+            },
+          null,
+          _ourX509store,
+          "couchbase-demo-cert"
+          );  // <.>
 
     // end::listener-config-tls-id-SelfSigned[]
     // tag::listener-config-tls-id-caCert[]
-
     // Use CA Cert
     //    Import a key pair into secure storage
     //    Create a TLSIdentity from the imported key-pair
-    InputStream thisKeyPair = new FileInputStream();
-
-    thisKeyPair.getClass().getResourceAsStream("serverkeypair.p12");
-
-    TLSIdentity thisIdentity = new TLSIdentity.importIdentity(
-      EXTERNAL_KEY_STORE_TYPE,  // KeyStore type, eg: "PKCS12"
-      thisKeyPair,              // An InputStream from the keystore
-      password,                 // The keystore password
-      EXTERNAL_KEY_ALIAS,       // The alias, in the external keystore, of the entry to be used.
-      null,                     // The key password
-    "test-alias"                // The alias for the imported key
-    );
+    byte[] thisKeyPair = File.ReadAllBytes("serverkeypair.p12");
+    var thisIdentity = TLSIdentity.ImportIdentity(
+                          _store, // x509store
+                          thisKeyPair, // byte array of PKCS12 data
+                          "123", // store password
+                          "couchbase-demo-cert", // alias label
+                          null); // <.>
 
     // end::listener-config-tls-id-caCert[]
     // tag::listener-config-tls-id-anon[]
-
     // Use an Anonymous Self-Signed Cert
-    listenerConfig.setTlsIdentity(null);
+    thisConfig.TlsIdentity = null; // <.>
 
     // end::listener-config-tls-id-anon[]
     // tag::listener-config-tls-id-set[]
-
-    // set the TLS Identity
-    listenerConfig.setTlsIdentity(thisIdentity); // <.>
+    // Set the TLS Identity
+    thisConfig.TlsIdentity = thisIdentity; // <.>
 
     // end::listener-config-tls-id-set[]
     // end::listener-config-tls-id-full[]
     // tag::listener-config-client-auth-pwd[]
-
     // Configure the client authenticator (if using Basic Authentication) <.>
-    thisConfig.setAuthenticator(new ListenerPasswordAuthenticator(
-      (thisUser, thisPassword) ->
-        username.equals(thisUser) && Arrays.equals(password, thisPassword)));
+    SecureString thisPassword = "valid.password"; /* example only */
+    var thisUser = "valid.user";
+    thisConfig.Authenticator = new ListenerPasswordAuthenticator(
+      (sender, thisUser, thisPassword) =>
+        {
+          return username.equals("valid.user")  && thisPassword == "valid.password");
+        }
+      );
 
     // end::listener-config-client-auth-pwd[]
     // tag::listener-config-client-root-ca[]
+    // Configure the client authenticator
+    // to validate using ROOT CA <.>
+    byte[] thisCaData; // byte array for CA data
+    using (var thisReader = new BinaryReader(stream)) {
+      thisCaData = thisReader.ReadBytes(int stream.Length);
+    }; // Get cert data
 
-    // Configure the client authenticator to validate using ROOT CA <.>
+    var thisRootCert = new X509Certificate(thisCaData); //
 
-    thisConfig.setAuthenticator(new ListenerCertificateAuthenticator(certs));
+    thisConfig.Authenticator = new ListenerCertificateAuthenticator(
+      new X509Certificate2XXollection(thisRootCert)
+    );
 
     // end::listener-config-client-root-ca[]
     // tag::listener-config-client-auth-self-signed[]
@@ -110,41 +155,41 @@ class cMyPassListener {
     // end::listener-config-client-auth-self-signed[]
     // tag::listener-start[]
     // Initialize the listener
-    final URLEndpointListener thisListener
-      = new URLEndpointListener(listenerConfig); // <.>
+    var thisListener = new URLEndpointListener(thisConfig); // <.>
 
-    // start the listener
+    // Start the listener
     thisListener.start(); // <.>
+
     // end::listener-start[]
     // end::listener-initialize[]
   }
 
-  // tag::listener-config-tls-disable[]
-  listenerConfig.disableTLS(true);
-  // end::listener-config-tls-disable[]
+  // tag::old-listener-config-tls-disable[]
+  thisConfig.disableTLS = true;
+  // end::old-listener-config-tls-disable[]
 
   // tag::listener-config-tls-id-nil-2[]
 
   // Use “anonymous” cert. These are self signed certs created by the system
-  listenerConfig.setTlsIdentity(nil);
+  thisConfig.TlsIdentity = null;
   // end::listener-config-tls-id-nil-2[]
 
 
-  // tag::listener-config-delta-sync[]
-  listenerConfig.enableDeltaSync(true;)
-  // end::listener-config-delta-sync[]
+  // tag::old-listener-config-delta-sync[]
+  thisConfig.EnableDeltaSync = true;
+  // end::old-listener-config-delta-sync[]
 
 
   // tag::listener-status-check[]
-
   int connectionCount = thisListener.getStatus().getConnectionCount(); // <.>
-
   int activeConnectionCount = thisListener.getStatus().getActiveConnectionCount();  // <.>
+
   // end::listener-status-check[]
 
 
   // tag::listener-stop[]
   thisListener.stop();
+
   // end::listener-stop[]
 
 
@@ -182,7 +227,7 @@ class cMyPassListener {
 
 
   // prev content of listener-config-client-auth-self-signed (for ios)
-  listenerConfig.authenticator = ListenerCertificateAuthenticator.init {
+  thisConfig.authenticator = ListenerCertificateAuthenticator.init {
     (cert) -> Bool in
     var cert:SecCertificate
     var certCommonName:CFString?
@@ -321,15 +366,23 @@ public class Examples {
     thisConfig.PinnedServerCertificate = thisCert; // <.>
 
     // end::p2p-act-rep-config-cacert-pinned[]
-    // tag::p2p-act-rep-config-conflict[]
+    // tag::p2p-act-rep-config-conflict-full[]
+    // tag::p2p-act-rep-config-conflict-builtin[]
     /* Optionally set a conflict resolver call back */ // <.>
     // Use built-in resolver
     thisConfig.ConflictResolver = new LocalWinConflictResolver();  //
 
+    // end::p2p-act-rep-config-conflict-builtin[]
+    // tag::p2p-act-rep-config-conflict-custom[]
     // optionally use custom resolver
     thisConfig.ConflictResolver = new ConflictResolver(
-      (conflict) => {/* define resolver function */}); //
-    // end::p2p-act-rep-config-conflict[]
+      (conflict) => {
+        /* define resolver function */
+      }
+    ); //
+
+    // end::p2p-act-rep-config-conflict-custom[]
+    // end::p2p-act-rep-config-conflict-full[]
     // tag::p2p-act-rep-start-full[]
     // Initialize and start a replicator
     // Initialize replicator with configuration data
@@ -337,12 +390,12 @@ public class Examples {
 
     // tag::p2p-act-rep-add-change-listener[]
     // Optionally add a change listener
-    _thisListenerToken = thisReplicator.AddChangeListener((sender, args) =>
+    _ThisListenerToken = thisReplicator.AddChangeListener((sender, args) =>
       {
         if (args.Status.Activity == ReplicatorActivityLevel.Stopped) {
             Console.WriteLine("Replication stopped");
         }
-      });
+      }); // <.>
 
     // end::p2p-act-rep-add-change-listener[]
     // tag::p2p-act-rep-start[]
@@ -378,17 +431,17 @@ public class Examples {
   CouchbaseLite.init(context);
   Database thisDB = new Database("passivepeerdb");  // <.>
   // Initialize the listener config
-  final URLEndpointListenerConfiguration listenerConfig = new URLEndpointListenerConfiguration(database);
-  listenerConfig.setPort(55990)             // <.> Default- port is selected
-  listenerConfig.setDisableTls(false)       // <.> Optional. Defaults to false. You get TLS encryption out-of-box
-  listenerConfig.setEnableDeltaSync(true)   // <.> Optional. Defaults to false.
+  final URLEndpointListenerConfiguration thisConfig = new URLEndpointListenerConfiguration(database);
+  thisConfig.Port(55990)             // <.> Default- port is selected
+  thisConfig.DisableTls(false)       // <.> Optional. Defaults to false. You get TLS encryption out-of-box
+  thisConfig.EnableDeltaSync(true)   // <.> Optional. Defaults to false.
 
   // Configure the client authenticator (if using basic auth)
   ListenerPasswordAuthenticator auth = new ListenerPasswordAuthenticator { "username", "password"}; // <.>
-  listenerConfig.setAuthenticator(auth); // <.>
+  thisConfig.Authenticator(auth); // <.>
 
   // Initialize the listener
-  final URLEndpointListener listener = new URLEndpointListener( listenerConfig ); // <.>
+  final URLEndpointListener listener = new URLEndpointListener( thisConfig ); // <.>
 
   // Start the listener
   listener.start(); // <.>
@@ -409,13 +462,9 @@ TLSIdentity thisIdentity = new TLSIdentity.createIdentity(true, X509_ATTRIBUTES,
 // end::createTlsIdentity[]
 
 
-
 // tag::deleteTlsIdentity[]
 // tag::p2p-tlsid-delete-id-from-keychain[]
-String thisAlias = "alias-to-delete";
-final KeyStore thisKeyStore =  KeyStore.getInstance("PKCS12");
-thisKeyStore.load(null);
-thisKeyStore.deleteEntry(thisAlias);
+TLSIdentity.DeleteIdentity(_store, "alias-to-delete", null);
 
 // end::p2p-tlsid-delete-id-from-keychain[]
 // end::deleteTlsIdentity[]
@@ -435,7 +484,7 @@ TLSIdentity thisIdentity = new TLSIdentity.getIdentity("CBL-Demo-Server-Cert")
     //   thisUser, thisPassword -> thisUser == "validUsername" && thisPassword == "validPasswordValue" );
 
     // if (thisAuth) {
-    //   listenerConfig.setAuthenticator(auth);
+    //   thisConfig.Authenticator(auth);
     // }
     // else {
     //   // . . . authentication failed take appropriate exception action
@@ -466,7 +515,7 @@ TLSIdentity thisIdentity = new TLSIdentity.getIdentity("CBL-Demo-Server-Cert")
 
     // ClientCertificateAuthenticator thisAuth = new ClientCertificateAuthenticator(thisIdentity);
 
-    // thisConfig.setAuthenticator(thisAuth);
+    // thisConfig.Authenticator(thisAuth);
 
 
 
@@ -492,7 +541,7 @@ TLSIdentity thisIdentity = new TLSIdentity.getIdentity("CBL-Demo-Server-Cert")
 
 String thisAlias = "alias-to-delete";
 KeyStore thisKeystore = KeyStore.getInstance("PKCS12"); // <.>
-thisKeyStore.load(null);
+thisKeyStore.load= null;
 if (thisAlias != null) {
    thisKeystore.deleteEntry(thisAlias);  // <.>
 }
@@ -504,7 +553,7 @@ if (thisAlias != null) {
 let rootCertData = SecCertificateCopyData(cert) as Data
 let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
 // Listener:
-listenerConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
+thisConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
 
 SecCertificate thisCert = new SecCertificate(); // populated as nec.
 
@@ -512,7 +561,7 @@ Data rootCertData = new Data(SecCertificateCopyData(thisCert));
 
 let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
 // Listener:
-listenerConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
+thisConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
 // cert auth
 
 

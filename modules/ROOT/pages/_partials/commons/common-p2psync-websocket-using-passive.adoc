@@ -161,7 +161,7 @@ Both valuable benefits, especially when network bandwidth is constrained.
 [source, {source-language}]
 ----
 
-include::{snippet-p2psync-ws}[tags=listener-deltasync, indent=0]
+include::{snippet-p2psync-ws}[tags=listener-config-delta-sync, indent=0]
 
 ----
 
