@@ -292,4 +292,4 @@ Avignon
 
 == Date/Time Functions
 
-include::{root-partials}query/date-time-functions.adoc[]
+include::{root-partials}query-date-time-functions.adoc[]
