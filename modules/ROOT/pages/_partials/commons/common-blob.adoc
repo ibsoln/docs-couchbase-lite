@@ -20,7 +20,7 @@ The following code example adds a blob to the document under the `avatar` proper
 
 .blob code
 ====
-[source]
+[source, {source-language}]
 ----
 include::{snippet}[tag=blob,indent=0]
 ----

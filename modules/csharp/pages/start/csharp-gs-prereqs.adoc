@@ -58,7 +58,7 @@ No more "mono-stdout" always at info level.)
 Open *Main.cs* in Visual Studio and copy the following code in the `main` method.
 This snippet demonstrates how to run basic CRUD operations, a simple Query and running bi-directional replications with Sync Gateway.
 
-[source]
+[source, {source-language}]
 ----
 include::{snippet}[tag=getting-started,indent=0]
 ----

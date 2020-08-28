@@ -19,7 +19,7 @@ include::{root-partials}block-abstract.adoc[]
 As the top-level entity in the API, new databases can be created using the `Database` class by passing in a name, configuration, or both.
 The following example creates a database using the `Database(string name)` method.
 
-[source]
+[source, {source-language}]
 ----
 include::{snippet}[tag=new-database,indent=0]
 ----
@@ -78,7 +78,7 @@ To use a prebuilt database, you need to set up the database, build the database 
 After your app launches, it needs to check whether the database exists.
 If the database does not exist, the app should copy it from the app bundle using the {url-api-references}/api/Couchbase.Lite.Database.html#Couchbase_Lite_Database_Copy_System_String_System_String_Couchbase_Lite_DatabaseConfiguration_[`Database.Copy(string, DatabaseConfiguration)`] method as shown below.
 
-[source]
+[source, {source-language}]
 ----
 include::{snippet}[tag=prebuilt-database,indent=0]
 ----
