@@ -9,60 +9,76 @@ import MultipeerConnectivity
 
 class cMyPassListener {
   // tag::listener-initialize[]
+  // tag::listener-local-db[]
+  // . . . preceding application logic . . .
   fileprivate  var _allowlistedUsers:[[String:String]] = []
-  fileprivate var _websocketListener:URLEndpointListener?
+  fileprivate var _thisListener:URLEndpointListener?
   fileprivate var thisDB:Database?
-    // Include websockets listener initializer code
-
-    // func fMyPassListener() {
-    // tag::listener-config-db[]
-    CBLDatabase *db = self.db;
-
-    CBLURLEndpointListenerConfiguration* listenerConfig; // <.>
-    listenerConfig = [[CBLURLEndpointListenerConfiguration alloc] initWithDatabase: database];
+  // Include websockets listener initializer code
+  // func fMyPassListener() {
+  CBLDatabase *thisDB = self.db;
+  // end::listener-local-db[]
+  // tag::listener-config-db[]
+  // Initialize the listener config
+  CBLURLEndpointListenerConfiguration* thisConfig; // <.>
+  thisConfig = [[CBLURLEndpointListenerConfiguration alloc] initWithDatabase: database];
 
     // end::listener-config-db[]
     // tag::listener-config-port[]
-    /* optionally */ int *wsPort = 4984;
-    /* optionally */ int *wssPort = 4985;
-    listenerConfig.port =  wssPort;
-    // end::listener-config-port[]
+    thisConfig.port =  55990; // <.>
 
+    // end::listener-config-port[]
     // tag::listener-config-netw-iface[]
     NSURL *thisURL = [NSURL URLWithString:@"10.1.1.10"];
-    listenerConfig.networkInterface = thisURL;
+    thisConfig.networkInterface = thisURL; // <.>
+
     // end::listener-config-netw-iface[]
     // tag::listener-config-delta-sync[]
-    listenerConfig.enableDeltaSync = true // <.>
+    thisConfig.enableDeltaSync = true // <.>
 
     // end::listener-config-delta-sync[]
     // tag::listener-config-tls-full[]
+    // Configure server security
     // tag::listener-config-tls-enable[]
-    listenerConfig.disableTLS  = false; // <.>
+    thisConfig.disableTLS  = false; // <.>
 
     // end::listener-config-tls-enable[]
     // tag::listener-config-tls-disable[]
-    listenerConfig.disableTLS  = true; // <.>
+    thisConfig.disableTLS  = true; // <.>
 
     // end::listener-config-tls-disable[]
     // tag::listener-config-tls-id-full[]
+    // tag::listener-config-tls-id-SelfSigned[]
+    // Use a self-signed certificate
+    // Create a TLSIdentity for the server using convenience API.
+    // System generates self-signed cert
+    // Work-in-progress. Code snippet coming soon.
+
+    // end::listener-config-tls-id-SelfSigned[]
+    // tag::listener-config-tls-id-caCert[]
+    // Use CA Cert
+    // Create a TLSIdentity from a key-pair and
+    // certificate in secure storage
+
+    // end::listener-config-tls-id-caCert[]
     // tag::listener-config-tls-id-anon[]
     // Use an anonymous self-signed cert
-    listenerConfig.tlsIdentity = nil;
+    thisConfig.tlsIdentity = nil;
 
     // end::listener-config-tls-id-anon[]
     // tag::listener-config-tls-id-set[]
     // set the TLS Identity
-    listenerConfig.tlsIdentity =
+    thisConfig.tlsIdentity =
       TLSIdentity(withLabel:thisIdentity)
 
     // end::listener-config-tls-id-set[]
     // end::listener-config-tls-id-full[]
     // tag::listener-config-client-auth-pwd[]
-    // Configure the client authenticator for Basic Authentication) <.>
+    // Configure Client Security using an Authenticator
+    // For example, Basic Authentication <.>
     - (BOOL) isValidCredentials: (NSString*)u password: (NSString*)p { return YES; } // helper
 
-    listenerConfig.authenticator = [[CBLListenerPasswordAuthenticator alloc] initWithBlock: ^BOOL(NSString * thisUser, NSString * thisPassword) {
+    thisConfig.authenticator = [[CBLListenerPasswordAuthenticator alloc] initWithBlock: ^BOOL(NSString * thisUser, NSString * thisPassword) {
         if ([self isValidCredentials: thisUser password:thisPassword]) {
             return  YES;
         }
@@ -71,20 +87,24 @@ class cMyPassListener {
 
     // end::listener-config-client-auth-pwd[]
     // tag::listener-config-client-auth-root[]
-    // Authenticate using Cert Authority
-    // cert is a pre-populated object of type:SecCertificate representing a certificate
+    // tag::listener-config-client-root-ca[]
+    // Configure the client authenticator
+    // to validate using ROOT CA <.>
+    // cert is a pre-populated object of
+    // type:SecCertificate representing a certificate
     NEEDS CODE CONVERSION
 
     let rootCertData = SecCertificateCopyData(cert) as Data
     let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
     // Listener:
-    listenerConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
+    thisConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
 
-    // end::listener-config-client-auth-root[]
+    // end::listener-config-client-root-ca[]
     // tag::listener-config-client-auth-self-signed[]
-    // Authenticate self-signed cert using application logic
+    // Authenticate self-signed cert
+    // using application logic
     NEEDS CODE CONVERSION
-    listenerConfig.authenticator = ListenerCertificateAuthenticator.init {
+    thisConfig.authenticator = ListenerCertificateAuthenticator.init {
       (cert) -> Bool in
         var cert:SecCertificate
         var certCommonName:CFString?
@@ -98,11 +118,12 @@ class cMyPassListener {
     // end::listener-config-client-auth-self-signed[]
     // tag::listener-start[]
     // Initialize the listener
-    CBLURLEndpointListener* websocketListener = nil;
-    websocketListener = [[CBLURLEndpointListener alloc] initWithConfig: listenerConfig]; // <.>
+    CBLURLEndpointListener* thisListener = nil;
+    thisListener = [[CBLURLEndpointListener alloc] initWithConfig: listenerConfig]; // <.>
     }
 
-    BOOL success = [websocketListener startWithError: &error];
+    // start the listener
+    BOOL success = [thisListener startWithError: &error];
     if (!success) {
         NSLog(@"Cannot start the listener: %@", error);
     } // <.>
@@ -114,25 +135,25 @@ class cMyPassListener {
 }
 
 // tag::listener-config-tls-disable[]
-listenerConfig.disableTLS  = true
+thisConfig.disableTLS  = true
 
 // end::listener-config-tls-disable[]
 
 // tag::listener-config-tls-id-nil[]
-listenerConfig.tlsIdentity = nil
+thisConfig.tlsIdentity = nil
 
 // end::listener-config-tls-id-nil[]
 
 
 // tag::old-listener-config-delta-sync[]
-listenerConfig.enableDeltaSync = true
+thisConfig.enableDeltaSync = true
 
 // end::old-listener-config-delta-sync[]
 
 
 // tag::listener-status-check[]
-let totalConnections = websocketListener.status.connectionCount
-let activeConnections = websocketListener.status.activeConnectionCount
+let totalConnections = thisListener.status.connectionCount
+let activeConnections = thisListener.status.activeConnectionCount
 
 // end::listener-status-check[]
 
@@ -147,13 +168,13 @@ let activeConnections = websocketListener.status.activeConnectionCount
   let rootCertData = SecCertificateCopyData(cert) as Data
   let rootCert = SecCertificateCreateWithData(kCFAllocatorDefault, rootCertData as CFData)!
   // Listener:
-  listenerConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
+  thisConfig.authenticator = ListenerCertificateAuthenticator.init (rootCerts: [rootCert])
 
 // end::listener-config-client-auth-root[]
 
 
 // tag::listener-config-client-auth-self-signed[]
-listenerConfig.authenticator = ListenerCertificateAuthenticator.init {
+thisConfig.authenticator = ListenerCertificateAuthenticator.init {
   (cert) -> Bool in
     var cert:SecCertificate
     var certCommonName:CFString?

@@ -61,9 +61,9 @@
 // :url-api-references-tlsidentity-property: {url-api-references-tlsidentity}{sep}Couchbase_Lite_P2P_TLSIdentity_
 :url-api-references-tlsidentity-method: {url-api-references-tlsidentity}{sep}Couchbase_Lite_P2P_TLSIdentity_
 
-:url-api-method-tls-identity-create: {url-api-references-tlsidentity-method}CreateIdentity_System_Boolean_System_Collections_Generic_Dictionary_System_String_System_String__System_Nullable_System_DateTimeOffset__System_Security_Cryptography_X509Certificates_X509Store_System_String_System_String_
+:url-api-method-tls-identity-create: {url-api-references-tlsidentity-method}CreateIdentity_System_Boolean_System_Collections_Generic_Dictionary_System_String_System_String__System_Nullable_System_DateTimeOffset__System_Security_Cryptography_X509Certificates_X509Store_System_String_System_String_[CreateIdentity()]
 
-:url-api-method-tls-identity-delete: {url-api-references-tlsidentity-method}DeleteIdentity_System_Security_Cryptography_X509Certificates_X509Store_System_String_System_String_
+:url-api-method-tls-identity-delete: {url-api-references-tlsidentity-method}DeleteIdentity_System_Security_Cryptography_X509Certificates_X509Store_System_String_System_String_[DeleteIdentity()]
 
 :url-api-method-tls-identity-get: {url-api-references-tlsidentity-method}GetIdentity_System_Security_Cryptography_X509Certificates_X509Store_System_String_System_String_[GetIdentity(X509Store, String, String)]
 
@@ -95,7 +95,7 @@
 // diag: Env+Module {param-module}
 
 :url-api-class-ListenerPasswordAuthenticator: {url-api-references-classes-p2p}{api-pfx}ListenerPasswordAuthenticator.html[ListenerPasswordAuthenticator]
-:url-api-class-ListenerCertificateAuthenticator: {url-api-references-classes-p2p}{api-pfx}ListenerCertificateAuthenticator.html[ListenerCertificateAuthenticator
+:url-api-class-ListenerCertificateAuthenticator: {url-api-references-classes-p2p}{api-pfx}ListenerCertificateAuthenticator.html[ListenerCertificateAuthenticator]
 
 // Authenticators
 :url-api-references-authenticator: {url-api-references-classes-sync}{api-pfx}Authenticator.html

@@ -10,13 +10,37 @@ include::ROOT:partial$_attributes-local.adoc[]
 
 // Attributes defining all Couchbase Lite pages and associated prebuilt xrefs (as used below)
 include::ROOT:partial$_page-index.adoc[]
+include::csharp:partial$_std-cbl-hdr-csharp.adoc[]
 
 .xref:ROOT:introduction.adoc[Introduction]
-* xref:android:learn/p2psync.adoc[about p2p]
+* {xref-cbl-pg-dbo-p2psync-websocket-using-passive}
+* {xref-cbl-pg-dbo-p2psync-websocket-using-active}
+* {url-api-references}[API References]
+* xref:csharp:learn/csharp-p2psync.adoc[about p2p]
 
-// .Android
-// include::partial$_std-cbl-hdr-android.adoc[]
-// :param-name: {lang-name-android}
+// .Java
+// * {xref-cbl-pg-dbo-p2psync-websocket-using-passive}
+// * {xref-cbl-pg-dbo-p2psync-websocket-using-active}
+// * {url-api-references}[API References]
+// * xref:csharp:learn/csharp-p2psync.adoc[about p2p]
+
+// .Swift
+// * {xref-cbl-pg-dbo-p2psync-websocket-using-passive}
+// * {xref-cbl-pg-dbo-p2psync-websocket-using-active}
+// * {url-api-references}[API References]
+// * xref:csharp:learn/csharp-p2psync.adoc[about p2p]
+
+
+
+
+
+// * xref:csharp:advance/csharp-p2psync-websocket-using-passive.adoc[Passive Peer]
+// * xref:csharp:advance/csharp-p2psync-websocket-using-active.adoc[Active Peer]
+// * xref:csharp:referadvance/csharp-p2psync-websocket-using-active.adoc[Active Peer]
+
+// // .Android
+// // include::partial$_std-cbl-hdr-android.adoc[]
+// // :param-name: {lang-name-android}
 // :param-title: {lang-title-android}
 // :param-module: {lang-mod-android}
 // include::ROOT:partial$nav-skeleton.adoc[]
