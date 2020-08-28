@@ -496,7 +496,7 @@ include::{root-partials}database-replicas.adoc[]
 
 == Certificate Pinning
 
-include::{root-partials}certificate-pinning.adoc[]
+include::{root-partials}::{root-partials}commons/common-certificate-pinning.adoc
 
 == Peer-to-Peer Sync
 
