@@ -28,7 +28,7 @@ This method can be used to check if a document with a given ID already exists in
 
 The following code example creates a document and persists it to the database.
 
-[source]
+[source, {source-language}]
 ----
 include::{snippet}[tag=initializer,indent=0]
 ----
@@ -38,7 +38,7 @@ include::{snippet}[tag=initializer,indent=0]
 By default, when a document is read from the database it is immutable.
 The `document.toMutable()` method should be used to create an instance of the document which can be updated.
 
-[source]
+[source, {source-language}]
 ----
 include::{snippet}[tag=update-document,indent=0]
 ----
@@ -54,7 +54,7 @@ In addition, as a convenience we offer `DateTimeOffset` accessors.
 Dates are a common data type, but JSON doesn't natively support them, so the convention is to store them as strings in ISO-8601 format.
 The following example sets the date on the `createdAt` property and reads it back using the `document.GetDate(string key)` accessor method.
 
-[source]
+[source, {source-language}]
 ----
 include::{snippet}[tag=date-getter,indent=0]
 ----
@@ -67,7 +67,7 @@ To check whether a given property exists in the document, you should use the {ur
 If you're making multiple changes to a database at once, it's faster to group them together.
 The following example persists a few documents in batch.
 
-[source]
+[source, {source-language}]
 ----
 include::{snippet}[tag=batch,indent=0]
 ----
