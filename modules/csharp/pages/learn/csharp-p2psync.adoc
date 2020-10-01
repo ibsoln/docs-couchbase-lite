@@ -16,4 +16,8 @@ include::partial$_std-cbl-hdr-csharp.adoc[]
 // :param-related: {url-api-references}[API Reference] | {xref-cbl-pg-p2psync-websocket} | {xref-cbl-pg-p2psync-custom}
 
 // Present common content including abstract and related content footer blocks
-include::{root-commons}p2psync.adoc[subs="macros,attributes"]
+<<<<<<< Updated upstream
+include::{root-commons}landing-p2psync.adoc[subs="macros,attributes"]
+=======
+include::{root-commons-release}landing-p2psync.adoc[subs="macros,attributes"]
+>>>>>>> Stashed changes

@@ -1,7 +1,7 @@
-= Peer-to-Peer Synchronization
+= Replications
 :page-layout: landing-page-core-concept
 // :page-role: -toc
-:page-roles: -toc
+:page-role: -toc
 :page-status:
 :page-edition: Enterprise
 :description: Introducing Couchbase Lite's Peer-to-Peer Synchronization feature
@@ -14,8 +14,4 @@ include::partial$_std-cbl-hdr-android.adoc[]
 // :param-abstract: Couchbase Lite's Peer-to-Peer Synchronization enables edge devices to synchronize securely without consuming centralized cloud-server resources
 
 // Present common content including abstract and related content footer blocks
-<<<<<<< Updated upstream
-include::{root-commons}landing-p2psync.adoc[subs="macros,attributes"]
-=======
-include::{root-commons-release}landing-p2psync.adoc[subs="macros,attributes"]
->>>>>>> Stashed changes
+include::{root-commons}landing-replications.adoc[subs="macros,attributes"]

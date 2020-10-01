@@ -1,0 +1,90 @@
+
+// DO NOT EDIT
+// include::{root-partials}block-related-howto-p2psync-ws.adoc[]
+// include::{root-partials}_block-abstract.adoc[]
+// DO NOT EDIT
+<<<<<<< Updated upstream
+= Replications
+=======
+= Replictions
+>>>>>>> Stashed changes
+++++
+<div class="card-row">
+++++
+
+[.column]
+====== {empty}
+
+[.content]
+Couchbase Lite for {param-title} provides functionality that supports the flexible and secure replication and synchronization of data whether locally, centrally or at the edge.
+
+<<<<<<< Updated upstream
+=======
+So your Couchbase Lite applications can:
+* Sync local databases
+* Sync with a centralized Couchbase Server database using Sync Gateway
+* Or sync directly with other edge devices using a listener to interact with the Couchbase Lite replicator.
+
+>>>>>>> Stashed changes
+[.column]
+====== {empty}
+[.media-left]
+image::ROOT:docs-listener-diagram.png[,500]
+++++
+</div>
+++++
+
+<<<<<<< Updated upstream
+So your Couchbase Lite applications can:
+
+* Sync local databases
+* Sync with a centralized Couchbase Server database using Sync Gateway
+* Or sync directly with other edge devices using a listener to interact with the Couchbase Lite replicator.
+=======
+Couchbase Lite provides two options for implementing the required listener in IP-based networks; an out-of-the-box listener implementation or a framework to custom build your own listener.
+>>>>>>> Stashed changes
+
+== {empty}
+++++
+<div class="card-row three-column-row">
+++++
+
+[.column]
+====== {empty}
+[.content]
+.Database Replication
+
+See: {xref-cbl-pg-dbreplica}
+<<<<<<< Updated upstream
+=======
+++++
+</div>
+++++
+>>>>>>> Stashed changes
+
+[.column]
+====== {empty}
+[.content]
+.Sync Gateway Replication
+
+See: {xref-cbl-pg-replication}
+<<<<<<< Updated upstream
+=======
+++++
+</div>
+++++
+>>>>>>> Stashed changes
+
+[.column]
+====== {empty}
+[.content]
+.Inter-Sync Gateway Replication
+
+See: {xref-cbl-pg-landing-p2psync}
+<<<<<<< Updated upstream
+
+++++
+</div>
+++++
+=======
+>>>>>>> Stashed changes
