@@ -1,0 +1,9 @@
+= Query Troubleshooting
+:description: Couchbase Lite database data model concepts - Queries
+
+include::partial$_std-cbl-hdr-swift.adoc[]
+
+:param-related: {xref-cbl-pg-query-predictive} | {xref-cbl-pg-query-live} | {xref-cbl-pg-indexing}
+:topic-group: Topic Group -- Querying
+:param-fullpage:
+include::{root-commons}query-troubleshooting.adoc[subs="macros,attributes", leveloffset=0]
