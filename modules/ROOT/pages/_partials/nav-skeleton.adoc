@@ -4,18 +4,12 @@ include::couchbase-lite:{param-module}:partial$_std-cbl-hdr-{param-module}.adoc[
 include::{root-partials}nav-skeleton-start-{param-module}.adoc[]
 
 * Advance
-// Add advanced Couchbase Lite how-to topics in here
 ** Peer-to-Peer Sync
 *** {xref-cbl-pg-dbo-p2psync-websocket-using-passive}
 *** {xref-cbl-pg-dbo-p2psync-websocket-using-active}
-// *** {xref-cbl-pg-p2p-manage-tls-id}
-//*** {xref-cbl-pg-dbo-p2psync-cloud-using}
 ** {xref-cbl-pg-dep-upgrade}
-include::{root-partials}nav-skeleton-troubleshooting.adoc[tags="{param-module}"]
-// ** {xref-cbl-pg-troubleshooting}
-
+//
 * Learn
-// Add Couchbase Lite concepts and best practices in here
 // tag::data-model[]
 ** {xref-cbl-pg-database}
 ** {xref-cbl-pg-document}
@@ -28,7 +22,7 @@ include::{root-partials}nav-skeleton-troubleshooting.adoc[tags="{param-module}"]
 // end::query[]
 *** {xref-cbl-pg-fts}
 ** {xref-cbl-pg-indexing}
-
+//
 ** {xref-cbl-pg-landing-replications}
 *** {xref-cbl-pg-dbreplica}
 *** {xref-cbl-pg-replication}
@@ -36,23 +30,19 @@ include::{root-partials}nav-skeleton-troubleshooting.adoc[tags="{param-module}"]
 **** {xref-cbl-pg-p2psync-websocket}
 **** {xref-cbl-pg-p2psync-custom}
 *** {xref-cbl-pg-cert-pinning}
-//** {xref-cbl-pg-sync-p2p}
-//** {xref-cbl-pg-sync-svr}
+//
 ** {xref-cbl-pg-conflict}
-// ** {xref-cbl-pg-thread-safety}
-//** {xref-cbl-pg-compatibility}
-// Add api references in here
+//
 * Refer
-//** {xref-cbl-pg-ref-api}
 ** {url-api-references}[API{nbsp}References]
 ** {xref-cbl-pg-refer-glossary}
-// Add product notices here, including Release Notes and Compatibility etc
+//
+* Troubleshooting
+include::{root-partials}nav-skeleton-troubleshooting-{param-platform}.adoc[]
 * Product Notes
 ** {xref-cbl-pg-releasenotes}
-// ** {xref-cbl-pg-supportnotes}
 ** {xref-cbl-pg-compatibility}
 ** {xref-cbl-pg-supported-os}
-// ** {xref-cbl-pg-changelog}
 
 //.nav skel
 //* {param-module}/{param-name}/{param-title}
