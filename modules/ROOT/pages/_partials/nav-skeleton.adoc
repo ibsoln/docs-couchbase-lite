@@ -25,6 +25,7 @@ include::{root-partials}nav-skeleton-troubleshooting.adoc[tags="{param-module}"]
 ** {xref-cbl-pg-query}
 *** {xref-cbl-pg-query-live}
 *** {xref-cbl-pg-query-predictive}
+*** {xref-cbl-pg-query-troubleshooting}
 // end::query[]
 *** {xref-cbl-pg-fts}
 ** {xref-cbl-pg-indexing}
