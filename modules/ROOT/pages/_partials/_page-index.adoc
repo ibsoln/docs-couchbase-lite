@@ -85,6 +85,9 @@ ifndef::version[:version: version undefined]
 :cbl-pg-sync-p2p: learn/{param-name}-sync-p2p.adoc
 :cbl-pg-sync-svr: learn/{param-name}-sync-svr.adoc
 :cbl-pg-thread-safety: learn/{param-name}-thread-safety.adoc
+:cbl-pg-troubleshooting-crashes: {param-name}-troubleshooting-crashes.adoc
+:cbl-pg-troubleshooting-logs: {param-name}-troubleshooting-logs.adoc
+:cbl-pg-troubleshooting-queries: {param-name}-troubleshooting-queries.adoc
 :cbl-pg-troubleshooting: advance/{param-name}-troubleshooting.adoc
 //
 // End -- Ref - Page Targets
@@ -158,6 +161,9 @@ ifndef::version[:version: version undefined]
 :xref-cbl-pg-sync-p2p: {xref-pfx-cbl}{cbl-pg-sync-p2p}[Synchronization - P2P]
 :xref-cbl-pg-sync-svr: {xref-pfx-cbl}{cbl-pg-sync-svr}[Synchronization - Server]
 :xref-cbl-pg-thread-safety: {xref-pfx-cbl}{cbl-pg-thread-safety}[Thread-safety]
+:xref-cbl-pg-troubleshooting-crashes: {xref-pfx-cbl}{cbl-pg-troubleshooting-crashes}[Decoding Crash Logs]
+:xref-cbl-pg-troubleshooting-logs: {xref-pfx-cbl}{cbl-pg-troubleshooting-logs}[Using Logs]
+:xref-cbl-pg-troubleshooting-queries: {xref-pfx-cbl}{cbl-pg-troubleshooting-queries}[Troubleshooting Queries]
 :xref-cbl-pg-troubleshooting: {xref-pfx-cbl}{cbl-pg-troubleshooting}[Troubleshooting]
 // :xref-cbl-pg-compatibility: {xref-pfx-root}{cbl-pg-compatibility}[Compatibility]
 //:xref-cbl-pg-database: {xref-pfx-cbl}{cbl-pg-database}[Database]
