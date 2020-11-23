@@ -1,4 +1,4 @@
-= Working with Replications
+= Sync Gateway Replication
 :page-layout: article
 :page-status:
 :page-edition:

@@ -1,17 +1,9 @@
-= Conflict Handling -- Working with Replications
+= Conflict Handling
 :page-layout: article
-:page-status:
-:page-edition:
-:page-role:
 :description: Couchbase Lite database replication - Conflict Handling
 
 // Define our environment
 include::partial$_std-cbl-hdr-csharp.adoc[]
-// :param-name: {lang-name-csharp}
-// :param-title: {lang-title-csharp}
-// :param-module: {lang-mod-csharp}
 
 // Present common content including abstract and related content footer blocks
 include::{root-commons}conflict.adoc[subs="macros,attributes"]
-
-// include::{root-partials}block-related-content-rep.adoc[]
