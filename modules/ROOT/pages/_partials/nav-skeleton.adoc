@@ -37,7 +37,8 @@ include::{root-partials}nav-skeleton-start-{param-module}.adoc[]
 //
 * {xref-cbl-pg-dep-upgrade}
 //
-* {xref-cbl-pg-troubleshooting}
+* Troubleshooting
+include::{root-partials}nav-skeleton-troubleshooting-{param-platform}.adoc[]
 //
 * Product Notes
 ** {xref-cbl-pg-releasenotes}
