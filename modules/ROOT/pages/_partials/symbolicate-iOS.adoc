@@ -1,9 +1,14 @@
+// BEGIN -- inclusion -- {root-partials}symbolicate-ios.adoc
+// Used-by:
+//    - {root-partials}nav-skeleton-troubleshooting
+//    - swift-troubleshooting-crashes.adoc
+//    - objc-troubleshooting-crashes.adoc
+
 == Symbolication
 
-In order to make sense of a crash report you will need to symbolicate
- its content.
-Symbolication being the process of replacing memory addresses in a crash report with human-readable function names and line numbers.
-To do this you need to have debug symbol (`.dSYM`) files for the application and for Couchbase Lite's framework.
+In order to make sense of a crash report you will need to translate the crash log's memory addresses with human-readable function names and line numbers; this process is called _symbolication_.
+
+To do this you will need to have debug symbol (`.dSYM`) files for the application and for Couchbase Lite on {param-title}'s framework.
 
 == Finding local dSYM
 
@@ -78,3 +83,5 @@ xcrun dsymutil -symbol-map <pathToApplicationArchieve>.xcarchive/BCSymbolMaps <p
 
 TIP: See Translating 'hidden' symbol names back to their original names: https://developer.apple.com/library/archive/technotes/tn2151/_index.html
 
+
+// END -- inclusion -- {root-partials}symbolicate-ios.adoc
