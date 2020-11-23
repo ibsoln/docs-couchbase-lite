@@ -1,13 +1,8 @@
-= Local Database Replication -- Working with Replications
+= Local Database Replication
 :page-layout: article
-:page-status:
-:page-role:
 :description: Couchbase mobile database local replication concepts
 
 include::partial$_std-cbl-hdr-csharp.adoc[]
-// :param-name: {lang-name-android}
-// :param-title: {lang-title-android}
-// :param-module: {lang-mod-android}
 
 include::{root-commons}dbreplica.adoc[subs="macros,attributes"]
 

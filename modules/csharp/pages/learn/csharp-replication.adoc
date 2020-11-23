@@ -1,8 +1,5 @@
-= Working with Replications
+= Sync Gateway Replication
 :page-layout: article
-:page-status:
-:page-edition:
-:page-role:
 :description: Couchbase database replication and synchronization concepts
 
 include::partial$_std-cbl-hdr-csharp.adoc[]
