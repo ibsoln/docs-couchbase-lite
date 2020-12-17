@@ -1,4 +1,4 @@
-= Bundle a Pre-built Database
+= Pre-built Database
 :page-layout: article
 :description: How to bundle your database with your Couchbase Lite on Objective-C app
 
