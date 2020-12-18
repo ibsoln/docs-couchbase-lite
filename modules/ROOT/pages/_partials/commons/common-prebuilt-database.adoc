@@ -1,46 +1,63 @@
 // BEGIN -- inclusion -- database-load-prebuilt.adoc - Used in {commons-}database.adoc file
 
-== Use case
+// over-ride important-caption to create a MUST DO block instead
+:save-important-caption: {important-caption}
+:important-caption: Must Do
+:listing-caption: Code Example
+== Overview
 
-As a mobile application developer I want to minimize any wait time that a user may experience on initial install and launch of my application -- for example, due to initialization and data setup.
+Couchbase Lite’s support for pre-built databases means you can pre-load your app with data instead of syncing it down from Sync Gateway during startup.
+This might benefit, for example, a mobile application developer striving to minimize consumer wait time (arising from data setup) on initial install and launch of the application.
 
-== Solution
-
-Include a pre-built version of any required database(s) in your application bundle.
-
+Avoiding an initial bulk sync will help reduce startup time and network transfer costs, leading to a better consumer experience.
 It is typically more efficient to download bulk data using the http/ftp stream  employed during the application installation than to install a smaller application bundle and then have to use a replicator to pull-in the bulk data.
 
-Couchbase Lite makes it easy to bundle pre-built databases as application resources.
-You can then deploy them on initial launch making for a smoother user experience.
+This prepackaging of the data typically applies to public/shared, non-user specific data that is mostly static.
+Even if the data is not static, you can still benefit from preloading it and only syncing the changed documents on startup
+
 The initial sync of any pre-built database will pull-in any content changes on the server that occurred after its incorporation into the app, quickly bringing the database up to date.
 
-== In use
+.*To use a prebuilt database:*
 
-To use a prebuilt database, you need to:
+* Create a new Couchbase Lite database with pre-bundled data and incorporate it into your app bundle as an asset/resource -- see <<inc-db>>
+* Adjust the start-up logic of your app to deploy the packaged database if it doesn't exist and to then initiate a sync to update it -- see <<deploy-db>>
 
-* Set up the a new Couchbase Lite database
-* Incorporate that database into your app bundle as a resource -- see <<inc-db>>
-* Adjust your start-up logic to deploy the packaged database if it doesn't exist and to then initiate a sync to update it -- see <<deploy-db>>
+*Alternatively* {ellipsis} rather than bundling the database within the app, the app could pull the database down from a CDN server on launch.
 
 [#inc-db]
 == Bundle Database with Application
 
-In your build and release process:
+These steps would typically be part of your build and release process:
 
-. Create a fresh Couchbase Lite database (every time) +
-Always start with a fresh database for each app version to ensure there are no checkpoint issues
+. Create a fresh Couchbase Lite database (every time)
 +
-NOTE: If you don't do this, and instead reuse the same database in your build process (for subsequent app versions), then you will invalidate the cached checkpoint in the packaged database.
-. Pull your Sync Gateway database into the new Couchbase Lite database +
-Use either the REST API, or the cblite tool (`cblite cp`), for this +
-Ensure the replication uses the exact same URL and parameters as those your app will use when it is running
+[IMPORTANT]
+--
+*Always start with a fresh database for each app version*; this ensures there are no checkpoint issues
+
+*Otherwise:*  You will invalidate the cached checkpoint in the packaged database, and instead reuse the same database in your build process (for subsequent app versions).
+--
+. Pull the data from Sync Gateway into the new Couchbase Lite database
 +
-NOTE: If this replication and the in-app replications don't use exactly the same parameters (for example, the URL or channels don’t match), then the checkpoint IDs will not match
+[IMPORTANT]
+--
+Ensure the replication that is used for creating the pre-built database *uses the exact same remote URL and replication config parameters (channels and filters)* as those your app will use when it is running.
+
+*Otherwise:* {ellipsis} the checkpoints will mismatch and the app will attempt to pull the data down again
+
+So don't, for instance, create a pre-built database against a staging Sync Gateway server and try to use that within your production app that syncs against a production Sync Gateway.
+--
++
+You can use the cblite tool (`cblite cp`) for this -- see: {url-github-cblite-docs-cp}  |  {url-github-repo-mobile-tools-cblite}
++
+*Alternatively* {ellipsis} you can write a simple CBL app to just initiate the required pull sync -- see: {xref-cbl-bmk-replication-start}
+
 . When the replication is complete, create the same indexes the app will use
-. Copy the database into your app package +
-Put it in an appropriate place (for example, a resource folder).
-Where possible you can zip the database.
 
+. Copy the database into your app package
++
+Put it in an appropriate place (for example, an assets or resource folder).
+Where possible you can zip the database.
 
 [#deploy-db]
 == Deploy Database on Initial Launch
@@ -48,21 +65,38 @@ Where possible you can zip the database.
 During the application start-up logic, check if database exists in the required location, and *if not*:
 
 . Locate the pre-packaged database (for example, in the assets or other resource  folder)
-. Copy the pre-packaged database to the required database location +
-Use {url-api-method-database-copy} to do this, to ensure that a UUID is generated for each copy
+. Copy the pre-packaged database to the required database location
 +
+Use {url-api-method-database-copy} to do this, as it is import to ensure that a UUID is generated for each copy -- see: <<copy-db>>
++
+[IMPORTANT]
+--
+*Do not copy the database using any other method*
+
+*Otherwise:* Each copy of the app will invalidate the other apps’ checkpoints because a new UUID was not generated.
+
+--
++
+[#copy-db]
+.Copy database using API
 [source, {source-language}]
 ----
 include::{snippet}[tag=prebuilt-database,indent=0]
 ----
 +
-NOTE: Copying the database manually will not generate a new UUID, so each copy of the app will invalidate the others’ checkpoints
+
 . Open the database
-. Start a pull replication, to sync any changes  +
+
+. Start a pull replication, to sync any changes
++
 The replicator uses the pre-built database's checkpoint as the timestamp to sync from; only documents changed since then are synced
-. Do not wait for replication to complete if you can avoid it +
+
+. Do not wait for replication to complete if you can avoid it
++
 Start your normal application logic immediately, unless it is essential to have the absolute up-to-date data set to begin.
 That way the user is not kept hanging around watching a progress indicator.
 They can begin interacting with your app whilst any out-of-data data is being updated.
 
+// Reset important-caption
+:important-caption: {save-important-caption}
 // END -- inclusion -- database-load-prebuilt.adoc - Used in {commons-}database.adoc file
