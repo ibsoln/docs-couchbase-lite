@@ -37,7 +37,6 @@ endif::[]
 ifdef::is-android[]
 .Constraints
 endif::[]
-
 [NOTE]
 --
 The retrieval of logs from the device is out of scope of this feature.
@@ -47,7 +46,6 @@ The value returned by `LogLevel.getValue()` is not the Android log level.
 Do not use this API call.
 endif::[]
 --
-
 
 // Begin text block
 == Introduction
