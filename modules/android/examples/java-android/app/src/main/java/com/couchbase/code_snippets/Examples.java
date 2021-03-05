@@ -1107,23 +1107,28 @@ public class Examples {
         // end::replication-pull-filter[]
     }
 
-    public void testCustomHeartbeat() throws URISyntaxException {
-    // tag::replication-set-heartbeat[]
-        URLEndpoint target =
-            new URLEndpoint(new URI("ws://localhost:4984/mydatabase"));
+    public void testCustomRetryConfig() throws URISyntaxException {
+    // tag::replication-retry-config[]
+    URLEndpoint target =
+    new URLEndpoint(new URI("ws://localhost:4984/mydatabase"));
 
-        ReplicatorConfiguration config =
-            new ReplicatorConfiguration(database, target);
+    ReplicatorConfiguration config =
+    new ReplicatorConfiguration(database, target);
 
-            //  other config as required . . .
+    //  other config as required . . .
+    // tag::replication-heartbeat-config[]
+    config.setHeartbeat(150L); // <.>
+    // end::replication-heartbeat-config[]
+    // tag::replication-maxretries-config[]
+    config.setMaxRetries(20L); // <.>
+    // end::replication-maxretries-config[]
+    // tag::replication-maxretrywaittime-config[]
+    config.setMaxRetryWaitTime(600L); // <.>
+    // end::replication-maxretrywaittime-config[]
 
-        config.setHeartbeat(60L); // <.>
+    Replicator repl = new Replicator(config);
 
-        //  other config as required . . .
-
-        Replicator repl = new Replicator(config);
-
-    // end::replication-set-heartbeat[]
+    // end::replication-retry-config[]
     }
 
 
