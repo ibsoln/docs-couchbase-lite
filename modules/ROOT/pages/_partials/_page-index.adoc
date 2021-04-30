@@ -266,7 +266,7 @@ ifndef::version[:version: version undefined]
 // SGW Pages linked-to from CBL
 :get-started-install--page: get-started-install.adoc
 :load-balancer--page: load-balancer.adoc
-:get-started-prepare--page: get-started-prepare--page.adoc
+:get-started-prepare--page: get-started-prepare.adoc
 :get-started-prepare--page-bmk-createuser: {get-started-prepare--page}#lbl-create-rbac-user
 :get-started-prepare--page-bmk-createBucket: {get-started-prepare--page}#lbl-create-bucket
 
