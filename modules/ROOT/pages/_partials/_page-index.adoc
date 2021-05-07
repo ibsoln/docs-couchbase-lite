@@ -43,69 +43,137 @@ ifndef::version[:version: version undefined]
 
 // Begin -- Ref - Page Targets -- a list of all pages (and their relative paths)
 //
-:cbl-pg-blob: blob.adoc
-:cbl-pg-build: gs-build.adoc
-:cbl-pg-cert-pinning: cert-pinning.adoc
-:cbl-pg-changelog-all: changelog.adoc
-:cbl-pg-changelog: changelog.adoc
-:cbl-pg-compatibility-all: compatibility.adoc
-:cbl-pg-compatibility: compatibility.adoc
-:cbl-pg-conflict-auto: conflict.adoc#automatic-conflict-resolution
-:cbl-pg-conflict-custom: conflict.adoc#custom-conflict-resolution
-:cbl-pg-conflict: conflict.adoc
-:cbl-pg-database: database.adoc
-:cbl-pg-database-prebuilt: prebuilt-database.adoc
-:cbl-pg-date-time: date-time.adoc
-// :cbl-pg-dbo-crud: next/dbo-crud.adoc
-:cbl-pg-dbo-p2psync-cloud-using: p2psync-cloud-using.adoc
-:cbl-pg-dbo-p2psync-websocket-using-active: p2psync-websocket-using-active.adoc
-:cbl-pg-dbo-p2psync-websocket-using-passive--delta-sync: {cbl-pg-dbo-p2psync-websocket-using-passive}#configure-delta-sync
-:cbl-pg-dbo-p2psync-websocket-using-passive: p2psync-websocket-using-passive.adoc
-:cbl-pg-dbo-query: next/dbo-query.adoc
-:cbl-pg-dbreplica: dbreplica.adoc
-:cbl-pg-dep-upgrade: dep-upgrade.adoc
-:cbl-pg-document: document.adoc
-:cbl-pg-fts: fts.adoc
-:cbl-pg-get-started: gs-get-started.adoc
-:cbl-pg-glossary:   refer-glossary.adoc
-:cbl-pg-index: index.adoc
-:cbl-pg-indexing: indexing.adoc
-:cbl-pg-install: gs-install.adoc
-:cbl-pg-landing-p2psync: landing-p2psync.adoc
-:cbl-pg-landing-replications: landing-replications.adoc
-:cbl-pg-p2p-manage-tls-id: p2p-managing-tls-id.adoc
-:cbl-pg-p2psync-custom: p2psync-custom.adoc
-:cbl-pg-p2psync-http: p2psync-http.adoc
-:cbl-pg-p2psync-tls: p2psync-tls.adoc
-:cbl-pg-p2psync-websocket: p2psync-websocket.adoc
-:cbl-pg-prereqs: gs-prereqs.adoc
-:cbl-pg-query-live: query-live.adoc
-:cbl-pg-query-predictive: query-predictive.adoc
-:cbl-pg-query-troubleshooting: query-troubleshooting.adoc
-:cbl-pg-query-using: query-using.adoc
-:cbl-pg-query: query.adoc
-:cbl-pg-quickstart: quickstart.adoc
-:cbl-pg-pfx-api: pfx-api.adoc
-:cbl-pg-refer-glossary: refer-glossary.adoc
-:cbl-pg-releasenotes-all: releasenotes.adoc
-// :cbl-pg-releasenotes: releasenotes.adoc
-:cbl-pg-releasenotes: product/{param-name}-releasenotes.adoc
-:cbl-pg-replication: learn/{param-name}-replication.adoc
-:cbl-pg-replication--delta-sync: {cbl-pg-replication}#delta-sync
-:cbl-pg-replication--status: {cbl-pg-replication}#lbl-repl-status
-:cbl-pg-replication--states: {cbl-pg-replication}#lbl-repl-states
-:cbl-pg-replication: replication.adoc
-:cbl-pg-supported-os: supported-os.adoc
-:cbl-pg-supportnotes-all: supportnotices.adoc
-:cbl-pg-supportnotes: supportnotices.adoc
-:cbl-pg-sync-p2p: sync-p2p.adoc
-:cbl-pg-sync-svr: sync-svr.adoc
-:cbl-pg-thread-safety: thread-safety.adoc
-:cbl-pg-troubleshooting-crashes: troubleshooting-crashes.adoc
-:cbl-pg-troubleshooting-logs: troubleshooting-logs.adoc
-:cbl-pg-troubleshooting-queries: troubleshooting-queries.adoc
-:cbl-pg-troubleshooting: troubleshooting.adoc
-//
+:blob--page:  blob.adoc
+:blob--xref: {cbl--pfx}{blob--page}[Blob]
+:compatibility--page: compatibility.adoc
+:compatibility--xref: {cbl--pfx}{compatibility--page}
+:conflict--page:  conflict.adoc
+:conflict--xref: {cbl--pfx}{conflict--page}[Conflict]
+:database--page:  database.adoc
+:database--xref: {cbl--pfx}{database--page}[Database]
+:dbreplica--page:  dbreplica.adoc
+:dbreplica--xref: {cbl--pfx}{dbreplica--page}[Dbreplica]
+:dep-upgrade--page:  dep-upgrade.adoc
+:dep-upgrade--xref: {cbl--pfx}{dep-upgrade--page}[Dep Upgrade]
+:document--page:  document.adoc
+:document--xref: {cbl--pfx}{document--page}[Document]
+:fts--page:  fts.adoc
+:fts--xref: {cbl--pfx}{fts--page}[Fts]
+:gs-build--page:  gs-build.adoc
+:gs-build--xref: {cbl--pfx}{gs-build--page}[Gs Build]
+:gs-install--page:  gs-install.adoc
+:gs-install--xref: {cbl--pfx}{gs-install--page}[Gs Install]
+:gs-prereqs--page:  gs-prereqs.adoc
+:gs-prereqs--xref: {cbl--pfx}{gs-prereqs--page}[Gs Prereqs]
+:index--page:  index.adoc
+:index--xref: {cbl--pfx}{index--page}[Index]
+:indexing--page:  indexing.adoc
+:indexing--xref: {cbl--pfx}{indexing--page}[Indexing]
+:landing-p2psync--page:  landing-p2psync.adoc
+:landing-p2psync--xref: {cbl--pfx}{landing-p2psync--page}[Landing P2Psync]
+:landing-replications--page:  landing-replications.adoc
+:landing-replications--xref: {cbl--pfx}{landing-replications--page}[Landing Replications]
+:p2p-managing-tls-id--page:  p2p-managing-tls-id.adoc
+:p2p-managing-tls-id--xref: {cbl--pfx}{p2p-managing-tls-id--page}[P2P Managing Tls Id]
+:p2psync--page:  p2psync.adoc
+:p2psync--xref: {cbl--pfx}{p2psync--page}[P2Psync]
+:p2psync-custom--page:  p2psync-custom.adoc
+:p2psync-custom--xref: {cbl--pfx}{p2psync-custom--page}[P2Psync Custom]
+:p2psync-websocket--page:  p2psync-websocket.adoc
+:p2psync-websocket--xref: {cbl--pfx}{p2psync-websocket--page}[P2Psync Websocket]
+:p2psync-websocket-using-active--page:  p2psync-websocket-using-active.adoc
+:p2psync-websocket-using-active--xref: {cbl--pfx}{p2psync-websocket-using-active--page}[P2Psync Websocket Using Active]
+:p2psync-websocket-using-passive--page:  p2psync-websocket-using-passive.adoc
+:p2psync-websocket-using-passive--xref: {cbl--pfx}{p2psync-websocket-using-passive--page}[P2Psync Websocket Using Passive]
+:prebuilt-database--page:  prebuilt-database.adoc
+:prebuilt-database--xref: {cbl--pfx}{prebuilt-database--page}[Prebuilt Database]
+:query--page:  query.adoc
+:query--xref: {cbl--pfx}{query--page}[Query]
+:query-live--page:  query-live.adoc
+:query-live--xref: {cbl--pfx}{query-live--page}[Query Live]
+:query-predictive--page:  query-predictive.adoc
+:query-predictive--xref: {cbl--pfx}{query-predictive--page}[Query Predictive]
+:query-resultsets--page:  query-resultsets.adoc
+:query-resultsets--xref: {cbl--pfx}{query-resultsets--page}[Query Resultsets]
+:query-troubleshooting--page:  query-troubleshooting.adoc
+:query-troubleshooting--xref: {cbl--pfx}{query-troubleshooting--page}[Query Troubleshooting]
+:quickstart--page:  quickstart.adoc
+:quickstart--xref: {cbl--pfx}{quickstart--page}[Quickstart]
+:ref-api--page:  ref-api.adoc
+:ref-api--xref: {cbl--pfx}{ref-api--page}[Ref Api]
+:refer-glossary--page:  refer-glossary.adoc
+:refer-glossary--xref: {cbl--pfx}{refer-glossary--page}[Refer Glossary]
+:release-notes--page: release-notes.adoc
+:release-notes--xref: {cbl--pfx}{release-notes--page}[Release Notes]
+:replication--page:  replication.adoc
+:replication--xref: {cbl--pfx}{replication--page}[Replication]
+:save-blob--page:  save-blob.adoc
+:save-blob--xref: {cbl--pfx}{save-blob--page}[Save Blob]
+:support-notices--page:   support-notices.adoc
+:support-notices--xref:   {cbl--pfx}{support-notices--page}[Support Notices]
+:supported-os--page:   supported-os.adoc
+:supported-os--xref:  {cbl--pfx}{supported-os--page}[Supported OS]
+:thread-safety--page:  thread-safety.adoc
+:thread-safety--xref: {cbl--pfx}{thread-safety--page}[Thread Safety]
+:troubleshooting--page:  troubleshooting.adoc
+:troubleshooting--xref: {cbl--pfx}{troubleshooting--page}[Troubleshooting]
+:troubleshooting-crashes--page:  troubleshooting-crashes.adoc
+:troubleshooting-crashes--xref: {cbl--pfx}{troubleshooting-crashes--page}[Troubleshooting Crashes]
+:troubleshooting-landing--page:  troubleshooting-landing.adoc
+:troubleshooting-landing--xref: {cbl--pfx}{troubleshooting-landing--page}[Troubleshooting Landing]
+:troubleshooting-logs--page:  troubleshooting-logs.adoc
+:troubleshooting-logs--xref: {cbl--pfx}{troubleshooting-logs--page}[Troubleshooting Logs]
+:troubleshooting-queries copy--page:  troubleshooting-queries copy.adoc
+:troubleshooting-queries copy--xref: {cbl--pfx}{troubleshooting-queries copy--page}[Troubleshooting Queries Copy]
+:troubleshooting-queries--page:  troubleshooting-queries.adoc
+:troubleshooting-queries--xref: {cbl--pfx}{troubleshooting-queries--page}[Troubleshooting Queries]
+
+
+
+
+
+// Deprecated Page Links
+:cbl-pg-blob:  {blob--page}
+:cbl-pg-build: {gs-build--page}
+:cbl-pg-conflict:  {conflict--page}
+:cbl-pg-database-prebuilt: {prebuilt-database--page}
+:cbl-pg-database:  {database--page}
+:cbl-pg-dbo-p2psync-websocket-using-active: {p2psync-websocket-using-active--page}
+:cbl-pg-dbo-p2psync-websocket-using-passive--delta-sync:   {cbl-pg-dbo-p2psync-websocket-using-passive}#configure-delta-sync
+:cbl-pg-dbo-p2psync-websocket-using-passive: {p2psync-websocket-using-passive--page}
+:cbl-pg-dbreplica:  {dbreplica--page}
+:cbl-pg-dep-upgrade:  {dep-upgrade--page}
+:cbl-pg-document:  {document--page}
+:cbl-pg-fts:  {fts--page}
+:cbl-pg-glossary: {refer-glossary--page}
+:cbl-pg-index:  {index--page}
+:cbl-pg-indexing:  {indexing--page}
+:cbl-pg-install: {gs-install--page}
+:cbl-pg-landing-p2psync:  {landing-p2psync--page}
+:cbl-pg-landing-replications:  {landing-replications--page}
+:cbl-pg-p2p-manage-tls-id: {p2p-managing-tls-id--page}
+:cbl-pg-p2psync-custom:  {p2psync-custom--page}
+:cbl-pg-p2psync-websocket:  {p2psync-websocket--page}
+:cbl-pg-prereqs: {gs-prereqs--page}
+:cbl-pg-query-live:  {query-live--page}
+:cbl-pg-query-predictive:  {query-predictive--page}
+:cbl-pg-query-troubleshooting:  {query-troubleshooting--page}
+:cbl-pg-query:  {query--page}
+:cbl-pg-quickstart:  {quickstart--page}
+:cbl-pg-refer-glossary:  {refer-glossary--page}
+:cbl-pg-release-notes:   {release-notes--page}
+:cbl-pg-replication--delta-sync:   {replication--page}#delta-sync
+:cbl-pg-replication--states:   {replication--page}#lbl-repl-states
+:cbl-pg-replication--status:   {replication--page}#lbl-repl-status
+:cbl-pg-replication:  {replication--page}
+:cbl-pg-supported-os:   {supported-os--page}
+:cbl-pg-supportnotes:   {support-notices--page}
+:cbl-pg-thread-safety:  {thread-safety--page}
+:cbl-pg-troubleshooting-crashes:  {troubleshooting-crashes--page}
+:cbl-pg-troubleshooting-logs:  {troubleshooting-logs--page}
+:cbl-pg-troubleshooting-queries:  {troubleshooting-queries--page}
+:cbl-pg-troubleshooting:  {troubleshooting--page}
+
 // End -- Ref - Page Targets
 
 // Being -- Ref - xrefs
